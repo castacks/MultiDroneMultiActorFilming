@@ -27,7 +27,7 @@ function rotMatrix(theta::Float64)
      sin(theta) cos(10)]
 end
 
-struct TargetState
+struct Target
     x::Float64
     y::Float64
     heading::Float64
@@ -35,22 +35,21 @@ struct TargetState
     faces::Array{Face}
     nfaces::UInt32
 
-    function TargetState(x::Number, y::Number, h::Number, a::Number, n::UInt32)
-        faces = Array{Face}[]
-        dphi = pi/n
+    function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32)
+        faces = Array{Face}(undef, n)
+        dphi = (2*pi)/n
         for i = 1:n
-            r_mat = rotMatrix(dphi*i)
-            norm = [1;0]
-            norm = r_mat*norm
-            println(norm, dphi*i * 180/pi)
+            norm = [cos(dphi*i + h); sin(dphi*i + h)]
+            pos = a*norm
+            f = Face(pos[1], pos[2], 0.1, 1., norm)
+            faces[i] = f
         end
-
         new(x,y,h,a,faces)
     end
 end
 
-function TargetState(x::Float64, y::Float64, h::Float64)
-    TargetState(x,y,h,0.0,Array{Face,1}(Face(0,0,[1;1], 0.1, 10)))
+function Target(x::Float64, y::Float64, h::Float64)
+    Target(x,y,h,0.0,Array{Face,1}(Face(0,0,[1;1], 0.1, 10)))
 end
 
 mutable struct UAVState
@@ -76,5 +75,5 @@ end
 
 # @testset "Targets" begin
     
-#     tstate = TargetState(0,0,0, 1, )
+#     tstate = Target(0,0,0, 1, )
 # end
