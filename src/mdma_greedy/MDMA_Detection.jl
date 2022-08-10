@@ -1,5 +1,7 @@
 module MDMA_Detection
 
+include("MDMA_States.jl")
+
 export ccw, cw, absoluteAngle, detectActor
 
 
