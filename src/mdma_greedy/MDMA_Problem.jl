@@ -1,3 +1,5 @@
+module MDMA_States
+
 using Test
 using LinearAlgebra
 
@@ -31,7 +33,7 @@ struct Target
     x::Float64
     y::Float64
     heading::Float64
-    apothem::Float64
+    apothem::Float64 # Distance from center to center of each face
     faces::Array{Face}
     nfaces::UInt32
 
@@ -70,10 +72,4 @@ struct ViewConeObservation
     distances::Vector{Float64} # Distances to actors
     faces::Vector{Face} # List of faces observed, not counting occlusions/etc
 end
-
-
-
-# @testset "Targets" begin
-    
-#     tstate = Target(0,0,0, 1, )
-# end
+end

@@ -1,4 +1,9 @@
-using MDMA_Problem
+module MDMA_Detection
+
+export ccw, cw, absoluteAngle, detectActor
+
+
+# using MDMA_Problem
 
 function ccw(d::Symbol)::Symbol
     d in cardinaldir || throw(ArgumentError("invalid cardinaldir: $d"))
@@ -149,4 +154,5 @@ end
     @test detectActor(dstate, TargetState(1, -1,0)) == true
     @test detectActor(dstate, TargetState(-1, -1,0)) == false
 
+end
 end
