@@ -2,9 +2,11 @@ using Test
 using LinearAlgebra
 using CairoMakie
 
+
+abstract type Sensor end
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
-struct ViewConeSensor
+struct ViewConeSensor <: Sensor
     fov::Float64 # Radians representing FOV
     cutoff::Float64 # Max Distance
 end
@@ -49,26 +51,25 @@ mutable struct Target
     end
 end
 
-function Target(x::Float64, y::Float64, h::Float64)
-    Target(x,y,h,0.0,Array{Face,1}(Face(0,0,[1;1], 0.1, 10)))
+function Target(x::Number, y::Number, h::Number)
+    Target(x,y,h,1.0, UInt32(6))
 end
 
-abstract type Sensor end
 
 mutable struct UAVState
     x::Int64
     y::Int64
-    done::Bool
     heading::Symbol
     sensor::ViewConeSensor
+    done::Bool
     function UAVState(x::Int64, y::Int64, h::Symbol, s::Sensor)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
-        new(x,y,h,s)
+        new(x,y,h,s, false)
     end
 end
 
 
-struct ViewConeObservation <: Sensor
+struct ViewConeObservation
     n::Int64 # Number of actors detected
     distances::Vector{Float64} # Distances to actors
     faces::Vector{Face} # List of faces observed, not counting occlusions/etc

@@ -1,8 +1,4 @@
-module MDMA_Detection
-
-include("MDMA_States.jl")
-
-export ccw, cw, absoluteAngle, detectActor
+export ccw, cw, absoluteAngle, detectTarget, dirAngle
 
 # using MDMA_Problem
 function ccw(d::Symbol)::Symbol
@@ -112,47 +108,46 @@ end
 
 @testset "detectTarget" begin
     dstate = UAVState(0,0,:N, ViewConeSensor(pi/2, 3))
-    @test detectActor(dstate, Target(0,2,0)) == true
-    @test detectActor(dstate, Target(0,3,0)) == true
-    @test detectActor(dstate, Target(1,3,0)) == false
-    @test detectActor(dstate, Target(1,2,0)) == true
-    @test detectActor(dstate, Target(-1,2,0)) == true
-    @test detectActor(dstate, Target(-1,1,0)) == true
-    @test detectActor(dstate, Target(1,1,0)) == true
-    @test detectActor(dstate, Target(-1,0,0)) == false
+    @test detectTarget(dstate, Target(0,2,0)) == true
+    @test detectTarget(dstate, Target(0,3,0)) == true
+    @test detectTarget(dstate, Target(1,3,0)) == false
+    @test detectTarget(dstate, Target(1,2,0)) == true
+    @test detectTarget(dstate, Target(-1,2,0)) == true
+    @test detectTarget(dstate, Target(-1,1,0)) == true
+    @test detectTarget(dstate, Target(1,1,0)) == true
+    @test detectTarget(dstate, Target(-1,0,0)) == false
     dstate = UAVState(0,0,:N, ViewConeSensor(pi, 3))
-    @test detectActor(dstate, Target(-1,0,0)) == true
-    @test detectActor(dstate, Target(-1,-1,0)) == false
-    @test detectActor(dstate, Target(1,-1,0)) == false
+    @test detectTarget(dstate, Target(-1,0,0)) == true
+    @test detectTarget(dstate, Target(-1,-1,0)) == false
+    @test detectTarget(dstate, Target(1,-1,0)) == false
     dstate = UAVState(0,0,:N, ViewConeSensor(3*pi/2, 3))
-    @test detectActor(dstate, Target(1,-1,0)) == true
-    @test detectActor(dstate, Target(-1, -1,0)) == true
+    @test detectTarget(dstate, Target(1,-1,0)) == true
+    @test detectTarget(dstate, Target(-1, -1,0)) == true
     dstate = UAVState(0,0,:E, ViewConeSensor(3*pi/2, 3))
-    @test detectActor(dstate, Target(-1, -1,0)) == true
-    @test detectActor(dstate, Target(-1, 1,0)) == true
-    @test detectActor(dstate, Target(-1, 0,0)) == false
+    @test detectTarget(dstate, Target(-1, -1,0)) == true
+    @test detectTarget(dstate, Target(-1, 1,0)) == true
+    @test detectTarget(dstate, Target(-1, 0,0)) == false
     dstate = UAVState(0,0,:S, ViewConeSensor(3*pi/2, 3))
-    @test detectActor(dstate, Target(0, 1,0)) == false
+    @test detectTarget(dstate, Target(0, 1,0)) == false
     # This test fails due to numerical precision issues comparing 44.99 to 45.0
     # and does not represent a logical issue with the code should not be an
     # issue in practice
-    # @test detectActor(dstate, Target(1, 1,0)) == true
-    @test detectActor(dstate, Target(2, 1,0)) == true
-    @test detectActor(dstate, Target(-1, 1,0)) == true
+    # @test detectTarget(dstate, Target(1, 1,0)) == true
+    @test detectTarget(dstate, Target(2, 1,0)) == true
+    @test detectTarget(dstate, Target(-1, 1,0)) == true
     dstate = UAVState(0,0,:W, ViewConeSensor(3*pi/2, 3))
-    @test detectActor(dstate, Target(1, 0,0)) == false
-    @test detectActor(dstate, Target(1, 1,0)) == true
-    @test detectActor(dstate, Target(-1, -1,0)) == true
+    @test detectTarget(dstate, Target(1, 0,0)) == false
+    @test detectTarget(dstate, Target(1, 1,0)) == true
+    @test detectTarget(dstate, Target(-1, -1,0)) == true
     dstate = UAVState(0,0,:E, ViewConeSensor(pi/2, 3))
-    @test detectActor(dstate, Target(1, 1,0)) == true
-    @test detectActor(dstate, Target(1, 0,0)) == true
-    @test detectActor(dstate, Target(1, -1,0)) == true
-    @test detectActor(dstate, Target(-1, 0,0)) == false
+    @test detectTarget(dstate, Target(1, 1,0)) == true
+    @test detectTarget(dstate, Target(1, 0,0)) == true
+    @test detectTarget(dstate, Target(1, -1,0)) == true
+    @test detectTarget(dstate, Target(-1, 0,0)) == false
     dstate = UAVState(0,0,:NE, ViewConeSensor(3*pi/2, 3))
-    @test detectActor(dstate, Target(1, 1,0)) == true
-    @test detectActor(dstate, Target(1, 0,0)) == true
-    @test detectActor(dstate, Target(1, -1,0)) == true
-    @test detectActor(dstate, Target(-1, -1,0)) == false
+    @test detectTarget(dstate, Target(1, 1,0)) == true
+    @test detectTarget(dstate, Target(1, 0,0)) == true
+    @test detectTarget(dstate, Target(1, -1,0)) == true
+    @test detectTarget(dstate, Target(-1, -1,0)) == false
 
-end
 end
