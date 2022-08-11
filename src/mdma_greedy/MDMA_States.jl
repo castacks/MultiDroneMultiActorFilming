@@ -1,7 +1,6 @@
-module MDMA_States
-
 using Test
 using LinearAlgebra
+using CairoMakie
 
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
@@ -29,7 +28,7 @@ function rotMatrix(theta::Float64)
      sin(theta) cos(10)]
 end
 
-struct Target
+mutable struct Target
     x::Float64
     y::Float64
     heading::Float64
@@ -54,22 +53,34 @@ function Target(x::Float64, y::Float64, h::Float64)
     Target(x,y,h,0.0,Array{Face,1}(Face(0,0,[1;1], 0.1, 10)))
 end
 
+abstract type Sensor end
+
 mutable struct UAVState
     x::Int64
     y::Int64
     done::Bool
     heading::Symbol
     sensor::ViewConeSensor
-    function UAVState(x::Int64, y::Int64, h::Symbol, s::ViewConeSensor)
+    function UAVState(x::Int64, y::Int64, h::Symbol, s::Sensor)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
         new(x,y,h,s)
     end
 end
 
 
-struct ViewConeObservation
+struct ViewConeObservation <: Sensor
     n::Int64 # Number of actors detected
     distances::Vector{Float64} # Distances to actors
     faces::Vector{Face} # List of faces observed, not counting occlusions/etc
 end
+
+
+function drawTargets()
+    f = Figure(resolution=(800,800))
+    Axis(f[1,1], backgroundcolor="black")
+
+    xs = LinRange(-10, 10, 20)
+    ys = LinRange(-10, 10, 20)
+    t = Target(5., 5., 0., 5., UInt32(6))
+
 end
