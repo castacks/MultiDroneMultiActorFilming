@@ -1,12 +1,13 @@
 using Test
 using LinearAlgebra
 using CairoMakie
+using SubmodularMaximization
 
+export Target, ViewConeSensor, Face, rotMatrix, UAVState
 
-abstract type Sensor end
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
-struct ViewConeSensor <: Sensor
+struct ViewConeSensor
     fov::Float64 # Radians representing FOV
     cutoff::Float64 # Max Distance
 end
@@ -62,14 +63,18 @@ mutable struct UAVState
     heading::Symbol
     sensor::ViewConeSensor
     done::Bool
-    function UAVState(x::Int64, y::Int64, h::Symbol, s::Sensor)
+    function UAVState(x::Int64, y::Int64, h::Symbol, s::ViewConeSensor)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
         new(x,y,h,s, false)
     end
 end
 
+function UAVState(x::Int64, y::Int64, h::Symbol)
+    UAVState(x,y,h, ViewConeSensor(pi/2, 5))
+end
 
-struct ViewConeObservation
+
+mutable struct ViewConeObservation
     n::Int64 # Number of actors detected
     distances::Vector{Float64} # Distances to actors
     faces::Vector{Face} # List of faces observed, not counting occlusions/etc

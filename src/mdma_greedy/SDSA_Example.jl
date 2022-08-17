@@ -4,11 +4,7 @@ using POMDPPolicies
 using POMDPSimulators
 using DiscreteValueIteration
 
-struct GridWorldState
-    x::Int64
-    y::Int64
-    done::Bool
-end
+
 
 GridWorldState(x::Int64, y::Int64) = GridWorldState(x,y, false)
 posequal(s1::GridWorldState, s2::GridWorldState) = s1.x == s2.x && s1.y == s2.y

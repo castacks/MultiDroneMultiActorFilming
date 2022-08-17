@@ -1,4 +1,4 @@
-export ccw, cw, absoluteAngle, detectTarget, dirAngle
+# export ccw, cw, absoluteAngle, detectTarget, dirAngle
 
 # using MDMA_Problem
 function ccw(d::Symbol)::Symbol
