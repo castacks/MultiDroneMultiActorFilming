@@ -47,15 +47,15 @@ end
 
 absoluteAngle(theta::Number) = absoluteAngle(cos(theta), sin(theta))
 
-function detectTarget(dstate::UAVState, astate::Target)::Bool
+function detectTarget(dstate::UAVState, astate::Target, sensor::ViewConeSensor)::Bool
     dist_sqr = (dstate.x - astate.x)^2 + (dstate.y - astate.y)^2
     # Check if inside the max view distance
-    if dist_sqr > dstate.sensor.cutoff^2
+    if dist_sqr > sensor.cutoff^2
         return false
     else
         # Get view bounds based on heading of Agent
         heading_angle = dirAngle(dstate.heading)
-        view_bounds = [- dstate.sensor.fov/2, dstate.sensor.fov/2]
+        view_bounds = [- sensor.fov/2, sensor.fov/2]
 
         # compute the true angle of the actor
         dy = astate.y - dstate.y
@@ -64,8 +64,8 @@ function detectTarget(dstate::UAVState, astate::Target)::Bool
 
         # Absolute positions of the top and bottom of the bound not accounting
         # for wrapping inside the 0 to 360 range
-        true_top = heading_angle + dstate.sensor.fov/2
-        true_bot = heading_angle - dstate.sensor.fov/2
+        true_top = heading_angle + sensor.fov/2
+        true_bot = heading_angle - sensor.fov/2
 
         # Need to change the min and max ranges for comparison in cases where
         # the boundary is split Across the x axis. This also requires changing
@@ -107,47 +107,55 @@ function dirAngle(h::Symbol)
 end
 
 @testset "detectTarget" begin
-    dstate = UAVState(0,0,:N, ViewConeSensor(pi/2, 3))
-    @test detectTarget(dstate, Target(0,2,0)) == true
-    @test detectTarget(dstate, Target(0,3,0)) == true
-    @test detectTarget(dstate, Target(1,3,0)) == false
-    @test detectTarget(dstate, Target(1,2,0)) == true
-    @test detectTarget(dstate, Target(-1,2,0)) == true
-    @test detectTarget(dstate, Target(-1,1,0)) == true
-    @test detectTarget(dstate, Target(1,1,0)) == true
-    @test detectTarget(dstate, Target(-1,0,0)) == false
-    dstate = UAVState(0,0,:N, ViewConeSensor(pi, 3))
-    @test detectTarget(dstate, Target(-1,0,0)) == true
-    @test detectTarget(dstate, Target(-1,-1,0)) == false
-    @test detectTarget(dstate, Target(1,-1,0)) == false
-    dstate = UAVState(0,0,:N, ViewConeSensor(3*pi/2, 3))
-    @test detectTarget(dstate, Target(1,-1,0)) == true
-    @test detectTarget(dstate, Target(-1, -1,0)) == true
-    dstate = UAVState(0,0,:E, ViewConeSensor(3*pi/2, 3))
-    @test detectTarget(dstate, Target(-1, -1,0)) == true
-    @test detectTarget(dstate, Target(-1, 1,0)) == true
-    @test detectTarget(dstate, Target(-1, 0,0)) == false
-    dstate = UAVState(0,0,:S, ViewConeSensor(3*pi/2, 3))
-    @test detectTarget(dstate, Target(0, 1,0)) == false
+    sensor = ViewConeSensor(pi/2, 3)
+    dstate = UAVState(0,0,:N)
+    @test detectTarget(dstate, Target(0,2,0), sensor) == true
+    @test detectTarget(dstate, Target(0,3,0), sensor) == true
+    @test detectTarget(dstate, Target(1,3,0), sensor) == false
+    @test detectTarget(dstate, Target(1,2,0), sensor) == true
+    @test detectTarget(dstate, Target(-1,2,0), sensor) == true
+    @test detectTarget(dstate, Target(-1,1,0), sensor) == true
+    @test detectTarget(dstate, Target(1,1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1,0,0), sensor) == false
+    sensor = ViewConeSensor(pi, 3)
+    dstate = UAVState(0,0,:N)
+    @test detectTarget(dstate, Target(-1,0,0), sensor) == true
+    @test detectTarget(dstate, Target(-1,-1,0), sensor) == false
+    @test detectTarget(dstate, Target(1,-1,0), sensor) == false
+    dstate = UAVState(0,0,:N)
+    sensor = ViewConeSensor(3*pi/2, 3)
+    @test detectTarget(dstate, Target(1,-1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, -1,0), sensor) == true
+    dstate = UAVState(0,0,:E)
+    sensor = ViewConeSensor(3*pi/2, 3)
+    @test detectTarget(dstate, Target(-1, -1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, 1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, 0,0), sensor) == false
+    dstate = UAVState(0,0,:S)
+    sensor = ViewConeSensor(3*pi/2, 3)
+    @test detectTarget(dstate, Target(0, 1,0), sensor) == false
     # This test fails due to numerical precision issues comparing 44.99 to 45.0
     # and does not represent a logical issue with the code should not be an
     # issue in practice
     # @test detectTarget(dstate, Target(1, 1,0)) == true
-    @test detectTarget(dstate, Target(2, 1,0)) == true
-    @test detectTarget(dstate, Target(-1, 1,0)) == true
-    dstate = UAVState(0,0,:W, ViewConeSensor(3*pi/2, 3))
-    @test detectTarget(dstate, Target(1, 0,0)) == false
-    @test detectTarget(dstate, Target(1, 1,0)) == true
-    @test detectTarget(dstate, Target(-1, -1,0)) == true
-    dstate = UAVState(0,0,:E, ViewConeSensor(pi/2, 3))
-    @test detectTarget(dstate, Target(1, 1,0)) == true
-    @test detectTarget(dstate, Target(1, 0,0)) == true
-    @test detectTarget(dstate, Target(1, -1,0)) == true
-    @test detectTarget(dstate, Target(-1, 0,0)) == false
-    dstate = UAVState(0,0,:NE, ViewConeSensor(3*pi/2, 3))
-    @test detectTarget(dstate, Target(1, 1,0)) == true
-    @test detectTarget(dstate, Target(1, 0,0)) == true
-    @test detectTarget(dstate, Target(1, -1,0)) == true
-    @test detectTarget(dstate, Target(-1, -1,0)) == false
+    @test detectTarget(dstate, Target(2, 1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, 1,0), sensor) == true
+    dstate = UAVState(0,0,:W)
+    sensor = ViewConeSensor(3*pi/2, 3)
+    @test detectTarget(dstate, Target(1, 0,0), sensor) == false
+    @test detectTarget(dstate, Target(1, 1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, -1,0), sensor) == true
+    dstate = UAVState(0,0,:E)
+    sensor = ViewConeSensor(pi/2, 3)
+    @test detectTarget(dstate, Target(1, 1,0), sensor) == true
+    @test detectTarget(dstate, Target(1, 0,0), sensor) == true
+    @test detectTarget(dstate, Target(1, -1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, 0,0), sensor) == false
+    dstate = UAVState(0,0,:NE)
+    sensor = ViewConeSensor(3*pi/2, 3)
+    @test detectTarget(dstate, Target(1, 1,0), sensor) == true
+    @test detectTarget(dstate, Target(1, 0,0), sensor) == true
+    @test detectTarget(dstate, Target(1, -1,0), sensor) == true
+    @test detectTarget(dstate, Target(-1, -1,0), sensor) == false
 
 end

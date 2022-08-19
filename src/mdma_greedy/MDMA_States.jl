@@ -12,7 +12,7 @@ struct ViewConeSensor
     cutoff::Float64 # Max Distance
 end
 
-const cardinaldir = Set([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
+const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 struct Face
     normal::Vector{Float64} # 2d normal
@@ -61,16 +61,11 @@ mutable struct UAVState
     x::Int64
     y::Int64
     heading::Symbol
-    sensor::ViewConeSensor
     done::Bool
-    function UAVState(x::Int64, y::Int64, h::Symbol, s::ViewConeSensor)
+    function UAVState(x::Int64, y::Int64, h::Symbol)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
-        new(x,y,h,s, false)
+        new(x,y,h,false)
     end
-end
-
-function UAVState(x::Int64, y::Int64, h::Symbol)
-    UAVState(x,y,h, ViewConeSensor(pi/2, 5))
 end
 
 
