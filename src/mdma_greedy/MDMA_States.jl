@@ -40,7 +40,7 @@ mutable struct Target
     nfaces::UInt32
 
     function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32)
-        faces = Array{Face}(undef, n)
+        faces = Vector{Face}(undef, n)
         dphi = (2*pi)/n
         for i = 1:n
             norm = [cos(dphi*i + h); sin(dphi*i + h)]
