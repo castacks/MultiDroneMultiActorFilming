@@ -47,16 +47,11 @@ end
 get_states(g::Grid) = g.states
 function get_states(width::Int64, height::Int64)
     states = Array{MDPState,3}(undef, width, height, 8)
-    # for state in states
-    #     println(state)
-    # end
-    for r=1:height
-        for c=1:width
-            for d=1:8
-                states[r][c][d] = MDPState(UAVState(c,r,cardinaldir[d]), 0)
-                println(c," ", r," ",d)
-            end
-        end
+    for i in CartesianIndices(states)
+        r = i[1]
+        c = i[2]
+        d = i[3]
+        states[i] = MDPState(UAVState(c,r,cardinaldir[d]), 0)
     end
     states
 end
