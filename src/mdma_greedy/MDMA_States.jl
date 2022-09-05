@@ -14,6 +14,12 @@ end
 
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
+function dir_to_index(d::Symbol)
+    if d in cardinaldir
+        return findall(x->x==d, cardinaldir)[1]
+    end
+end
+
 struct Face
     normal::Vector{Float64} # 2d normal
     pos::Vector{Float64} # position
@@ -62,7 +68,7 @@ mutable struct UAVState
     y::Int64
     heading::Symbol
     done::Bool
-    function UAVState(x::Int64, y::Int64, h::Symbol)
+    function UAVState(x::Integer, y::Integer, h::Symbol)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
         new(x,y,h,false)
     end
