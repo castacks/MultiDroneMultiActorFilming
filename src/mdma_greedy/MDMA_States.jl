@@ -63,7 +63,7 @@ function Target(x::Number, y::Number, h::Number)
 end
 
 
-mutable struct UAVState
+struct UAVState
     x::Int64
     y::Int64
     heading::Symbol

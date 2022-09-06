@@ -22,10 +22,11 @@ export State, Trajectory, Grid, get_states, dims, num_states, MDPStates
 const State = UAVState
 const Sensor = ViewConeSensor
 const Trajectory = Vector{State}
+const sense_dist = 3
 struct MDPState
     state::State
     depth::Int64
-    prev::Union{State, Nothing}
+    prev::Union{MDPState, Nothing}
 end
 # Constructor for initial states
 MDPState(state) = MDPState(state, 0, nothing)
@@ -59,38 +60,12 @@ function get_states(width::Int64, height::Int64)
     end
     states
 end
+
 dims(g::Grid) = (g.width, g.height, g.depth)
 num_states(g::Grid) = length(g.states)
 
 # States in grid should not have x or y lower than 1 or more than width/height
 state_to_index(g::Grid, s::MDPState) = (s.state.y, s.state.x, dir_to_index(s.state.heading))
-
-# function generate_transition_matrix(g::Grid)
-#     rows = Int64[]
-#     columns = Int64[]
-#     weights = Float64[]
-
-#     # Push uniform transition probabilities for each state
-#     for state in get_states(g)
-#         ns = neighbors(g, state)
-
-#         source = state_to_index(g, state)
-#         weight = 1 / length(ns)
-
-#         for neighbor in ns
-#             dest = state_to_index(g, neighbor)
-
-#             push!(columns, source)
-#             push!(rows, dest)
-#             push!(weights, weight)
-#         end
-#     end
-
-#     size = length(get_states(g))
-#     sparse(rows, columns, weights, size, size)
-# end
-
-# function transition(model::SingleRobotMultiTargetViewCoverageProblem, )
 
 
 abstract type AbstractSingleRobotProblem <: MDP{MDPState, State} end
@@ -109,6 +84,7 @@ struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
         new(grid, sensor, horizon, targets, prior_trajectories)
     end
 end
+get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
 horizon(x::AbstractSingleRobotProblem) = x.horizon
 
 function state_trajectory(state::MDPState)
@@ -124,19 +100,62 @@ function state_trajectory(state::MDPState)
 
     ret
 end
-# const grid_size = 100
-# grid = Grid(grid_size, grid_size)
-# sensor = ViewConeSensor()
 
+POMDPs.transition(model::AbstractSingleRobotProblem, state::UAVState, action::UAVState) = transition(model, MDPState(state), action)
+function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, action::UAVState)
+
+    nbors = neighbors(model.grid, state, sense_dist)
+    if action in nbors
+        return SparseCat([MDPState(state, action)], [1.0])
+    else
+        states = nbors
+        num_neighbors = length(nbors)
+
+        # Need to convert all neighbors to MDPStates
+        MDPStates = Vector{MDPState}(undef, 0)
+        for s in nbors
+            push!(MDPStates, MDPState(state,s))
+        end
+
+        # map(x->MDPState(state,action), nbors)
+        probs = Vector{Float64}(undef, num_neighbors)
+        push!(MDPStates, state)
+        push!(probs, 1.0)
+        return SparseCat(MDPStates, probs)
+    end
+
+end
+function POMDPs.states(model::AbstractSingleRobotProblem)
+    uavstates = get_states(model)
+    mdpstates = Vector{MDPState}(undef, 0)
+    for s in uavstates
+        push!(mdpstates, MDPState(s))
+    end
+    mdpstates
+end
 function POMDPs.actions(model::AbstractSingleRobotProblem)
     get_states(model.grid)
 end
 
 function POMDPs.actions(model::AbstractSingleRobotProblem, state::MDPState)
-    neighbors(model.grid, state.state)
+    neighbors(model.grid, state.state, sense_dist)
 end
 
-function actionindex(model::AbstractSingleRobotProblem, state::MDPState) end
+function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
+    cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading))
+    grid = model.grid
+    d = dims(grid)
+    lin = LinearIndices((1:d[1], 1:d[2], 1:d[3]))
+    return lin[cart]
+end
+# POMDPs.stateindex(model::AbstractSingleRobotProblem, state::MDPState) = stateindex(model, state.state)
+# function POMDPs.stateindex(model::AbstractSingleRobotProblem, state::UAVState)
+#     state.x * model.grid.width + state.y*model.grid.height + findall(x->x==state.heading, cardinaldir)[1]
+# end
+
+function POMDPs.actionindex(model::AbstractSingleRobotProblem, state::UAVState)
+    stateindex(model, MDPState(state))
+end
 
 function dist_check(x1::Number,y1::Number, x2::Number,y2::Number, d::Number)
     (x2-x1)^2 + (y2-y1)^2 <= d^2
@@ -174,24 +193,22 @@ end
 # Have used a sparsematrix to represent transitions in prior work
 
 function solve_single_robot(problem::AbstractSingleRobotProblem,
-                            state::State;
-                            n_iterations =
-                                default_num_iterations[problem.horizon],
-                            exploration_constant =
-                                exploration_constant(problem.horizon))
+                            state::State)
 
     solver = ValueIterationSolver(max_iterations=100, belres=1e-6, verbose=true)
     policy = solve(solver, problem)
 
     action, info = action_info(policy, MDPState(state))
-    tree = info[:tree]
+    print(action)
+    print(info)
+    return policy
 end
 
-function reward(model::AbstractSingleRobotProblem, state::MDPState, action::State)
+function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, action::State)
     # Want to just give a reward value if you detect an object
     reward = 0
     for t in model.targets
-        if detectTarget(action, t, ViewConeSensor(pi/2, 3))
+        if detectTarget(action, t, ViewConeSensor(pi/2, sense_dist))
             reward += 5
         end
     end
@@ -201,7 +218,7 @@ end
 
 POMDPs.discount(model::AbstractSingleRobotProblem) = 1.0
 
-function isterminal(model::AbstractSingleRobotProblem, state)
+function isterminal(model::AbstractSingleRobotProblem, state::MDPState)
     state.depth == model.horizon
 end
 
@@ -216,6 +233,8 @@ end
     grid = Grid(20,20)
     horizon = 30
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets)
+    # print(transition(model, MDPState(UAVState(1,1,:N)), UAVState(1,2,:N)))
+    # print(transition(model, UAVState(1,1,:N), UAVState(1,2,:N))
     @test reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)) == 15
     targets[3] = Target(10,10,0)
     @test reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)) == 10
