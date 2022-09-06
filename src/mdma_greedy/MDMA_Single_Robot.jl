@@ -6,7 +6,7 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 
-export State, Trajectory, Grid, get_states, dims, num_states, MDPStates
+export State, Trajectory, Grid, get_states, dims, num_states, MDPState
 # include("MDMA.jl")
 # using MDMA
 
@@ -22,7 +22,6 @@ export State, Trajectory, Grid, get_states, dims, num_states, MDPStates
 const State = UAVState
 const Sensor = ViewConeSensor
 const Trajectory = Vector{State}
-const sense_dist = 3
 struct MDPState
     state::State
     depth::Int64
@@ -75,13 +74,15 @@ struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
     sensor::ViewConeSensor
     horizon::Int64
     targets::Vector{Target}
+    move_dist::Int64
     prior_trajectories::Vector{Vector{UAVState}}
     function SingleRobotMultiTargetViewCoverageProblem(grid::Grid,
                                                        sensor::ViewConeSensor,
                                                        horizon::Integer,
                                                        targets::Vector{Target},
+                                                       move_dist::Integer,
                                                        prior_trajectories = Trajectory[])
-        new(grid, sensor, horizon, targets, prior_trajectories)
+        new(grid, sensor, horizon, targets, move_dist, prior_trajectories)
     end
 end
 get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
@@ -104,8 +105,21 @@ end
 POMDPs.transition(model::AbstractSingleRobotProblem, state::UAVState, action::UAVState) = transition(model, MDPState(state), action)
 function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, action::UAVState)
 
-    nbors = neighbors(model.grid, state, sense_dist)
+    nbors = neighbors(model.grid, state, model.move_dist)
     if action in nbors
+        states = nbors
+        num_neighbors = length(nbors)
+
+        # Need to convert all neighbors to MDPStates
+        MDPStates = Vector{MDPState}(undef, 0)
+        for s in nbors
+            push!(MDPStates, MDPState(state,s))
+        end
+
+        # map(x->MDPState(state,action), nbors)
+        probs = Vector{Float64}(undef, num_neighbors)
+        push!(MDPStates, state)
+        push!(probs, 1.0)
         return SparseCat([MDPState(state, action)], [1.0])
     else
         states = nbors
@@ -138,7 +152,7 @@ function POMDPs.actions(model::AbstractSingleRobotProblem)
 end
 
 function POMDPs.actions(model::AbstractSingleRobotProblem, state::MDPState)
-    neighbors(model.grid, state.state, sense_dist)
+    neighbors(model.grid, state.state, model.move_dist)
 end
 
 function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
@@ -170,8 +184,18 @@ function neighbors(grid::Grid, state::State, d::Integer)::Vector{State}
     for x = state.x-diff:state.x+diff
         for y = state.y-diff:state.y+diff
             if dist_check(state.x, state.y, x,y, d) && in_bounds(grid,x,y)
+                # for d in cardinaldir
+                #     new = UAVState(x,y,d)
+                #     if new != state
+                #         push!(actions, new)
+                #     end
+                # end
                 push!(actions, UAVState(x,y, ccw(state.heading)))
                 push!(actions, UAVState(x,y, cw(state.heading)))
+                # push!(actions, UAVState(x,y, state.heading))
+                # if x != state.x && y != state.y
+                #     push!(actions, UAVState(x,y, state.heading))
+                # end
             end
         end
     end
@@ -195,7 +219,7 @@ end
 function solve_single_robot(problem::AbstractSingleRobotProblem,
                             state::State)
 
-    solver = ValueIterationSolver(max_iterations=100, belres=1e-6, verbose=true)
+    solver = ValueIterationSolver(max_iterations=5, belres=1e-6, verbose=true)
     policy = solve(solver, problem)
 
     action, info = action_info(policy, MDPState(state))
@@ -208,7 +232,7 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
     # Want to just give a reward value if you detect an object
     reward = 0
     for t in model.targets
-        if detectTarget(action, t, ViewConeSensor(pi/2, sense_dist))
+        if detectTarget(action, t, model.sensor)
             reward += 5
         end
     end
@@ -232,7 +256,7 @@ end
 
     grid = Grid(20,20)
     horizon = 30
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets)
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, 3)
     # print(transition(model, MDPState(UAVState(1,1,:N)), UAVState(1,2,:N)))
     # print(transition(model, UAVState(1,1,:N), UAVState(1,2,:N))
     @test reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)) == 15
