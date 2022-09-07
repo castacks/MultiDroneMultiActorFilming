@@ -194,7 +194,8 @@ function neighbors(grid::Grid, state::State, d::Integer)::Vector{State}
                 push!(actions, UAVState(x,y, cw(state.heading)))
                 # push!(actions, UAVState(x,y, state.heading))
                 # if x != state.x && y != state.y
-                #     push!(actions, UAVState(x,y, state.heading))
+                push!(actions, state)
+                # push!(actions, UAVState(x,y, state.heading))
                 # end
             end
         end
@@ -245,6 +246,8 @@ POMDPs.discount(model::AbstractSingleRobotProblem) = 1.0
 function isterminal(model::AbstractSingleRobotProblem, state::MDPState)
     state.depth == model.horizon
 end
+
+POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1,1,:S))
 
 
 @testset "single_robot_planner" begin
