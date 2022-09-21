@@ -28,7 +28,7 @@ struct MDPState
     prev::Union{MDPState, Nothing}
 end
 # Constructor for initial states
-MDPState(state) = MDPState(state, 0, nothing)
+MDPState(state) = MDPState(state, 1, nothing)
 MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, m)
 
 # State and trajectory objects for convenience
@@ -44,7 +44,6 @@ struct Grid
         x = new(width, height, 8, get_states(width, height),
                 sparse([], [], Float64[], width*height, width*height)
                 )
-        # x.transition_matrix .= generate_transition_matrix(x)
         x
     end
 end
@@ -73,7 +72,8 @@ struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
     grid::Grid
     sensor::ViewConeSensor
     horizon::Int64
-    targets::Vector{Target}
+    intial_targets::Vector{Target}
+    target_trajectories::Array{Target, 2}
     move_dist::Int64
     prior_trajectories::Vector{Vector{UAVState}}
     function SingleRobotMultiTargetViewCoverageProblem(grid::Grid,
@@ -82,7 +82,8 @@ struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
                                                        targets::Vector{Target},
                                                        move_dist::Integer,
                                                        prior_trajectories = Trajectory[])
-        new(grid, sensor, horizon, targets, move_dist, prior_trajectories)
+        target_trajectories = generate_target_trajectories(grid, horizon, targets)
+        new(grid, sensor, horizon, targets, target_trajectories, move_dist, prior_trajectories)
     end
 end
 get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
@@ -135,6 +136,7 @@ function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, a
         probs = Vector{Float64}(undef, num_neighbors)
         push!(MDPStates, state)
         push!(probs, 1.0)
+        println("TIME ", MDPStates[1].depth)
         return SparseCat(MDPStates, probs)
     end
 
@@ -220,7 +222,7 @@ end
 function solve_single_robot(problem::AbstractSingleRobotProblem,
                             state::State)
 
-    solver = ValueIterationSolver(max_iterations=5, belres=1e-6, verbose=true)
+    solver = ValueIterationSolver(max_iterations=200, belres=1e-6, verbose=true)
     policy = solve(solver, problem)
 
     action, info = action_info(policy, MDPState(state))
@@ -232,16 +234,19 @@ end
 function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, action::State)
     # Want to just give a reward value if you detect an object
     reward = 0
-    for t in model.targets
-        if detectTarget(action, t, model.sensor)
-            reward += 5
+    time = state.depth
+    for targets in eachrow(model.target_trajectories)
+        for t in targets
+            if detectTarget(action, t, model.sensor)
+                reward += 5
+            end
         end
     end
     reward
 end
 
 
-POMDPs.discount(model::AbstractSingleRobotProblem) = 1.0
+POMDPs.discount(model::AbstractSingleRobotProblem) = 0.9
 
 function isterminal(model::AbstractSingleRobotProblem, state::MDPState)
     state.depth == model.horizon
@@ -249,7 +254,40 @@ end
 
 POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1,1,:S))
 
+function generate_target_trajectories(grid::Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
+    trajectory = Array{Target, 2}(undef, horizon, length(initial))
+    ystart = grid.height
+    yend = 4
+    x = grid.width - 5
+    trajectory[1,:] = initial
+    current = initial
+    for i = 2:horizon
+        new = Vector{Target}(undef,0)
+        for t in current
+            push!(new, Target(t.x,t.y+((yend-ystart)/i), 0))
+        end
+        current = new
+        trajectory[i,:] = current
+    end
+    return trajectory
+end
 
+function bruh()
+    sensor = ViewConeSensor(pi/2, 3)
+    targets = Vector{Target}(undef, 0)
+    push!(targets, Target(1,2,0))
+    push!(targets, Target(1,3,0))
+    push!(targets, Target(2,3,0))
+
+    grid = Grid(20,20)
+    horizon = 30
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, 3)
+
+    # print(model.target_trajectories)
+    # print(transition(model, MDPState(UAVState(1,1,:N)), UAVState(1,2,:N)))
+    # print(transition(model, UAVState(1,1,:N), UAVState(1,2,:N))
+    println("test ", reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)))
+end
 @testset "single_robot_planner" begin
     sensor = ViewConeSensor(pi/2, 3)
     targets = Vector{Target}(undef, 0)
@@ -260,9 +298,13 @@ POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1,1,:
     grid = Grid(20,20)
     horizon = 30
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, 3)
+
+    # print(model.target_trajectories)
     # print(transition(model, MDPState(UAVState(1,1,:N)), UAVState(1,2,:N)))
     # print(transition(model, UAVState(1,1,:N), UAVState(1,2,:N))
+    # println("test ", reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)))
     @test reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)) == 15
     targets[3] = Target(10,10,0)
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, 3)
     @test reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)) == 10
 end
