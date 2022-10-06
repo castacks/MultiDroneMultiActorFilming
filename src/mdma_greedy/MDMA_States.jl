@@ -20,6 +20,7 @@ function dir_to_index(d::Symbol)
     end
 end
 
+# Target Faces
 struct Face
     normal::Vector{Float64} # 2d normal
     pos::Vector{Float64} # position
@@ -37,6 +38,7 @@ function rotMatrix(theta::Float64)
      sin(theta) cos(10)]
 end
 
+# Target information
 mutable struct Target
     x::Float64
     y::Float64
@@ -48,6 +50,7 @@ mutable struct Target
     function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32)
         faces = Vector{Face}(undef, n)
         dphi = (2*pi)/n
+        # Need to generate n faces with n normal vectors
         for i = 1:n
             norm = [cos(dphi*i + h); sin(dphi*i + h)]
             pos = a*norm
@@ -63,14 +66,14 @@ function Target(x::Number, y::Number, h::Number)
 end
 
 
+#  State struct for agents. Used specifically as part of the action space
 struct UAVState
     x::Int64
     y::Int64
     heading::Symbol
-    done::Bool
     function UAVState(x::Integer, y::Integer, h::Symbol)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
-        new(x,y,h,false)
+        new(x,y,h)
     end
 end
 

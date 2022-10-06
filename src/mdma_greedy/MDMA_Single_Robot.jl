@@ -25,13 +25,15 @@ const Trajectory = Vector{State}
 struct MDPState
     state::State
     depth::Int64
+    horizon::Int64
     prev::Union{MDPState, Nothing}
 end
 # Constructor for initial states
-MDPState(state) = MDPState(state, 1, nothing)
-MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, nothing)
-MDPState(m::MDPState) = MDPState(m.state, m.depth+1, nothing)
-MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth + 1, nothing)
+# TODO Update this
+MDPState(state, horizon) = MDPState(state, horizon, horizon, nothing)
+MDPState(m::MDPState, s::State) = MDPState(s, m.depth - 1, m.horizon, nothing)
+MDPState(m::MDPState) = MDPState(m.state, m.depth - 1, m.horizon, nothing)
+MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth - 1, m.horizon, nothing)
 
 # State and trajectory objects for convenience
 struct Grid
@@ -69,7 +71,7 @@ state_to_index(g::Grid, s::MDPState) = (s.state.y, s.state.x, dir_to_index(s.sta
 
 abstract type AbstractSingleRobotProblem <: MDP{MDPState, MDPState} end
 
-struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
+mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
     grid::Grid
     sensor::ViewConeSensor
     horizon::Int64
@@ -77,14 +79,16 @@ struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
     target_trajectories::Array{Target, 2}
     move_dist::Int64
     prior_trajectories::Vector{Vector{UAVState}}
+    neighbor_count::Int64
+    max_lim::Int64
     function SingleRobotMultiTargetViewCoverageProblem(grid::Grid,
                                                        sensor::ViewConeSensor,
                                                        horizon::Integer,
                                                        targets::Vector{Target},
+                                                       target_trajectories::Array{Target, 2},
                                                        move_dist::Integer,
                                                        prior_trajectories = Trajectory[])
-        target_trajectories = generate_target_trajectories(grid, horizon, targets)
-        new(grid, sensor, horizon, targets, target_trajectories, move_dist, prior_trajectories)
+        new(grid, sensor, horizon, targets, target_trajectories, move_dist, prior_trajectories, 0, 100000)
     end
 end
 get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
@@ -99,14 +103,15 @@ function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, a
     if action in nbors
         return SparseCat([MDPState(state, action)], [1.0])
     else
-        return SparseCat([MDPState(state.state, state.depth + 1, nothing)], [1.0])
+        # TODO Change here
+        return SparseCat([MDPState(state)], [1.0])
     end
 
 end
 
 
 function POMDPs.states(model::AbstractSingleRobotProblem)
-    get_states(model)
+    get_states(model.grid)
 end
 
 function POMDPs.actions(model::AbstractSingleRobotProblem)
@@ -140,6 +145,11 @@ end
 # neighbors(grid::Grid, mstate::MDPState, d::Integer) = neighbors(grid, mstate.state, d)
 # Compute neighbors within a certain distance of the state in the grid
 function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Integer)::Vector{MDPState}
+    model.neighbor_count += 1
+    if model.neighbor_count > model.max_lim
+        model.neighbor_count = 0
+    end
+
     actions = Vector{MDPState}(undef, 0)
     diff = d ÷ 2 + 1# Search within a square region around the object
     diff = Int64(diff)
@@ -148,16 +158,14 @@ function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Intege
     for x = uavstate.x-diff:uavstate.x+diff
         for y = uavstate.y-diff:uavstate.y+diff
             if dist_check(uavstate.x, uavstate.y, x,y, d) && in_bounds(grid,x,y)
-                if state.depth + 1 <= model.horizon
+                # TODO Change here
+                if state.depth - 1 >= 1
                   push!(actions, MDPState(state, UAVState(x,y, ccw(uavstate.heading))))
                   push!(actions, MDPState(state, UAVState(x,y, cw(uavstate.heading))))
-
+                  push!(actions, MDPState(state, UAVState(x,y, uavstate.heading)))
                 end
             end
         end
-    end
-    if state.depth + 1 <= model.horizon
-        push!(actions, MDPState(state))
     end
     actions
 end
@@ -189,6 +197,7 @@ end
 
 function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, action::MDPState)
     # Want to just give a reward value if you detect an object
+    # TODO Update this
     reward = 0
     time = action.depth
     # println("r ", time)
@@ -220,8 +229,9 @@ function generate_target_trajectories(grid::Grid, horizon::Integer, initial::Vec
     current = initial
     for i = 2:horizon
         new = Vector{Target}(undef,0)
-        for t in current
-            push!(new, Target(t.x,t.y+(-0.5), 0))
+        push!(new, Target(initial[1].x, initial[1].y, 0))
+        for t in current[2:end]
+            push!(new, Target(t.x-0,t.y+(-1), 0))
         end
         current = new
         trajectory[i,:] = current
@@ -238,7 +248,9 @@ end
 
     horizon = 4
     grid = Grid(20,20, horizon)
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, 3)
+
+    traj = generate_target_trajectories(grid, horizon, targets)
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets,traj, 3)
 
     # print(model.target_trajectories)
     # print(transition(model, MDPState(UAVState(1,1,:N)), UAVState(1,2,:N)))
@@ -246,6 +258,7 @@ end
     # println("test ", reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)))
     @test reward(model, MDPState(UAVState(1,1,:N)), MDPState(UAVState(1,1,:N))) == 15
     targets[3] = Target(10,10,0)
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, 3)
+    traj = generate_target_trajectories(grid, horizon, targets)
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets,traj, 3)
     @test reward(model, MDPState(UAVState(1,1,:N)), MDPState(UAVState(1,1,:N))) == 10
 end
