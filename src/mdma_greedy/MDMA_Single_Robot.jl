@@ -22,12 +22,14 @@ export State, Trajectory, Grid, get_states, dims, num_states, MDPState
 const State = UAVState
 const Sensor = ViewConeSensor
 const Trajectory = Vector{State}
+
 struct MDPState
     state::State
     depth::Int64
     horizon::Int64
     prev::Union{MDPState, Nothing}
 end
+
 # Constructor for initial states
 # TODO Update this
 MDPState(state, horizon) = MDPState(state, horizon, horizon, nothing)
@@ -49,6 +51,7 @@ struct Grid
         x
     end
 end
+
 get_states(g::Grid) = g.states
 function get_states(width::Int64, height::Int64, horizon::Int64)
     states = Array{MDPState,4}(undef, width, height, 8, horizon)
@@ -109,7 +112,6 @@ function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, a
 
 end
 
-
 function POMDPs.states(model::AbstractSingleRobotProblem)
     get_states(model.grid)
 end
@@ -129,10 +131,6 @@ function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
     lin = LinearIndices((1:d[1], 1:d[2], 1:d[3], 1:d[4]))
     return lin[cart]
 end
-# POMDPs.stateindex(model::AbstractSingleRobotProblem, state::MDPState) = stateindex(model, state.state)
-# function POMDPs.stateindex(model::AbstractSingleRobotProblem, state::UAVState)
-#     state.x * model.grid.width + state.y*model.grid.height + findall(x->x==state.heading, cardinaldir)[1]
-# end
 
 function POMDPs.actionindex(model::AbstractSingleRobotProblem, action::MDPState)
     stateindex(model, action)
@@ -168,6 +166,7 @@ function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Intege
         end
     end
     actions
+
 end
 
 in_bounds(grid::Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x,y, :N))
@@ -180,6 +179,7 @@ function in_bounds(grid::Grid, state::State)
     end
     false
 end
+
 # Define neighbors and take cartesian product with directions
 # Make neighbors within a distance of grid
 # Have used a sparsematrix to represent transitions in prior work
@@ -216,7 +216,7 @@ end
 POMDPs.discount(model::AbstractSingleRobotProblem) = 0.9
 
 function isterminal(model::AbstractSingleRobotProblem, state::MDPState)
-    state.depth == model.horizon
+    state.depth == 1
 end
 
 POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1,1,:S))
@@ -252,10 +252,6 @@ end
     traj = generate_target_trajectories(grid, horizon, targets)
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets,traj, 3)
 
-    # print(model.target_trajectories)
-    # print(transition(model, MDPState(UAVState(1,1,:N)), UAVState(1,2,:N)))
-    # print(transition(model, UAVState(1,1,:N), UAVState(1,2,:N))
-    # println("test ", reward(model, MDPState(UAVState(1,1,:N)), UAVState(1,1,:N)))
     @test reward(model, MDPState(UAVState(1,1,:N)), MDPState(UAVState(1,1,:N))) == 15
     targets[3] = Target(10,10,0)
     traj = generate_target_trajectories(grid, horizon, targets)
