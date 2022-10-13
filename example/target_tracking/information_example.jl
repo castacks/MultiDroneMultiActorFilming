@@ -2,6 +2,7 @@
 
 using SubmodularMaximization
 using PyPlot
+using HistogramFilters
 
 close("all")
 
@@ -34,7 +35,7 @@ title("Prior")
 
 
 # Information gain on the prior
-information = Array(get_data(histogram_filter))
+information = Array(HistogramFilters.get_data(histogram_filter))
 for ii = 1:length(information)
   state = SubmodularMaximization.index_to_state(grid, ii)
 

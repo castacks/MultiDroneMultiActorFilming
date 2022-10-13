@@ -1,0 +1,6 @@
+[deps]
+Cairo = "159f3aea-2a34-519c-b102-8c37f9878175"
+CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+DiscreteValueIteration = "4b033969-44f6-5439-a48b-c11fa3648068"
+HistogramFilters = "e728799a-c4ee-4fd0-b51f-768aa83b5e1a"
+POMDPs = "a93abf59-7444-517b-a68a-c42f96afdd7d"

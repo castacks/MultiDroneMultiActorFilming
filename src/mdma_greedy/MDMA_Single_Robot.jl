@@ -1,7 +1,6 @@
 using POMDPs
 using POMDPModelTools
 using POMDPPolicies
-using POMDPSimulators
 using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
