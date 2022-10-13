@@ -13,34 +13,17 @@ Additionally, we implemented two application scenarios
 
 ## Installation
 
-Clone this repository to `my_path/MultiAgentSensing`.
-Then, in order for Julia to find the `SubmodularMaximization` module that this
-package provides, we need to add this to the `LOAD_PATH` variable.
-To do so, edit `.julia/config/startup.jl` and add the line:
-```
-push!(LOAD_PATH, "$(homedir())/projects/MultiAgentSensing")
-```
+The easiest way would be to use the provided Dockerfile and scripts.
 
-### Dependencies
+To build
+* `cd docker-scripts`
+* `sudo ./build`
 
-In addition to a number of registered Julia packages, some scripts for plotting
-data from experimental trials rely on
-[RosDataProcess](https://github.com/mcorah/RosDataProcess).
-Due to the target tracking code, this package also depends on
-[HistogramFilters.jl](https://github.com/mcorah/HistogramFilters.jl).
-Neither package is registered with the Julia ecosystem, but both can be
-installed easily `Pkg.add`:
-```
-Pkg.add("https://github.com/mcorah/RosDataProcess")
-Pkg.add("https://github.com/mcorah/HistogramFilters.jl")
-```
+To get a shell
+* `sudo ./start`
 
-Other dependencies
-* Julia: `POMDPs.jl`, `MCTS.jl`
-* Python: `tikzplotlib` or `matplotlib2tikz`: One of these should be installed
-  with whichever Python installation that
-  [PyCall.jl](https://github.com/JuliaPy/PyCall.jl)
-  is configured to load
+Once inside start julia and activate the environment to use the provided packages
+* `using Pkg; Pkg.activate("/env")`
 
 ## Example code
 
