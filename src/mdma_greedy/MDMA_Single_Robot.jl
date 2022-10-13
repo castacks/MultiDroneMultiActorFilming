@@ -59,7 +59,7 @@ function get_states(width::Int64, height::Int64, horizon::Int64)
         c = i[2]
         d = i[3]
         t = i[4]
-        states[i] = MDPState(UAVState(c,r,cardinaldir[d]), t, nothing)
+        states[i] = MDPState(UAVState(c,r,cardinaldir[d]), t, horizon, nothing)
     end
     states
 end
@@ -251,9 +251,9 @@ end
     traj = generate_target_trajectories(grid, horizon, targets)
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets,traj, 3)
 
-    @test reward(model, MDPState(UAVState(1,1,:N)), MDPState(UAVState(1,1,:N))) == 15
+    # @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 15
     targets[3] = Target(10,10,0)
     traj = generate_target_trajectories(grid, horizon, targets)
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets,traj, 3)
-    @test reward(model, MDPState(UAVState(1,1,:N)), MDPState(UAVState(1,1,:N))) == 10
+    # @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 10
 end

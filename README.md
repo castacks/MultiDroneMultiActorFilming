@@ -22,8 +22,11 @@ To build
 To get a shell
 * `sudo ./start`
 
+To get a jupyter notebook
+* `sudo ./run_jupyter`
+
 Once inside start julia and activate the environment to use the provided packages
-* `using Pkg; Pkg.activate("/env")`
+* `using Pkg; Pkg.activate("/airlab")`
 
 ## Example code
 
