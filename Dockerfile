@@ -1,10 +1,10 @@
 FROM ubuntu:latest
 
-COPY src /airlab/src
-COPY example /airlab/example
+# COPY src /airlab/src
+# COPY example /airlab/example
 COPY LICENSE /airlab/
 COPY README.md /airlab/
-COPY SubmodularMaximization.jl /airlab/
+# COPY SubmodularMaximization.jl /airlab/
 
 RUN apt-get update
 RUN apt-get -y install tar

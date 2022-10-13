@@ -6,3 +6,12 @@ cd $(dirname "$0")
 
 docker build .. -t airlab
 yes | docker image prune || true
+
+docker_run () {
+    docker run \
+           --volume $PWD/../src:/airlab/src\
+           --volume $PWD/../examples:/airlab/examples \
+           --volume $PWD/../SubmodularMaximization.jl:/airlab/ \
+           airlab \
+           "$@"
+}

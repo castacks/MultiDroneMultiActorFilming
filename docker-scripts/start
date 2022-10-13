@@ -4,4 +4,12 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-docker run -it airlab
+./build
+
+docker run \
+       --volume $PWD/../src:/airlab/src\
+       --volume $PWD/../examples:/airlab/examples \
+       --volume $PWD/../SubmodularMaximization.jl:/airlab/SubmodularMaximization.jl \
+       -it \
+       airlab \
+       /bin/bash
