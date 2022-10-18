@@ -21,8 +21,9 @@ RUN wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-
 RUN tar zxvf julia-1.8.2-linux-x86_64.tar.gz
 
 ENV PATH="$PATH:/julia-1.8.2/bin"
+ENV JULIA_LOAD_PATH="/env:$JULIA_LOAD_PATH"
 
-COPY juliapackages /airlab
-WORKDIR /airlab
+COPY juliapackages /env
+WORKDIR /env
 RUN julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate();'
 WORKDIR /airlab

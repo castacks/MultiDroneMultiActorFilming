@@ -100,7 +100,6 @@ horizon(x::AbstractSingleRobotProblem) = x.horizon
 # POMDPs.transition(model::AbstractSingleRobotProblem, state::UAVState, action::UAVState) = transition(model, MDPState(state), action)
 function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, action::MDPState)
 
-    time = state.depth
     nbors = neighbors(model, state, model.move_dist)
     if action in nbors
         return SparseCat([MDPState(state, action)], [1.0])
@@ -142,10 +141,6 @@ end
 # neighbors(grid::Grid, mstate::MDPState, d::Integer) = neighbors(grid, mstate.state, d)
 # Compute neighbors within a certain distance of the state in the grid
 function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Integer)::Vector{MDPState}
-    model.neighbor_count += 1
-    if model.neighbor_count > model.max_lim
-        model.neighbor_count = 0
-    end
 
     actions = Vector{MDPState}(undef, 0)
     diff = d ÷ 2 + 1# Search within a square region around the object

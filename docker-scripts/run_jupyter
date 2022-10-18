@@ -4,7 +4,6 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-./build
 
 docker run \
        --volume $PWD/../src:/airlab/src\
