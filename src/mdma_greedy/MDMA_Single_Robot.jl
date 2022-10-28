@@ -68,7 +68,7 @@ dims(g::Grid) = (g.width, g.height, g.angle_divisions, g.horizon)
 num_states(g::Grid) = length(g.states)
 
 # States in grid should not have x or y lower than 1 or more than width/height
-state_to_index(g::Grid, s::MDPState) = (s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
+# state_to_index(g::Grid, s::MDPState) = (s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
 
 
 abstract type AbstractSingleRobotProblem <: MDP{MDPState,MDPState} end
@@ -123,7 +123,7 @@ function POMDPs.actions(model::AbstractSingleRobotProblem, state::MDPState)
 end
 
 function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
-    cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
+    cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), (model.horizon + 1) - s.depth)
     grid = model.grid
     d = dims(grid)
     lin = LinearIndices((1:d[1], 1:d[2], 1:d[3], 1:d[4]))
@@ -203,7 +203,7 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
 end
 
 
-POMDPs.discount(model::AbstractSingleRobotProblem) = 0.9
+POMDPs.discount(model::AbstractSingleRobotProblem) = 1
 
 function isterminal(model::AbstractSingleRobotProblem, state::MDPState)
     state.depth == model.horizon
