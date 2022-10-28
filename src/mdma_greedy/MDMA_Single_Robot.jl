@@ -111,7 +111,7 @@ function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, a
 end
 
 function POMDPs.states(model::AbstractSingleRobotProblem)
-    reverse(get_states(model.grid))
+    get_states(model.grid)
 end
 
 function POMDPs.actions(model::AbstractSingleRobotProblem)
@@ -193,7 +193,6 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
     # TODO Update this
     reward = 0
     time = action.depth
-    println(time)
     targets = model.target_trajectories[time, :]
     for t in targets
         if detectTarget(action.state, t, model.sensor)
