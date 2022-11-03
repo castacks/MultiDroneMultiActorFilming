@@ -124,6 +124,7 @@ end
 
 function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
     cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), (model.horizon + 1) - s.depth)
+    # cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
     grid = model.grid
     d = dims(grid)
     lin = LinearIndices((1:d[1], 1:d[2], 1:d[3], 1:d[4]))
@@ -190,7 +191,6 @@ end
 
 function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, action::MDPState)
     # Want to just give a reward value if you detect an object
-    # TODO Update this
     reward = 0
     time = action.depth
     targets = model.target_trajectories[time, :]
@@ -205,7 +205,7 @@ end
 
 POMDPs.discount(model::AbstractSingleRobotProblem) = 1
 
-function isterminal(model::AbstractSingleRobotProblem, state::MDPState)
+function POMDPs.isterminal(model::AbstractSingleRobotProblem, state::MDPState)
     state.depth == model.horizon
 end
 
