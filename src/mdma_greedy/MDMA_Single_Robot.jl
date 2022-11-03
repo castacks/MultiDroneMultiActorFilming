@@ -179,7 +179,7 @@ end
 
 function solve_single_robot(problem::AbstractSingleRobotProblem)
 
-    solver = ValueIterationSolver(max_iterations=90, belres=1e-6, verbose=true)
+    solver = ValueIterationSolver(max_iterations=90, belres=1e-6, verbose=true, include_Q=false)
     policy = solve(solver, problem)
 
     # action, info = action_info(policy, MDPState(state))
