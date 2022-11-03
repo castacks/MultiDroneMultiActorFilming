@@ -1,6 +1,5 @@
 using Test
 using LinearAlgebra
-using CairoMakie
 using SubmodularMaximization
 
 export Target, ViewConeSensor, Face, rotMatrix, UAVState

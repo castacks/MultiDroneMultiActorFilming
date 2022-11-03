@@ -1,10 +1,10 @@
 using Cairo
+export RenderConf, draw_target, draw_targets, draw_animated, compute_path
 
 struct RenderConf
-    ppm::Float64
-    buf::Int64
+    ppm::Float64 # Pixels per meter for grid size
+    buf::Int64   # Buffer grid surrounding the image
 end
-
 
 
 function draw_background(cr::CairoContext, width, height)
@@ -136,17 +136,17 @@ function draw_path(model, path, cutoff)
 end
 
 #Pixels per meter
-function init_cairo(model,conf::renderconf)
+function init_cairo(model,conf::RenderConf)
     width = conf.ppm*dims(model.grid)[1]+ 2*conf.buf*conf.ppm
     height = conf.ppm*dims(model.grid)[2]+ 2*conf.buf*conf.ppm
-    c = cairorgbsurface(width,height);
-    cr = cairocontext(c);
+    c = CairoRGBSurface(width,height);
+    cr = CairoContext(c);
     draw_background(cr, width, height)
     return (c, cr)
 end
 
-function draw_animated(model, path, cutoff)
-    rconf = RenderConf(50, 4)
+function draw_animated(rconf::RenderConf, model, path, cutoff)
+    # rconf = RenderConf(50, 4)
     c, cr = init_cairo(model, rconf)
     ppm = rconf.ppm
     buf = rconf.buf
@@ -179,7 +179,6 @@ function compute_path(model, policy, state)
     push!(path, state)
     for x in 2:model.horizon
         state = action(policy, state);
-        #         state = MDPState(state);
         push!(path, state);
     end
     path
