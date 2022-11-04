@@ -174,21 +174,17 @@ function in_bounds(grid::Grid, state::State)
     false
 end
 
-# Define neighbors and take cartesian product with directions
-# Make neighbors within a distance of grid
-# Have used a sparsematrix to represent transitions in prior work
-
+# Produces the policy for a single robot
 function solve_single_robot(problem::AbstractSingleRobotProblem)
 
     solver = ValueIterationSolver(max_iterations=90, belres=1e-6, verbose=true, include_Q=false)
     policy = solve(solver, problem)
 
-    # action, info = action_info(policy, MDPState(state))
-    # print(action)
-    # print(info)
     return policy
 end
 
+
+# This should depend on the prior observations as well as other plans from robots
 function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, action::MDPState)
     # Want to just give a reward value if you detect an object
     reward = 0
@@ -202,15 +198,18 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
     reward
 end
 
-
+# Don't need any discount
 POMDPs.discount(model::AbstractSingleRobotProblem) = 1
 
+# Mark states as terminal when they have reached the horizon
 function POMDPs.isterminal(model::AbstractSingleRobotProblem, state::MDPState)
     state.depth == model.horizon
 end
 
+# Upper left
 POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1, 1, :S))
 
+# Generate basic trajectories
 function generate_target_trajectories(grid::Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
     trajectory = Array{Target,2}(undef, horizon, length(initial))
     yend = 4
