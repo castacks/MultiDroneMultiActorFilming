@@ -1,0 +1,12 @@
+LogBlueprintUserMessages: [BP_WalkingPeople2_2] X=-726.000 Y=-656.000 Z=0.000
+LogBlueprintUserMessages: [BP_WalkingPeople2_2] X=-486.000 Y=-276.000 Z=0.000
+LogBlueprintUserMessages: [BP_WalkingPeople2_2] X=-466.000 Y=104.000 Z=0.000
+LogBlueprintUserMessages: [BP_WalkingPeople2_2] P=0.000000 Y=57.724331 R=0.000000
+LogBlueprintUserMessages: [BP_WalkingPeople2_2] P=0.000000 Y=71.113907 R=0.000000
+LogBlueprintUserMessages: [BP_WalkingPeople2_2] P=0.000000 Y=86.987206 R=0.000000
+LogBlueprintUserMessages: [BP_WalkingPeople3_1] X=-116.000 Y=-656.000 Z=0.000
+LogBlueprintUserMessages: [BP_WalkingPeople3_1] X=-346.000 Y=-276.000 Z=0.000
+LogBlueprintUserMessages: [BP_WalkingPeople3_1] X=-346.000 Y=104.000 Z=0.000
+LogBlueprintUserMessages: [BP_WalkingPeople3_1] P=0.000000 Y=121.184982 R=0.000000
+LogBlueprintUserMessages: [BP_WalkingPeople3_1] P=0.000000 Y=106.837479 R=0.000000
+LogBlueprintUserMessages: [BP_WalkingPeople3_1] P=0.000000 Y=89.999992 R=0.000000
