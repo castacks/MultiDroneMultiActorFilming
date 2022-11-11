@@ -5,7 +5,7 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 
-export State, Trajectory, Grid, get_states, dims, num_states, MDPState
+export State, Trajectory, Grid, get_states, dims, num_states, MDPState, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot
 # include("MDMA.jl")
 # using MDMA
 
@@ -77,20 +77,17 @@ mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotP
     grid::Grid
     sensor::ViewConeSensor
     horizon::Int64
-    intial_targets::Vector{Target}
     target_trajectories::Array{Target,2}
     move_dist::Int64
-    prior_trajectories::Vector{Vector{UAVState}}
-    neighbor_count::Int64
-    max_lim::Int64
-    function SingleRobotMultiTargetViewCoverageProblem(grid::Grid,
+
+    function SingleRobotMultiTargetViewCoverageProblem(
+        grid::Grid,
         sensor::ViewConeSensor,
         horizon::Integer,
-        targets::Vector{Target},
         target_trajectories::Array{Target,2},
-        move_dist::Integer,
-        prior_trajectories=Trajectory[])
-        new(grid, sensor, horizon, targets, target_trajectories, move_dist, prior_trajectories, 0, 100000)
+        move_dist::Integer)
+
+        new(grid, sensor, horizon, target_trajectories, move_dist)
     end
 end
 get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
@@ -239,11 +236,11 @@ end
     grid = Grid(20, 20, horizon)
 
     traj = generate_target_trajectories(grid, horizon, targets)
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, traj, 3)
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
 
-    # @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 15
+    @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 15
     targets[3] = Target(10, 10, 0)
     traj = generate_target_trajectories(grid, horizon, targets)
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, targets, traj, 3)
-    # @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 10
+    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
+    @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 10
 end

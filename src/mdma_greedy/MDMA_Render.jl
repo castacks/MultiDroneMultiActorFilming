@@ -1,9 +1,11 @@
 using Cairo
-export RenderConf, draw_target, draw_targets, draw_animated, compute_path
+export RenderConf, draw_target, draw_targets, draw_frames, draw_path, compute_path
 
 struct RenderConf
     ppm::Float64 # Pixels per meter for grid size
     buf::Int64   # Buffer grid surrounding the image
+    draw_paths::Bool # Render paths
+    draw_old_states::Bool # Set to false if you want only current state shown
 end
 
 
@@ -18,7 +20,6 @@ end
 function draw_grid(g::Grid, cr::CairoContext, point_size, ppm, buf)
     set_source_rgba(cr, 0, 0, 0, 0.3);
     x,y,z = dims(g)
-    print(dims(g))
     for i in 1:x
         for j in 1:y
             arc(cr, i*ppm + buf*ppm, j*ppm+ buf*ppm, point_size, 0, 2*pi);
@@ -88,8 +89,7 @@ function draw_arc(cr::CairoContext, radius, x,y, heading,fov,ppm, fade,cfade, bu
 end
 
 
-function draw_path(model, path, cutoff)
-    rconf = RenderConf(50, 4)
+function draw_scene(rconf::RenderConf, model, path, cutoff)
     c, cr = init_cairo(model, rconf)
     ppm = rconf.ppm
     buf = rconf.buf
@@ -97,41 +97,46 @@ function draw_path(model, path, cutoff)
 
     save(cr)
     select_font_face(cr, "Latin Modern Math", Cairo.FONT_SLANT_NORMAL,
-                 Cairo.FONT_WEIGHT_NORMAL);
+        Cairo.FONT_WEIGHT_NORMAL)
 
-    set_font_size(cr, 80.0);
-    set_source_rgba(cr, 0, 0, 0, 1);
-    move_to(cr, model.grid.width/2*ppm + -2*ppm, model.grid.height*ppm + 1.6*buf*ppm);
-    show_text(cr, "𝐷 = $(model.move_dist)  t = $(cutoff)");
+    set_font_size(cr, 80.0)
+    set_source_rgba(cr, 0, 0, 0, 1)
+    move_to(cr, model.grid.width / 2 * ppm + -2 * ppm, model.grid.height * ppm + 1.6 * buf * ppm)
+    show_text(cr, "𝐷 = $(model.move_dist)  t = $(cutoff)")
     restore(cr)
 
 
     # Draw States
-    state=path[1]
-    move_to(cr,state.state.x*ppm + buf*ppm, state.state.y*ppm + buf*ppm)
-    draw_state(cr, state.state, model, ppm, 0.4, 1/cutoff, buf)
-    for (i,state) in enumerate(path[2:cutoff])
-        draw_state(cr, state.state, model, ppm, 0.4, i/cutoff, buf)
+    if rconf.draw_old_states
+      state = path[1]
+      move_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
+      draw_state(cr, state.state, model, ppm, 0.4, 1 / cutoff, buf)
+      for (i, state) in enumerate(path[2:cutoff-1])
+          draw_state(cr, state.state, model, ppm, 0.4, i / cutoff, buf)
+      end
     end
+    draw_state(cr,  path[cutoff].state, model, ppm, 0.4, cutoff / cutoff, buf)
 
     # Draw Lines
-    state=path[1]
-    move_to(cr,state.state.x*ppm + buf*ppm, state.state.y*ppm + buf*ppm)
-    for (i,state) in enumerate(path[2:cutoff])
-        cfade = i/cutoff
-        fade=1
-        set_source_rgba(cr, (cfade), (1-cfade)*0.5, (1-cfade)*1.1, fade/2);
-        set_line_width(cr, 13.0);
-        move_to(cr,path[i].state.x*ppm+ buf*ppm, path[i].state.y*ppm + buf*ppm)
-        line_to(cr, state.state.x*ppm+buf*ppm, state.state.y*ppm + buf*ppm)
-        stroke(cr)
-
-
+    if rconf.draw_paths
+      state = path[1]
+      move_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
+      for (i, state) in enumerate(path[2:cutoff])
+          cfade = i / cutoff
+          fade = 1
+          set_source_rgba(cr, (cfade), (1 - cfade) * 0.5, (1 - cfade) * 1.1, fade / 2)
+          set_line_width(cr, 13.0)
+          move_to(cr, path[i].state.x * ppm + buf * ppm, path[i].state.y * ppm + buf * ppm)
+          line_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
+          stroke(cr)
+       end
     end
-    targets = model.target_trajectories[cutoff,:]
-    draw_targets(cr, targets,ppm, 15, buf)
+    targets = model.target_trajectories[cutoff, :]
+    draw_targets(cr, targets, ppm, 15, buf)
 
-    write_to_png(c,"anim/$(lpad(cutoff, 2, "0")).png");
+    filepath = "output/$(lpad(cutoff, 2, "0")).png"
+    println("Writing to ", filepath)
+    write_to_png(c, filepath)
 
 end
 
@@ -145,33 +150,10 @@ function init_cairo(model,conf::RenderConf)
     return (c, cr)
 end
 
-function draw_animated(rconf::RenderConf, model, path, cutoff)
-    # rconf = RenderConf(50, 4)
-    c, cr = init_cairo(model, rconf)
-    ppm = rconf.ppm
-    buf = rconf.buf
-    draw_grid(model.grid, cr, 5, ppm, buf)
-
-    save(cr)
-    select_font_face(cr, "Latin Modern Math", Cairo.FONT_SLANT_NORMAL,
-                 Cairo.FONT_WEIGHT_NORMAL);
-
-    set_font_size(cr, 80.0);
-    set_source_rgba(cr, 0, 0, 0, 1);
-    move_to(cr, model.grid.width/2*ppm + -2*ppm, model.grid.height*ppm + 1.6*buf*ppm);
-    show_text(cr, "𝐷 = $(model.move_dist)  t = $(cutoff)");
-    restore(cr)
-
-    # Draw States
-    state=path[cutoff]
-    move_to(cr,state.state.x*ppm + buf*ppm, state.state.y*ppm + buf*ppm)
-    draw_state(cr, state.state, model, ppm, 0.4, 1/cutoff, buf)
-
-    targets = model.target_trajectories[cutoff,:]
-    draw_targets(cr, targets,ppm, 15, buf)
-
-    write_to_png(c,"anim/$(lpad(cutoff, 2, "0")).png");
-
+function draw_frames(rconf::RenderConf, model, path)
+    for i in 1:model.horizon
+        draw_scene(rconf, model, path, i)
+    end
 end
 
 function compute_path(model, policy, state)
