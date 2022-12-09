@@ -4,7 +4,7 @@ using POMDPPolicies
 using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
-
+using LinearAlgebra
 export State, Trajectory, Grid, get_states, dims, num_states, MDPState, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot
 # include("MDMA.jl")
 # using MDMA
@@ -189,10 +189,25 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
     targets = model.target_trajectories[time, :]
     for t in targets
         if detectTarget(action.state, t, model.sensor)
-            reward += 5
+            #reward += 5
+            for f in t.faces
+                alpha = 1#??
+                d = [t.x; t.y] + t.apothem * f.normal - [action.state.x; action.state.y] # robot to center of face
+                # println(d, norm(d))
+                # println(f.normal, dot(d, f.normal))
+                reward += sqrt(alpha * -dot(d, f.normal) * inview(d, f.normal) / norm(d)^3)
+            end
         end
     end
     reward
+end
+
+function inview(robot_to_face_distance::Vector{Float64}, face_normal::Vector{Float64})
+    if dot(robot_to_face_distance, face_normal) < 0
+        return true
+    else 
+        return false
+    end
 end
 
 # Don't need any discount
