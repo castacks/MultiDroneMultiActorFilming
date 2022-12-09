@@ -51,9 +51,10 @@ mutable struct Target
         dphi = (2*pi)/n
         # Need to generate n faces with n normal vectors
         for i = 1:n
-            norm = [cos(dphi*i + h); sin(dphi*i + h)]
+            theta = dphi*i + h
+            norm = [cos(theta); sin(theta)]
             pos = a*norm
-            f = Face(pos[1], pos[2], 0.1, 1., norm)
+            f = Face(pos[1], pos[2], 0.1, 0.5*cos(theta+pi)+0.5, norm)
             faces[i] = f
         end
         new(x,y,h,a,faces)

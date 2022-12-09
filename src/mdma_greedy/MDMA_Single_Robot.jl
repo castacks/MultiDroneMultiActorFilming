@@ -195,7 +195,7 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
                 d = [t.x; t.y] + t.apothem * f.normal - [action.state.x; action.state.y] # robot to center of face
                 # println(d, norm(d))
                 # println(f.normal, dot(d, f.normal))
-                reward += sqrt(alpha * -dot(d, f.normal) * inview(d, f.normal) / norm(d)^3)
+                reward += f.weight * sqrt(alpha * -dot(d, f.normal) * inview(d, f.normal) / norm(d)^3)
             end
         end
     end
