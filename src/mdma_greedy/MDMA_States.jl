@@ -45,8 +45,9 @@ mutable struct Target
     apothem::Float64 # Distance from center to center of each face
     faces::Array{Face}
     nfaces::UInt32
+    id::UInt32
 
-    function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32)
+    function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32, id::UInt32)
         faces = Vector{Face}(undef, n)
         dphi = (2*pi)/n
         # Need to generate n faces with n normal vectors
@@ -56,12 +57,12 @@ mutable struct Target
             f = Face(pos[1], pos[2], 0.1, 1., norm)
             faces[i] = f
         end
-        new(x,y,h,a,faces)
+        new(x,y,h,a,faces, id)
     end
 end
 
-function Target(x::Number, y::Number, h::Number)
-    Target(x,y,h,1.0, UInt32(6))
+function Target(x::Number, y::Number, h::Number, id::Number)
+    Target(x,y,h,1.0, UInt32(6), UInt32(id))
 end
 
 
@@ -90,6 +91,6 @@ function drawTargets()
 
     xs = LinRange(-10, 10, 20)
     ys = LinRange(-10, 10, 20)
-    t = Target(5., 5., 0., 5., UInt32(6))
+    t = Target(5., 5., 0., 5., UInt32(6), 1)
 
 end

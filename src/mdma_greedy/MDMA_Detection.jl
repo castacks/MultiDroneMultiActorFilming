@@ -30,16 +30,12 @@ end
 function absoluteAngle(dx::Number, dy::Number)
     actor_angle = abs(atan(dy/dx))
     if ( dy >= 0 && dx >= 0 ) # Q1
-        # println("Q1")
         actor_angle = actor_angle
     elseif (dy >= 0 && dx < 0) # Q2
-        # println("Q2")
         actor_angle = pi - actor_angle
     elseif (dy < 0 && dx <= 0) # Q3
-        # println("Q3")
         actor_angle = pi + actor_angle
     elseif (dy < 0 && dx > 0) # Q4
-        # println("Q4")
         actor_angle = 2*pi - actor_angle
     end
     actor_angle

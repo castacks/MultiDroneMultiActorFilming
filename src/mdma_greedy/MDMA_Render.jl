@@ -1,5 +1,5 @@
 using Cairo
-export RenderConf, draw_target, draw_targets, draw_frames, draw_path, compute_path
+export RenderConf, draw_target, draw_targets, draw_frames, draw_path
 
 struct RenderConf
     ppm::Float64 # Pixels per meter for grid size
@@ -154,14 +154,4 @@ function draw_frames(rconf::RenderConf, model, path)
     for i in 1:model.horizon
         draw_scene(rconf, model, path, i)
     end
-end
-
-function compute_path(model, policy, state)
-    path = Vector{MDPState}(undef, 0)
-    push!(path, state)
-    for x in 2:model.horizon
-        state = action(policy, state);
-        push!(path, state);
-    end
-    path
 end
