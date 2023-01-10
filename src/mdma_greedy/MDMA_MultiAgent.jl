@@ -11,7 +11,7 @@ export generate_empty_coverage_data, compute_prior_coverage
 # Stores configuration variables for multi-robot target tracking
 struct MultiDroneMultiActorConfigs
     # Will need a grid for each robot
-    grid::Grid
+    grid::MDMA_Grid
     sensor::ViewConeSensor
     horizon::Int64
     target_trajectories::Array{Target,2}

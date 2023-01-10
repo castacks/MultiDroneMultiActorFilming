@@ -5,10 +5,7 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 
-export Grid, get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path
-
-# include("MDMA.jl")
-# using MDMA
+export get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path
 
 ##################################################
 ## Override function solve_single_robot         ##
@@ -27,22 +24,8 @@ MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, m.horizon, nothing)
 MDPState(m::MDPState) = MDPState(m.state, m.depth + 1, m.horizon, nothing)
 MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth + 1, m.horizon, nothing)
 
-# State and trajectory objects for convenience
-struct Grid
-    width::Int64
-    height::Int64
-    angle_divisions::Int64
-    horizon::Int64
-    states::Array{MDPState,4}
 
-    # We will precompute some of the large objects that we use frequently
-    function Grid(width, height, horizon)
-        x = new(width, height, 8, horizon, get_states(width, height, horizon))
-        x
-    end
-end
-
-get_states(g::Grid) = g.states
+get_states(g::MDMA_Grid) = g.states
 function get_states(width::Int64, height::Int64, horizon::Int64)
     states = Array{MDPState,4}(undef, width, height, 8, horizon)
     for i in CartesianIndices(states)
@@ -55,8 +38,8 @@ function get_states(width::Int64, height::Int64, horizon::Int64)
     states
 end
 
-dims(g::Grid) = (g.width, g.height, g.angle_divisions, g.horizon)
-num_states(g::Grid) = length(g.states)
+dims(g::MDMA_Grid) = (g.width, g.height, g.angle_divisions, g.horizon)
+num_states(g::MDMA_Grid) = length(g.states)
 
 # States in grid should not have x or y lower than 1 or more than width/height
 # state_to_index(g::Grid, s::MDPState) = (s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
@@ -65,14 +48,14 @@ num_states(g::Grid) = length(g.states)
 abstract type AbstractSingleRobotProblem <: MDP{MDPState,MDPState} end
 
 mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
-    grid::Grid
+    grid::MDMA_Grid
     sensor::ViewConeSensor
     horizon::Int64
     target_trajectories::Array{Target,2}
     move_dist::Int64
 
     function SingleRobotMultiTargetViewCoverageProblem(
-        grid::Grid,
+        grid::MDMA_Grid,
         sensor::ViewConeSensor,
         horizon::Integer,
         target_trajectories::Array{Target,2},
@@ -151,9 +134,9 @@ function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Intege
     actions
 end
 
-in_bounds(grid::Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
-in_bounds(grid::Grid, state::MDPState) = in_bounds(grid, state.state)
-function in_bounds(grid::Grid, state::State)
+in_bounds(grid::MDMA_Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
+in_bounds(grid::MDMA_Grid, state::MDPState) = in_bounds(grid, state.state)
+function in_bounds(grid::MDMA_Grid, state::State)
     if state.x > 0 && state.x <= grid.width
         if state.y > 0 && state.y <= grid.height
             return true
@@ -219,7 +202,7 @@ end
 POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1, 1, :S))
 
 # Generate basic trajectories
-function generate_target_trajectories(grid::Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
+function generate_target_trajectories(grid::MDMA_Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
     trajectory = Array{Target,2}(undef, horizon, length(initial))
     yend = 4
     x = grid.width - 5
@@ -247,7 +230,7 @@ end
     push!(targets, Target(2, 3, 0, 3))
 
     horizon = 4
-    grid = Grid(20, 20, horizon)
+    grid = MDMA_Grid(20, 20, horizon)
 
     traj = generate_target_trajectories(grid, horizon, targets)
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)

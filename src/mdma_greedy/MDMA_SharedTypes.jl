@@ -1,6 +1,6 @@
 # This file contains shared type aliases between Multi Agent and Single Agent Code
 export CoverageData
-export Trajectory, MDPState, State, Sensor
+export Trajectory, MDPState, State, Sensor, MDMA_Grid
 # This is a 2D array since the rows represent timestamps For example this is
 # what the data looks like if you have a 4 timestep scene in which 0 means not
 # covered and 1 means covered
@@ -11,7 +11,6 @@ export Trajectory, MDPState, State, Sensor
 # |    3 | (T1,1)  | (T2,1)  | (T3,1)  |
 # |    4 | (T1,1)  | (T2,1)  | (T3,1)  |
 const CoverageData = Array{Tuple{Target,Float64},2}
-
 
 # Single Agent Types
 const State = UAVState
@@ -25,3 +24,18 @@ struct MDPState
 end
 
 const Trajectory = Vector{MDPState}
+
+# State and trajectory objects for convenience
+struct MDMA_Grid
+    width::Int64
+    height::Int64
+    angle_divisions::Int64
+    horizon::Int64
+    states::Array{MDPState,4}
+
+    # We will precompute some of the large objects that we use frequently
+    function MDMA_Grid(width, height, horizon)
+        x = new(width, height, 8, horizon, get_states(width, height, horizon))
+        x
+    end
+end

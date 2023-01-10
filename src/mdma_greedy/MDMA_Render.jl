@@ -17,7 +17,7 @@ function draw_background(cr::CairoContext, width, height)
     restore(cr);
 end
 
-function draw_grid(g::Grid, cr::CairoContext, point_size, ppm, buf)
+function draw_grid(g::MDMA_Grid, cr::CairoContext, point_size, ppm, buf)
     set_source_rgba(cr, 0, 0, 0, 0.3);
     x,y,z = dims(g)
     for i in 1:x
