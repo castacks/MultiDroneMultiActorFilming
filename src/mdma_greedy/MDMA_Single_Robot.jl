@@ -5,7 +5,8 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 
-export  Grid, get_states, dims, num_states, MDPState, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path
+export Grid, get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path
+
 # include("MDMA.jl")
 # using MDMA
 
@@ -18,16 +19,6 @@ export  Grid, get_states, dims, num_states, MDPState, SingleRobotMultiTargetView
 
 ## target_coverage.jl has analogs to MDMA_Detection.jl
 
-const State = UAVState
-const Sensor = ViewConeSensor
-const Trajectory = Vector{State}
-
-struct MDPState
-    state::State
-    depth::Int64
-    horizon::Int64
-    prev::Union{MDPState,Nothing}
-end
 
 # Constructor for initial states
 # TODO Update this
@@ -182,7 +173,7 @@ end
 
 
 # This should depend on the prior observations as well as other plans from robots
-function POMDPs.reward(model::AbstractSingleRobotProblem, coverage_data::Array{Tuple{Target,Bool}}, state::MDPState, action::MDPState)
+function POMDPs.reward(model::AbstractSingleRobotProblem, coverage_data::CoverageData, state::MDPState, action::MDPState)
     # Want to just give a reward value if you detect an object
     reward = 0
     time = action.depth
@@ -194,7 +185,7 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, coverage_data::Array{T
                 other, coverage_value = tstatus
                 if other.id == target.id
                     if coverage_value > 0
-                      reward = 0
+                        reward = 0
                     else
                         reward = 5
                     end
@@ -206,7 +197,7 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, coverage_data::Array{T
 end
 
 # Get path from policy
-function compute_path(model, policy, state)
+function compute_path(model, policy, state)::Trajectory
     path = Vector{MDPState}(undef, 0)
     push!(path, state)
     for x in 2:model.horizon

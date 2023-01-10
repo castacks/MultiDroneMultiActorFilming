@@ -5,7 +5,8 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 
-export MultiDroneMultiActorConfigs, MultiRobotTargetCoverageProblem, evaluate_coverage
+export MultiDroneMultiActorConfigs, MultiRobotTargetCoverageProblem
+export generate_empty_coverage_data, compute_prior_coverage
 
 # Stores configuration variables for multi-robot target tracking
 struct MultiDroneMultiActorConfigs
@@ -27,7 +28,7 @@ struct MultiDroneMultiActorConfigs
         target_trajectories,
         move_dist,
         solver_iterations,
-        belres,
+        belres
     )
 
         new(grid, sensor, horizon, solver_iterations)
@@ -78,6 +79,7 @@ function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},
     MultiRobotTargetCoverageProblem(robot_states, target_trajectories, configs)
 end
 
+# This should later be replaced with PPA
 function compute_coverage_value(is_covered::Bool)::Float64
     if is_covered
         1
@@ -86,9 +88,34 @@ function compute_coverage_value(is_covered::Bool)::Float64
     end
 end
 
-function compute_prior_coverage(p::MultiRobotTargetCoverageProblem, trajectories::Vector{Vector{MDPState}})::Array{Tuple{Target,Bool}, 2}
 
-    final_states = map(last, trajectories)
+
+# Construct empty coverage data, which may be useful for testing
+function generate_empty_coverage_data(p::MultiRobotTargetCoverageProblem, trajectories::Vector{Trajectory})::CoverageData
+
+    target_traj = p.configs.target_trajectories
+    num_targets = length(target_traj[1, :])
+    coverage_data = Array{Tuple{Target,Float64},2}(undef, p.configs.horizon, num_targets)
+
+    # If a target is detected by at least one robot it is covered
+    # loop over each trajectory and compute detections. Is that really the best?
+    for r in 1:p.num_robots
+        current_robot_trajectory = trajectories[r]
+        for time in 1:p.configs.horizon
+            robot_state = current_robot_trajectory[time]
+            for (target_idx, target) in enumerate(target_traj[time, :])
+                # Set coverage data to the coverage value and the target
+                # Set to 0 for testing
+                coverage_data[time, target_idx] = (target, 0)
+            end
+        end
+    end
+    coverage_data
+end
+
+function compute_prior_coverage(p::MultiRobotTargetCoverageProblem, trajectories::Vector{Trajectory})::CoverageData
+
+    # final_states = map(last, trajectories)
 
     # loop over targets and append to covered states
     # set coverage value for each target for now just 1 or 0
@@ -99,7 +126,7 @@ function compute_prior_coverage(p::MultiRobotTargetCoverageProblem, trajectories
     # 2D array of tuples of targets and values where each row is a timestep
     # Use floats to store a "coverage value" which can be PPA.etc
     # For boolean detection we simply use 1 for covered and -1 for non-convered
-    coverage_data = Array{Tuple{Target,Float64}, 2}(undef, p.configs.horizon, num_targets)
+    coverage_data = Array{Tuple{Target,Float64},2}(undef, p.configs.horizon, num_targets)
 
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
@@ -111,7 +138,7 @@ function compute_prior_coverage(p::MultiRobotTargetCoverageProblem, trajectories
                 is_covered = detectTarget(robot_state.state, target, p.configs.sensor)
                 cval = compute_coverage_value(is_covered)
                 # Set coverage data to the coverage value and the target
-                coverage_data[time,target_idx] = (target, cval)
+                coverage_data[time, target_idx] = (target, cval)
             end
         end
     end
@@ -121,6 +148,7 @@ end
 function get_state(p, robot_id)
     p.partition_matroid[robot_id]
 end
+
 
 # Block is robot id
 # Selections are other agent trajectories
