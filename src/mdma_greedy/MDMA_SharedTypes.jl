@@ -23,6 +23,11 @@ struct MDPState
     prev::Union{MDPState,Nothing}
 end
 
+MDPState(state, horizon) = MDPState(state, 1, horizon, nothing)
+MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, m.horizon, nothing)
+MDPState(m::MDPState) = MDPState(m.state, m.depth + 1, m.horizon, nothing)
+MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth + 1, m.horizon, nothing)
+
 const Trajectory = Vector{MDPState}
 
 # State and trajectory objects for convenience
