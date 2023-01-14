@@ -5,7 +5,7 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 
-export get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path
+export get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path, reward
 
 ##################################################
 ## Override function solve_single_robot         ##
@@ -179,6 +179,11 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
     end
     reward
 end
+
+# For reward only the action matters in this case
+POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, action::MDPState) = POMDPs.reward(model, action, action)
+
+reward = POMDPs.reward
 
 # Get path from policy
 function compute_path(model, policy, state)::Trajectory

@@ -10,6 +10,8 @@ export generate_empty_coverage_data, compute_prior_coverage
 
 # Stores configuration variables for multi-robot target tracking
 struct MultiDroneMultiActorConfigs
+    num_robots::Int32
+    target_trajectories::Array{Target,2}
     # Will need a grid for each robot
     grid::MDMA_Grid
     sensor::ViewConeSensor
@@ -21,6 +23,8 @@ struct MultiDroneMultiActorConfigs
     belres::Float64
 
     function MultiDroneMultiActorConfigs(;
+        num_robots,
+        target_trajectories,
         grid,
         sensor=ViewConeSensor,
         horizon,
@@ -29,7 +33,7 @@ struct MultiDroneMultiActorConfigs
         belres
     )
 
-        new(grid, sensor, horizon, move_dist, solver_iterations, belres)
+        new(num_robots, target_trajectories, grid, sensor, horizon, move_dist, solver_iterations, belres)
     end
 end
 
@@ -61,29 +65,24 @@ end
 struct MultiRobotTargetCoverageProblem
     # Target tracking problems are defined by vectors of robot states
     partition_matroid::Vector{MDPState}
-
-    num_robots::UInt32
-
-    target_trajectories::Array{Target,2}
-
+    coverage_data::CoverageData
     configs::MultiDroneMultiActorConfigs
+
 end
 
 function extract_single_robot_problems(model::MultiRobotTargetCoverageProblem, coverage::CoverageData)::Vector{SingleRobotMultiTargetViewCoverageProblem}
     problems = Vector{SingleRobotMultiTargetViewCoverageProblem}(undef)
     config = model.configs
     for initial_state in model.partition_matroid
-        push!(MDMA.SingleRobotMultiTargetViewCoverageProblem(config.grid, config.sensor, config.horizon, model.target_trajectories, model.configs.move_dist, coverage, initial_state))
+        push!(MDMA.SingleRobotMultiTargetViewCoverageProblem(config.grid, config.sensor, config.horizon, config.target_trajectories, model.configs.move_dist, coverage, initial_state))
     end
     problems
 end
 # Construct a target coverage problem with configs.
-function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},
-    target_trajectories::Array{Target, 2};
+function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},coverage_data::CoverageData,
     kwargs...)
-    num_robots = length(robot_states)
     configs = MultiDroneMultiActorConfigs(; kwargs...)
-    MultiRobotTargetCoverageProblem(robot_states, num_robots, target_trajectories, configs)
+    MultiRobotTargetCoverageProblem(robot_states,coverage_data, configs)
 end
 
 # This should later be replaced with PPA
@@ -98,47 +97,47 @@ end
 
 
 # Construct empty coverage data, which may be useful for testing
-function generate_empty_coverage_data(p::MultiRobotTargetCoverageProblem)::CoverageData
+function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::CoverageData
 
-    target_traj = p.target_trajectories
+    target_traj = configs.target_trajectories
     num_targets = length(target_traj[1, :])
-    coverage_data = Array{Tuple{Target,Float64},2}(undef, p.configs.horizon, num_targets)
+    coverage_data = Array{Tuple{Target,Float64},2}(undef, configs.horizon, num_targets)
 
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
-    for time in 1:p.configs.horizon
-      for (target_idx, target) in enumerate(target_traj[time, :])
-          # Set coverage data to the coverage value and the target
-          # Set to 0 for testing
-          coverage_data[time, target_idx] = (target, 0)
-      end
+    for time in 1:configs.horizon
+        for (target_idx, target) in enumerate(target_traj[time, :])
+            # Set coverage data to the coverage value and the target
+            # Set to 0 for testing
+            coverage_data[time, target_idx] = (target, 0)
+        end
     end
     coverage_data
 end
 
-function compute_prior_coverage(p::MultiRobotTargetCoverageProblem, trajectories::Vector{Trajectory})::CoverageData
+function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectories::Vector{Trajectory})::CoverageData
 
     # final_states = map(last, trajectories)
 
     # loop over targets and append to covered states
     # set coverage value for each target for now just 1 or 0
-    target_traj = p.target_trajectories
+    target_traj = configs.target_trajectories
     num_targets = length(target_traj[1, :])
 
     # Mapping of which targets are covered through history
     # 2D array of tuples of targets and values where each row is a timestep
     # Use floats to store a "coverage value" which can be PPA.etc
     # For boolean detection we simply use 1 for covered and -1 for non-convered
-    coverage_data = Array{Tuple{Target,Float64},2}(undef, p.configs.horizon, num_targets)
+    coverage_data = Array{Tuple{Target,Float64},2}(undef, configs.horizon, num_targets)
 
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
     for r in 1:p.num_robots
         current_robot_trajectory = trajectories[r]
-        for time in 1:p.configs.horizon
+        for time in 1:configs.horizon
             robot_state = current_robot_trajectory[time]
             for (target_idx, target) in enumerate(target_traj[time, :])
-                is_covered = detectTarget(robot_state.state, target, p.configs.sensor)
+                is_covered = detectTarget(robot_state.state, target, configs.sensor)
                 cval = compute_coverage_value(is_covered)
                 # Set coverage data to the coverage value and the target
                 coverage_data[time, target_idx] = (target, cval)
@@ -184,7 +183,7 @@ function solve_block(p::MultiRobotTargetCoverageProblem, robot_id::Integer,
         configs.grid,
         configs.sensor,
         configs.horizon,
-        p.target_trajectories,
+        configs.target_trajectories,
         configs.move_dist,
         covered_states,
         state
@@ -207,24 +206,38 @@ end
 
 # Can just call reward from single robot planner
 # X the set of trajectories Vector(Int, Trajectory)
-function objective(p::MultiRobotTargetCoverageProblem, X)
+# TODO fix objective
+function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
     configs = p.configs
 
     trajectories = map(last, X)
 
     # Sum reward across trajectory
     # Pass in the object POMDPS.reward will change
-    # Check if target is already in list of covered targest
+    # Check if target is already in list of covered targets
     # Sum over rewards for targets for trajectories
 
-    for robot_trajectory in trajectories
-        map(reward, )
-        for t in p.configs.horizon
-
+    sum_reward = 0
+    for (robot_id, robot_trajectory) in trajectories
+        for state in robot_trajectory
+            single_problem = SingleRobotMultiTargetViewCoverageProblem(
+                configs.grid,
+                configs.sensor,
+                configs.horizon,
+                configs.target_trajectories,
+                configs.move_dist,
+                p.coverage_data,
+                state
+            )
+            sum_reward += reward(single_problem, state)
 
         end
+        # This is why we passed prior stuff to single robot
+        # Is this covered? Do a quick lookup
+        # For the reward only the
     end
 
     # For PPA we use differences after and before
+    sum_reward
 
 end
