@@ -1,6 +1,9 @@
 # This file contains shared type aliases between Multi Agent and Single Agent Code
+
+using Random
+
 export CoverageData
-export Trajectory, MDPState, State, Sensor, MDMA_Grid
+export Trajectory, MDPState, State, Sensor, MDMA_Grid, random_state
 # This is a 2D array since the rows represent timestamps For example this is
 # what the data looks like if you have a 4 timestep scene in which 0 means not
 # covered and 1 means covered
@@ -43,4 +46,13 @@ struct MDMA_Grid
         x = new(width, height, 8, horizon, get_states(width, height, horizon))
         x
     end
+end
+
+function random_state(horizon, grid::MDMA_Grid)::MDPState
+    rwidth = rand(1:grid.width)
+    rheight = rand(1:grid.height)
+    rdir = rand(cardinaldir)
+    depth = 1
+
+    MDPState(UAVState(rwidth, rheight, rdir), horizon)
 end

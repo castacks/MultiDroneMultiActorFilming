@@ -62,7 +62,7 @@ end
 #
 # Warning: this "problem" object may become invalid if any of the underlying
 # objects change and may copy some but not of the inputs.
-struct MultiRobotTargetCoverageProblem
+struct MultiRobotTargetCoverageProblem <: PartitionProblem
     # Target tracking problems are defined by vectors of robot states
     partition_matroid::Vector{MDPState}
     coverage_data::CoverageData
@@ -94,7 +94,13 @@ function compute_coverage_value(is_covered::Bool)::Float64
     end
 end
 
+function empty(p::MultiRobotTargetCoverageProblem)
+    Vector{MDPState}(undef, 0)
+end
 
+function PartitionElement(p::MultiRobotTargetCoverageProblem)
+    MDPState
+end
 
 # Construct empty coverage data, which may be useful for testing
 function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::CoverageData
@@ -206,7 +212,6 @@ end
 
 # Can just call reward from single robot planner
 # X the set of trajectories Vector(Int, Trajectory)
-# TODO fix objective
 function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
     configs = p.configs
 
