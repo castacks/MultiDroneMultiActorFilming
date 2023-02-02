@@ -89,7 +89,7 @@ function draw_arc(cr::CairoContext, radius, x,y, heading,fov,ppm, fade,cfade, bu
 end
 
 
-function draw_scene(rconf::RenderConf, model, path, cutoff)
+function draw_scene(rconf::RenderConf, model,  paths, cutoff)
     c, cr = init_cairo(model, rconf)
     ppm = rconf.ppm
     buf = rconf.buf
@@ -106,34 +106,36 @@ function draw_scene(rconf::RenderConf, model, path, cutoff)
     restore(cr)
 
 
-    # Draw States
-    if rconf.draw_old_states
-      state = path[1]
-      move_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
-      draw_state(cr, state.state, model, ppm, 0.4, 1 / cutoff, buf)
-      for (i, state) in enumerate(path[2:cutoff-1])
-          draw_state(cr, state.state, model, ppm, 0.4, i / cutoff, buf)
-      end
-    end
-    draw_state(cr,  path[cutoff].state, model, ppm, 0.4, cutoff / cutoff, buf)
+    for path in paths
+        # Draw States
+        if rconf.draw_old_states
+            state = path[1]
+            move_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
+            draw_state(cr, state.state, model, ppm, 0.4, 1 / cutoff, buf)
+            for (i, state) in enumerate(path[2:cutoff-1])
+                draw_state(cr, state.state, model, ppm, 0.4, i / cutoff, buf)
+            end
+        end
+        draw_state(cr, path[cutoff].state, model, ppm, 0.4, cutoff / cutoff, buf)
 
-    # Draw Lines
-    if rconf.draw_paths
-      state = path[1]
-      move_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
-      for (i, state) in enumerate(path[2:cutoff])
-          cfade = i / cutoff
-          fade = 1
-          set_source_rgba(cr, (cfade), (1 - cfade) * 0.5, (1 - cfade) * 1.1, fade / 2)
-          set_line_width(cr, 13.0)
-          move_to(cr, path[i].state.x * ppm + buf * ppm, path[i].state.y * ppm + buf * ppm)
-          line_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
-          stroke(cr)
-       end
+        # Draw Lines
+        if rconf.draw_paths
+            state = path[1]
+            move_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
+            for (i, state) in enumerate(path[2:cutoff])
+                cfade = i / cutoff
+                fade = 1
+                set_source_rgba(cr, (cfade), (1 - cfade) * 0.5, (1 - cfade) * 1.1, fade / 2)
+                set_line_width(cr, 13.0)
+                move_to(cr, path[i].state.x * ppm + buf * ppm, path[i].state.y * ppm + buf * ppm)
+                line_to(cr, state.state.x * ppm + buf * ppm, state.state.y * ppm + buf * ppm)
+                stroke(cr)
+            end
+        end
     end
+
     targets = model.target_trajectories[cutoff, :]
     draw_targets(cr, targets, ppm, 15, buf)
-
     filepath = "output/$(lpad(cutoff, 2, "0")).png"
     println("Writing to ", filepath)
     write_to_png(c, filepath)
@@ -150,8 +152,8 @@ function init_cairo(model,conf::RenderConf)
     return (c, cr)
 end
 
-function draw_frames(rconf::RenderConf, model, path)
-    for i in 1:model.horizon
-        draw_scene(rconf, model, path, i)
-    end
+function draw_frames(rconf::RenderConf, model, paths)
+  for i in 1:model.horizon
+      draw_scene(rconf, model, paths, i)
+  end
 end
