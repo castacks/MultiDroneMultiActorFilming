@@ -165,10 +165,12 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
     targets = model.target_trajectories[time, :]
     for (target_id, target) in enumerate(targets)
         (_, target_coverage) = coverage_data[time, target_id]
-        if (target_coverage > 0)
-            return 0
-        else
-            return 1
+        if detectTarget(action.state, target, model.sensor)
+          if (target_coverage > 0)
+              reward = 0
+          else
+              reward += 1
+          end
         end
     end
     reward
@@ -214,7 +216,7 @@ function generate_target_trajectories(grid::MDMA_Grid, horizon::Integer, initial
         push!(new, Target(initial[1].x, initial[1].y, 0, tid))
         for t in current[2:end]
             tid += 1
-            push!(new, Target(t.x - 0, t.y + (-1), 0, tid))
+            push!(new, Target(t.x - 0, t.y - 0.5, 0, tid))
         end
         current = new
         trajectory[i, :] = current

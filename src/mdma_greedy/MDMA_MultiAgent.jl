@@ -117,7 +117,7 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
         for (target_idx, target) in enumerate(target_traj[time, :])
             # Set coverage data to the coverage value and the target
             # Set to 0 for testing
-            coverage_data[time, target_idx] = (target, 0)
+            coverage_data[time, target_idx] = (target, -1)
         end
     end
     coverage_data
@@ -190,6 +190,10 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
     # Will later have new number and old number of pixels
     covered_states = compute_prior_coverage(p.configs, trajectories)
 
+
+    for (_, coverage_val) in covered_states
+        print(coverage_val)
+    end
     # Get the state of the robot?
     state = get_state(p, block)
     # state = last(trajectories[block])
@@ -213,7 +217,6 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
     solution_trajectory = compute_path(single_problem, policy, state)
 
     p.coverage_data = covered_states
-
     (block, solution_trajectory)
     # call solve_sequential on this
     # subtype PartitionProblem
