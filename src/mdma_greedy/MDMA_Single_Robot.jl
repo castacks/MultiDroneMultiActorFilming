@@ -173,6 +173,14 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
           end
         end
     end
+
+    if (action.state.heading == state.state.heading)
+        reward += 0.1
+    end
+
+    if (action.state.x == state.state.x) && (action.state.y == state.state.y)
+        reward += 0.05
+    end
     reward
 end
 
@@ -193,7 +201,7 @@ function compute_path(model, policy, state)::Trajectory
 end
 
 # Don't need any discount
-POMDPs.discount(model::AbstractSingleRobotProblem) = 0.5
+POMDPs.discount(model::AbstractSingleRobotProblem) = 1
 
 # Mark states as terminal when they have reached the horizon
 function POMDPs.isterminal(model::AbstractSingleRobotProblem, state::MDPState)
