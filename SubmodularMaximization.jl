@@ -100,7 +100,7 @@ struct Solution{PartitionElement}
 end
 
 objective(p::PartitionProblem, X) = error("Objective not defined for ",
-                                          typeof(p))
+                                          typeof(p), typeof(X))
 # Define the solution for individual solution elements
 objective(p::PartitionProblem{T}, X::T) where T = objective(p, [X])
 
@@ -121,7 +121,7 @@ get_num_agents(p::PartitionProblem) = length(p.partition_matroid)
 # This should be an optimal or subotimal solver that outputs the appropriate
 # PartitionElement for a block given prior selections
 solve_block(p::PartitionProblem, block::Integer, selections::Vector) =
-  error("Single agent (block) solver not defined for ", typeof(p))
+  error("Single agent (block) solver not defined for ", typeof(p)," ", typeof(block)," ", typeof(selections))
 
 #
 # Concrete partition matroid problems

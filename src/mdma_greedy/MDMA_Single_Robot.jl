@@ -50,6 +50,7 @@ mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotP
     move_dist::Int64
     coverage_data::CoverageData
     initial_state::MDPState
+    # Add default height of 7 meters
 
     function SingleRobotMultiTargetViewCoverageProblem(
         grid::MDMA_Grid,
@@ -162,19 +163,12 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
     reward = 0
     time = action.depth
     targets = model.target_trajectories[time, :]
-    for target in targets
-        target_statuses = coverage_data[time, :]
-        if detectTarget(action.state, target, model.sensor)
-            for tstatus in target_statuses
-                other, coverage_value = tstatus
-                if other.id == target.id
-                    if coverage_value > 0
-                        reward = 0
-                    else
-                        reward = 5
-                    end
-                end
-            end
+    for (target_id, target) in enumerate(targets)
+        (_, target_coverage) = coverage_data[time, target_id]
+        if (target_coverage > 0)
+            return 0
+        else
+            return 1
         end
     end
     reward
