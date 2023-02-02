@@ -67,7 +67,7 @@ end
 #
 # Warning: this "problem" object may become invalid if any of the underlying
 # objects change and may copy some but not of the inputs.
-struct MultiRobotTargetCoverageProblem <: PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
+mutable struct MultiRobotTargetCoverageProblem <: PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
     # Target tracking problems are defined by vectors of robot states
     partition_matroid::Vector{MDPState} # Most recent version of states of robots
     coverage_data::CoverageData
@@ -212,6 +212,8 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
 
     solution_trajectory = compute_path(single_problem, policy, state)
 
+    p.coverage_data = covered_states
+
     (block, solution_trajectory)
     # call solve_sequential on this
     # subtype PartitionProblem
@@ -239,7 +241,7 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
                 configs.sensor,
                 configs.horizon,
                 configs.target_trajectories,
-                configs.move_dist,
+                Int64(configs.move_dist),
                 p.coverage_data,
                 state
             )
