@@ -24,10 +24,10 @@ get_states(g::MDMA_Grid) = g.states
 function get_states(width::Int64, height::Int64, horizon::Int64)
     states = Array{MDPState,4}(undef, width, height, 8, horizon)
     for i in CartesianIndices(states)
-        r = i[1]
-        c = i[2]
-        d = i[3]
-        t = i[4]
+        r = i[1] # row
+        c = i[2] # column
+        d = i[3] # direction
+        t = i[4] # time
         states[i] = MDPState(UAVState(c, r, cardinaldir[d]), t, horizon, nothing)
     end
     states

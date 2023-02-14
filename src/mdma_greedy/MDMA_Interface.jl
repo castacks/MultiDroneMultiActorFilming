@@ -43,7 +43,6 @@ function configs_from_file(filename::String, move_dist::Number)::MultiDroneMulti
 
 end
 
-map(x->MDMA.random_state(horizon, grid), 1:num_robots)
 
 @testset "test_file_parse" begin
     configs_from_file("../../blender/four_split_data.json", 3)
