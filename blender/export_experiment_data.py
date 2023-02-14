@@ -29,9 +29,14 @@ for ob in bpy.data.objects:
 # Setting up robots. For now ignore initial states
 robot_data = {'robot_fovs': []}
 num_robots = 0
+camera_sense_dist = 0
 for camera in bpy.data.cameras:
     robot_data['robot_fovs'].append(camera.angle)
+    camera_sense_dist = camera.clip_end
     num_robots += 1
+
+robot_data.update({'sense_dist': camera_sense_dist})
+
 json_root.update(robot_data)
 # Number of actors and drones
 num_actors = len(actor_names)

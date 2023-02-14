@@ -12,9 +12,10 @@ import SubmodularMaximization.objective
 export MultiDroneMultiActorConfigs, MultiRobotTargetCoverageProblem
 export generate_empty_coverage_data, compute_prior_coverage, solve_block, empty, objective
 
+
 # Stores configuration variables for multi-robot target tracking
 struct MultiDroneMultiActorConfigs
-    num_robots::Int32
+    num_robots::Int64
     target_trajectories::Array{Target,2}
     # Will need a grid for each robot
     grid::MDMA_Grid
@@ -22,9 +23,6 @@ struct MultiDroneMultiActorConfigs
     horizon::Int64
     move_dist::Float64
 
-    # Configuration for the ValueIterationSolver solver
-    solver_iterations::Int64
-    belres::Float64
 
     # Initialization
 
@@ -32,13 +30,11 @@ struct MultiDroneMultiActorConfigs
         num_robots,
         target_trajectories,
         grid,
-        sensor=ViewConeSensor,
+        sensor,
         horizon,
         move_dist,
-        solver_iterations,
-        belres
     )
-        new(num_robots, target_trajectories, grid, sensor, horizon, move_dist, solver_iterations, belres)
+        new(num_robots, target_trajectories, grid, sensor, horizon, move_dist)
     end
 end
 
@@ -109,7 +105,7 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
 
     target_traj = configs.target_trajectories
     num_targets = length(target_traj[1, :])
-    coverage_data = Array{Tuple{Target,Float64},2}(undef, configs.horizon, num_targets)
+    coverage_data = Array{Float64,2}(undef, configs.horizon, num_targets)
 
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
@@ -117,7 +113,7 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
         for (target_idx, target) in enumerate(target_traj[time, :])
             # Set coverage data to the coverage value and the target
             # Set to 0 for testing
-            coverage_data[time, target_idx] = (target, -1)
+            coverage_data[time, target_idx] = -1
         end
     end
     coverage_data
@@ -147,11 +143,11 @@ function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectori
                 # Update coverage based on previous coverage values Need to
                 # check if other robots have covered this target before
                 # assigning new coverage
-                (_, previous_coverage) = coverage_data[time, target_idx]
+                previous_coverage = coverage_data[time, target_idx]
                 is_covered = detectTarget(robot_state.state, target, configs.sensor)
                 cval = compute_coverage_value(is_covered, previous_coverage)
                 # Set coverage data to the coverage value and the target
-                coverage_data[time, target_idx] = (target, cval)
+                coverage_data[time, target_idx] = cval
             end
         end
     end
@@ -173,6 +169,8 @@ end
 function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
     selections::Vector{Tuple{Int64,Vector{MDMA.MDPState}}})
 
+
+    println("Processing Robot ", block)
     # Get configs
     configs = p.configs
 
@@ -191,9 +189,6 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
     covered_states = compute_prior_coverage(p.configs, trajectories)
 
 
-    for (_, coverage_val) in covered_states
-        print(coverage_val)
-    end
     # Get the state of the robot?
     state = get_state(p, block)
     # state = last(trajectories[block])
@@ -230,7 +225,7 @@ end
 function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
     configs = p.configs
 
-    print("objective", typeof(X))
+    println("objective", typeof(X))
     # Sum reward across trajectory
     # Pass in the object POMDPS.reward will change
     # Check if target is already in list of covered targets

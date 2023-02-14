@@ -65,7 +65,6 @@ function Target(x::Number, y::Number, h::Number, id::Number)
     Target(x,y,h,1.0, UInt32(6), UInt32(id))
 end
 
-
 #  State struct for agents. Used specifically as part of the action space
 struct UAVState
     x::Int64

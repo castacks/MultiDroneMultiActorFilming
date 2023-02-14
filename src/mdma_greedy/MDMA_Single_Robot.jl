@@ -164,7 +164,7 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
     time = action.depth
     targets = model.target_trajectories[time, :]
     for (target_id, target) in enumerate(targets)
-        (_, target_coverage) = coverage_data[time, target_id]
+        target_coverage = coverage_data[time, target_id]
         if detectTarget(action.state, target, model.sensor)
           if (target_coverage > 0)
               reward = 0
