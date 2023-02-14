@@ -47,12 +47,17 @@ for name in actor_names:
 # Add position data over time
 for t in range(1, scene.frame_end + 1):
     scene.frame_set(t)
+
+    # Selections should be the targets
+    targets = []
     for ob in bpy.context.selected_objects:
         true_loc = ob.matrix_world.to_translation()
         true_rot = ob.matrix_world.to_quaternion().to_euler()
-        position_data["actor_positions"].append(
+        targets.append(
             {"location": [x for x in true_loc], "rotation": [x for x in true_rot]}
         )
+
+    position_data["actor_positions"].append(targets)
 
 
 # Dump into file
