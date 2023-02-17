@@ -44,6 +44,7 @@ num_states(g::MDMA_Grid) = length(g.states)
 abstract type AbstractSingleRobotProblem <: MDP{MDPState,MDPState} end
 
 mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
+    grid::MDMA_Grid
     sensor::Camera
     horizon::Int64
     target_trajectories::Array{Target,2}
@@ -60,7 +61,7 @@ mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotP
         move_dist::Integer,
         coverage_data::CoverageData,
         initial_state::MDPState
-        )
+    )
 
         new(grid, sensor, horizon, target_trajectories, move_dist, coverage_data, initial_state)
     end
@@ -166,16 +167,11 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
     for (target_id, t) in enumerate(targets)
         target_coverage = coverage_data[time, target_id]
         if detectTarget(action.state, t, model.sensor)
-            if (target_coverage > 0)
-                reward = 0
-                continue
-            end
-            #reward += 5
             #print("\ntarget detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
             for f in t.faces
                 alpha = 1#f.size#1??
                 #d = [t.x; t.y] + t.apothem * f.normal - [action.state.x; action.state.y] # robot to center of face
-                d = [action.state.x; action.state.y; drone_height] - [f.pos[1]; f.pos[2]; target_height/2]
+                d = [action.state.x; action.state.y; drone_height] - [f.pos[1]; f.pos[2]; target_height / 2]
                 if f.normal == [0.0; 0.0]
                     face_normal = [f.normal[1]; f.normal[2]; 1.0]
                 else
@@ -186,6 +182,9 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
                 r = f.weight * sqrt(alpha * -dot(d, face_normal) * inview(d, face_normal) / norm(d)^3)
                 #print("\nReward ", d, " ", face_normal, " ", alpha, " ", r, " ", reward)
                 reward += r
+            end
+            if (target_coverage > 0)
+                reward = 0
             end
 
         end
@@ -207,6 +206,7 @@ function inview(robot_to_face_distance::Vector{Float64}, face_normal::Vector{Flo
     else
         return false
     end
+end
 # For reward only the action matters in this case
 POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, action::MDPState) = POMDPs.reward(model, action, action)
 

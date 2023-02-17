@@ -14,12 +14,12 @@ export generate_empty_coverage_data, compute_prior_coverage, solve_block, empty,
 
 
 # Stores configuration variables for multi-robot target tracking
-struct MultiDroneMultiActorConfigs
+mutable struct MultiDroneMultiActorConfigs
     num_robots::Int64
     target_trajectories::Array{Target,2}
     # Will need a grid for each robot
     grid::MDMA_Grid
-    sensor::ViewConeSensor
+    sensor::Camera
     horizon::Int64
     move_dist::Float64
 
@@ -225,7 +225,6 @@ end
 function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
     configs = p.configs
 
-    println("objective", typeof(X))
     # Sum reward across trajectory
     # Pass in the object POMDPS.reward will change
     # Check if target is already in list of covered targets
