@@ -21,9 +21,9 @@ struct PinholeCameraModel
     function PinholeCameraModel(focal_length::Vector{Float64}, resolution::Vector{Float64}, lens_dim::Vector{Float64}, skew::Float64, pitch::Float64)
         # world units to pixel units
         focal_length[1] = resolution[1]/lens_dim[1] * focal_length[1]
-        focal_length[2] = resolution[2]/lens_dim[2] * focal_length[2] 
+        focal_length[2] = resolution[2]/lens_dim[2] * focal_length[2]
         principal_point_offset = resolution/2
-        
+
         intrinsics = [[focal_length[1], 0, 0] [skew, focal_length[2], 0] [principal_point_offset[1], principal_point_offset[2], 1]] #[[focal_length[1], skew, principal_point_offset[1]] [0, focal_length[2], principal_point_offset[2]] [0, 0, 1]]
         extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, -cos(pitch), sin(pitch)]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
 
@@ -71,13 +71,14 @@ mutable struct Target
     apothem::Float64 # Distance from center to center of each face
     faces::Array{Face}
     nfaces::UInt32
+    id::UInt32
 
-    function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32)
+    function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32, id::UInt32)
         faces = Vector{Face}(undef, n)
         dphi = (2*pi)/(n-1)
         side_length = 0.1
         # Need to generate n faces with n normal vectors
-        for i = 1:(n-1) # TODO: Add z dimension to face generation 
+        for i = 1:(n-1) # TODO: Add z dimension to face generation
             theta = dphi*i + h
             norm = [cos(theta); sin(theta)]
             pos = a*norm
@@ -88,14 +89,13 @@ mutable struct Target
         pos = a*norm
         f = Face(pos[1], pos[2], 3*sqrt(3)*side_length^2/2, 1/n, norm)
         faces[n] = f
-        new(x,y,h,a,faces)
+        new(x,y,h,a,faces, id)
     end
 end
 
-function Target(x::Number, y::Number, h::Number)
-    Target(x,y,h,1.0, UInt32(6))
+function Target(x::Number, y::Number, h::Number, id::Number)
+    Target(x,y,h,1.0, UInt32(6), UInt32(id))
 end
-
 
 #  State struct for agents. Used specifically as part of the action space
 struct UAVState
@@ -122,6 +122,6 @@ function drawTargets()
 
     xs = LinRange(-10, 10, 20)
     ys = LinRange(-10, 10, 20)
-    t = Target(5., 5., 0., 5., UInt32(6))
+    t = Target(5., 5., 0., 5., UInt32(6), 1)
 
 end

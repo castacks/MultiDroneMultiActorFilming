@@ -1,64 +1,49 @@
 # This file contains code for interfacing with Airsim
 
-function targets_from_file(filename::String)::Array{Target,2}
+import JSON
+using Test
+using MDMA
 
-    lines = readlines(filename)
-    num_lines = length(lines)
+export configs_from_file
 
-    # Store data in dictionaries
+function configs_from_file(filename::String, move_dist::Number)::MultiDroneMultiActorConfigs
 
-    ppdata = []
-    hdata = []
-    current_name = ""
-    positions = []
-    headings = []
-    # Target names
-    unique_names = []
-    for l in lines
-        splits = split(l, " ")
-        name = strip(splits[2], ['[', ']'])
-        if name != current_name
-            println(name, current_name)
-            current_name = name
-            push!(ppdata, positions)
-            push!(hdata, headings)
-            positions = []
-            headings = []
+    json_root = JSON.parsefile(filename)
+
+    scene = json_root["scene"]
+    scale = scene["scale"]
+    blend_file = json_root["filename"]
+    horizon = json_root["num_frames"]
+    num_targets = json_root["num_targets"]
+    robot_fovs = json_root["robot_fovs"]
+    num_robots = json_root["num_robots"]
+    sense_dist = json_root["sense_dist"]
+
+    target_trajectories = Array{Target,2}(undef, horizon, num_targets)
+    for (time, target_set) in enumerate(json_root["actor_positions"])
+        target_row = Vector{Target}(undef, num_targets)
+        for (id, loc_pos) in enumerate(target_set)
+            loc = loc_pos["location"]
+            rot = loc_pos["rotation"]
+            x = loc[1]
+            y = loc[2]
+            h = rot[3] # Take rotatin around z as the "heading"
+            target_row[id] = Target(x, y, h, id)
         end
-        # List of chars to exclude
-        fchars = ['X', 'Y', 'Z', '=', 'P', 'Y', 'R']
-
-        if splits[3][1] == 'X'
-            push!(positions, map(y -> parse(Float64, strip(y, fchars)), splits[3:5]))
-        else
-            push!(headings, map(y -> parse(Float64, strip(y, fchars)), splits[3:5]))
-        end
-        if !(name in unique_names)
-            push!(unique_names, name)
-        end
+        target_trajectories[time, :] = target_row
     end
-    num_targets = length(unique_names)
-    horizon = div(num_lines, (2 * num_targets))
-    println(horizon)
-    println(num_targets)
-    println(ppdata)
-    println(hdata)
-    println(unique_names)
 
-    # trajectory = Array{Target,2}(undef, horizon, num_targets)
-    # for t in 1:horizon
-    #     targets = Array{Target,1}(undef, num_targets)
-    #     for i in 1:num_targets
-    #         j = t + (num_targets * i - 1)
-    #         println(t, i, j, positions[j])
-    #         # targets[i] = Target(
-    #     end
-    # end
 
+    # Making the object
+    grid = MDMA_Grid(Int64(scale["x"]), Int64(scale["y"]), horizon)
+    fov = robot_fovs[1]
+    sensor = ViewConeSensor(fov, sense_dist)
+
+    return MultiDroneMultiActorConfigs(num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
 
 end
 
 
 @testset "test_file_parse" begin
-    # targets_from_file("./src/mdma_greedy/trajectory1.txt")
+    configs_from_file("../../blender/four_split_data.json", 3)
 end

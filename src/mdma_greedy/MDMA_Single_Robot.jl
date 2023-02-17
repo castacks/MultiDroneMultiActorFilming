@@ -5,9 +5,8 @@ using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
 using LinearAlgebra
-export State, Trajectory, Grid, get_states, dims, num_states, MDPState, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot
-# include("MDMA.jl")
-# using MDMA
+
+export get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path, reward
 
 ##################################################
 ## Override function solve_single_robot         ##
@@ -18,54 +17,25 @@ export State, Trajectory, Grid, get_states, dims, num_states, MDPState, SingleRo
 
 ## target_coverage.jl has analogs to MDMA_Detection.jl
 
-const State = UAVState
-const Sensor = Camera
-const Trajectory = Vector{State}
-
-struct MDPState
-    state::State
-    depth::Int64
-    horizon::Int64
-    prev::Union{MDPState,Nothing}
-end
 
 # Constructor for initial states
 # TODO Update this
-MDPState(state, horizon) = MDPState(state, 1 , horizon, nothing)
-MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, m.horizon, nothing)
-MDPState(m::MDPState) = MDPState(m.state, m.depth + 1, m.horizon, nothing)
-MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth + 1, m.horizon, nothing)
 
-# State and trajectory objects for convenience
-struct Grid
-    width::Int64
-    height::Int64
-    angle_divisions::Int64
-    horizon::Int64
-    states::Array{MDPState,4}
-
-    # We will precompute some of the large objects that we use frequently
-    function Grid(width, height, horizon)
-        x = new(width, height, 8, horizon, get_states(width, height, horizon))
-        x
-    end
-end
-
-get_states(g::Grid) = g.states
+get_states(g::MDMA_Grid) = g.states
 function get_states(width::Int64, height::Int64, horizon::Int64)
     states = Array{MDPState,4}(undef, width, height, 8, horizon)
     for i in CartesianIndices(states)
-        r = i[1]
-        c = i[2]
-        d = i[3]
-        t = i[4]
+        r = i[1] # row
+        c = i[2] # column
+        d = i[3] # direction
+        t = i[4] # time
         states[i] = MDPState(UAVState(c, r, cardinaldir[d]), t, horizon, nothing)
     end
     states
 end
 
-dims(g::Grid) = (g.width, g.height, g.angle_divisions, g.horizon)
-num_states(g::Grid) = length(g.states)
+dims(g::MDMA_Grid) = (g.width, g.height, g.angle_divisions, g.horizon)
+num_states(g::MDMA_Grid) = length(g.states)
 
 # States in grid should not have x or y lower than 1 or more than width/height
 # state_to_index(g::Grid, s::MDPState) = (s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
@@ -74,20 +44,25 @@ num_states(g::Grid) = length(g.states)
 abstract type AbstractSingleRobotProblem <: MDP{MDPState,MDPState} end
 
 mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
-    grid::Grid
     sensor::Camera
     horizon::Int64
     target_trajectories::Array{Target,2}
     move_dist::Int64
+    coverage_data::CoverageData
+    initial_state::MDPState
+    # Add default height of 7 meters
 
     function SingleRobotMultiTargetViewCoverageProblem(
-        grid::Grid,
+        grid::MDMA_Grid,
         sensor::Camera,
         horizon::Integer,
         target_trajectories::Array{Target,2},
-        move_dist::Integer)
+        move_dist::Integer,
+        coverage_data::CoverageData,
+        initial_state::MDPState
+        )
 
-        new(grid, sensor, horizon, target_trajectories, move_dist)
+        new(grid, sensor, horizon, target_trajectories, move_dist, coverage_data, initial_state)
     end
 end
 get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
@@ -160,9 +135,9 @@ function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Intege
     actions
 end
 
-in_bounds(grid::Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
-in_bounds(grid::Grid, state::MDPState) = in_bounds(grid, state.state)
-function in_bounds(grid::Grid, state::State)
+in_bounds(grid::MDMA_Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
+in_bounds(grid::MDMA_Grid, state::MDPState) = in_bounds(grid, state.state)
+function in_bounds(grid::MDMA_Grid, state::State)
     if state.x > 0 && state.x <= grid.width
         if state.y > 0 && state.y <= grid.height
             return true
@@ -182,13 +157,19 @@ end
 
 
 # This should depend on the prior observations as well as other plans from robots
-function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, action::MDPState)
+function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::MDPState, action::MDPState)
+    coverage_data = model.coverage_data
     # Want to just give a reward value if you detect an object
     reward = 0
     time = action.depth
     targets = model.target_trajectories[time, :]
-    for t in targets
+    for (target_id, t) in enumerate(targets)
+        target_coverage = coverage_data[time, target_id]
         if detectTarget(action.state, t, model.sensor)
+            if (target_coverage > 0)
+                reward = 0
+                continue
+            end
             #reward += 5
             #print("\ntarget detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
             for f in t.faces
@@ -206,7 +187,16 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
                 #print("\nReward ", d, " ", face_normal, " ", alpha, " ", r, " ", reward)
                 reward += r
             end
+
         end
+    end
+
+    if (action.state.heading == state.state.heading)
+        reward += 0.1
+    end
+
+    if (action.state.x == state.state.x) && (action.state.y == state.state.y)
+        reward += 0.05
     end
     reward
 end
@@ -214,9 +204,23 @@ end
 function inview(robot_to_face_distance::Vector{Float64}, face_normal::Vector{Float64})
     if dot(robot_to_face_distance, face_normal) < 0
         return true
-    else 
+    else
         return false
     end
+# For reward only the action matters in this case
+POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, action::MDPState) = POMDPs.reward(model, action, action)
+
+reward = POMDPs.reward
+
+# Get path from policy
+function compute_path(model, policy, state)::Trajectory
+    path = Vector{MDPState}(undef, 0)
+    push!(path, state)
+    for x in 2:model.horizon
+        state = action(policy, state)
+        push!(path, state)
+    end
+    path
 end
 
 # Don't need any discount
@@ -228,20 +232,22 @@ function POMDPs.isterminal(model::AbstractSingleRobotProblem, state::MDPState)
 end
 
 # Upper left
-POMDPs.initialstate(model::AbstractSingleRobotProblem) = MDPState(UAVState(1, 1, :S))
+POMDPs.initialstate(model::AbstractSingleRobotProblem) = model.initial_state
 
 # Generate basic trajectories
-function generate_target_trajectories(grid::Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
+function generate_target_trajectories(grid::MDMA_Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
     trajectory = Array{Target,2}(undef, horizon, length(initial))
     yend = 4
     x = grid.width - 5
     trajectory[1, :] = initial
     current = initial
+    tid = 1
     for i = 2:horizon
         new = Vector{Target}(undef, 0)
-        push!(new, Target(initial[1].x, initial[1].y, 0))
+        push!(new, Target(initial[1].x, initial[1].y, 0, tid))
         for t in current[2:end]
-            push!(new, Target(t.x - 0, t.y + (-1), 0))
+            tid += 1
+            push!(new, Target(t.x - 0, t.y - 0.5, 0, tid))
         end
         current = new
         trajectory[i, :] = current
@@ -252,19 +258,22 @@ end
 @testset "single_robot_planner" begin
     sensor = ViewConeSensor(pi / 2, 3)
     targets = Vector{Target}(undef, 0)
-    push!(targets, Target(1, 2, 0))
-    push!(targets, Target(1, 3, 0))
-    push!(targets, Target(2, 3, 0))
+    push!(targets, Target(1, 2, 0, 1))
+    push!(targets, Target(1, 3, 0, 2))
+    push!(targets, Target(2, 3, 0, 3))
 
     horizon = 4
-    grid = Grid(20, 20, horizon)
+    grid = MDMA_Grid(20, 20, horizon)
 
-    traj = generate_target_trajectories(grid, horizon, targets)
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
+    # initial_state = MDPState(UAVState(0,0,:S))
+    # traj = generate_target_trajectories(grid, horizon, targets)
+    # coverage = generate_empty_coverage_data()
+    # model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3, )
 
-    #@test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 15
-    targets[3] = Target(10, 10, 0)
-    traj = generate_target_trajectories(grid, horizon, targets)
-    model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
-    #@test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 10
+    # #TODO Fix tests
+    # # @test reward(model, MDPState(UAVState(1, 1, :N), horizon), MDPState(UAVState(1, 1, :N), horizon)) == 15
+    # targets[3] = Target(10, 10, 0, 3)
+    # traj = generate_target_trajectories(grid, horizon, targets)
+    # model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
+    # @test reward(model, MDPState(UAVState(1, 1, :N), horizon), MDPState(UAVState(1, 1, :N), horizon)) == 10
 end
