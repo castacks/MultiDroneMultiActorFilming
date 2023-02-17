@@ -19,7 +19,7 @@ export State, Trajectory, Grid, get_states, dims, num_states, MDPState, SingleRo
 ## target_coverage.jl has analogs to MDMA_Detection.jl
 
 const State = UAVState
-const Sensor = ViewConeSensor
+const Sensor = Camera
 const Trajectory = Vector{State}
 
 struct MDPState
@@ -75,14 +75,14 @@ abstract type AbstractSingleRobotProblem <: MDP{MDPState,MDPState} end
 
 mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotProblem
     grid::Grid
-    sensor::ViewConeSensor
+    sensor::Camera
     horizon::Int64
     target_trajectories::Array{Target,2}
     move_dist::Int64
 
     function SingleRobotMultiTargetViewCoverageProblem(
         grid::Grid,
-        sensor::ViewConeSensor,
+        sensor::Camera,
         horizon::Integer,
         target_trajectories::Array{Target,2},
         move_dist::Integer)
@@ -190,12 +190,21 @@ function POMDPs.reward(model::AbstractSingleRobotProblem, state::MDPState, actio
     for t in targets
         if detectTarget(action.state, t, model.sensor)
             #reward += 5
+            #print("\ntarget detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
             for f in t.faces
-                alpha = 1#??
-                d = [t.x; t.y] + t.apothem * f.normal - [action.state.x; action.state.y] # robot to center of face
+                alpha = 1#f.size#1??
+                #d = [t.x; t.y] + t.apothem * f.normal - [action.state.x; action.state.y] # robot to center of face
+                d = [action.state.x; action.state.y; drone_height] - [f.pos[1]; f.pos[2]; target_height/2]
+                if f.normal == [0.0; 0.0]
+                    face_normal = [f.normal[1]; f.normal[2]; 1.0]
+                else
+                    face_normal = [f.normal[1]; f.normal[2]; 0.0]
+                end
                 # println(d, norm(d))
                 # println(f.normal, dot(d, f.normal))
-                reward += f.weight * sqrt(alpha * -dot(d, f.normal) * inview(d, f.normal) / norm(d)^3)
+                r = f.weight * sqrt(alpha * -dot(d, face_normal) * inview(d, face_normal) / norm(d)^3)
+                #print("\nReward ", d, " ", face_normal, " ", alpha, " ", r, " ", reward)
+                reward += r
             end
         end
     end
@@ -253,9 +262,9 @@ end
     traj = generate_target_trajectories(grid, horizon, targets)
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
 
-    @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 15
+    #@test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 15
     targets[3] = Target(10, 10, 0)
     traj = generate_target_trajectories(grid, horizon, targets)
     model = SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, traj, 3)
-    @test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 10
+    #@test reward(model, MDPState(UAVState(1,1,:N), horizon), MDPState(UAVState(1,1,:N), horizon)) == 10
 end

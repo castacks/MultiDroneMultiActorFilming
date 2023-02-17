@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-docker build .. -t airlab
+docker build .. --no-cache -t airlab 
 yes | docker image prune || true
 
 docker_run () {

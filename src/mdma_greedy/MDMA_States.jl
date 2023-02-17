@@ -2,7 +2,7 @@ using Test
 using LinearAlgebra
 using SubmodularMaximization
 
-export Target, ViewConeSensor, Face, rotMatrix, UAVState
+export Camera, Target, ViewConeSensor, PinholeCameraModel,  Face, rotMatrix, UAVState, drone_height, target_height
 
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
@@ -11,6 +11,32 @@ struct ViewConeSensor
     cutoff::Float64 # Max Distance
 end
 
+# Sensor representing pinhole camera
+struct PinholeCameraModel
+    intrinsics::Matrix{Float64}
+    extrinsics::Matrix{Float64}
+    resolution::Vector{Float64}
+    fov::Float64
+    cutoff::Float64
+    function PinholeCameraModel(focal_length::Vector{Float64}, resolution::Vector{Float64}, lens_dim::Vector{Float64}, skew::Float64, pitch::Float64)
+        # world units to pixel units
+        focal_length[1] = resolution[1]/lens_dim[1] * focal_length[1]
+        focal_length[2] = resolution[2]/lens_dim[2] * focal_length[2] 
+        principal_point_offset = resolution/2
+        
+        intrinsics = [[focal_length[1], 0, 0] [skew, focal_length[2], 0] [principal_point_offset[1], principal_point_offset[2], 1]] #[[focal_length[1], skew, principal_point_offset[1]] [0, focal_length[2], principal_point_offset[2]] [0, 0, 1]]
+        extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, -cos(pitch), sin(pitch)]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+
+        fov = 2*atan(resolution[1], 2*focal_length[1])
+        cutoff = 6
+        return new(intrinsics,extrinsics,resolution,fov,cutoff)
+    end
+end
+
+Camera = Union{ViewConeSensor, PinholeCameraModel}
+
+const drone_height = 7 # meters
+const target_height = 2 # meters
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)
@@ -23,7 +49,7 @@ end
 struct Face
     normal::Vector{Float64} # 2d normal
     pos::Vector{Float64} # position
-    size::Float64 # Size of face, total face length
+    size::Float64 # Size of face, total face area
     weight::Float64 # Observation Weight
     function Face(x::Float64, y::Float64, s::Float64, w::Float64, n::Vector{Float64})
         pos = [x; y]
@@ -48,15 +74,20 @@ mutable struct Target
 
     function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32)
         faces = Vector{Face}(undef, n)
-        dphi = (2*pi)/n
+        dphi = (2*pi)/(n-1)
+        side_length = 0.1
         # Need to generate n faces with n normal vectors
-        for i = 1:n
+        for i = 1:(n-1) # TODO: Add z dimension to face generation 
             theta = dphi*i + h
             norm = [cos(theta); sin(theta)]
             pos = a*norm
-            f = Face(pos[1], pos[2], 0.1, 0.5*cos(theta+pi)+0.5, norm)
+            f = Face(pos[1], pos[2], side_length*target_height, 1/n, norm) # Possible weight 0.5*cos(theta+pi)+0.5
             faces[i] = f
         end
+        norm = [0.0; 0.0]
+        pos = a*norm
+        f = Face(pos[1], pos[2], 3*sqrt(3)*side_length^2/2, 1/n, norm)
+        faces[n] = f
         new(x,y,h,a,faces)
     end
 end
