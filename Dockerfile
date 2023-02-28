@@ -6,8 +6,8 @@ COPY LICENSE /airlab/
 COPY README.md /airlab/
 # COPY SubmodularMaximization.jl /airlab/
 
-RUN apt-get update
-RUN apt-get upgrade
+RUN apt-get -y update
+RUN apt-get -y upgrade
 RUN apt-get -y install tar
 RUN apt-get -y install wget
 
