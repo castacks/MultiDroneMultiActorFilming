@@ -1,9 +1,11 @@
 using POMDPs
 using POMDPModelTools
+using Base: parsed_toml
 using POMDPPolicies
 using DiscreteValueIteration
 using SubmodularMaximization
 using SparseArrays
+using LinearAlgebra
 
 
 import SubmodularMaximization.solve_block
@@ -87,12 +89,19 @@ function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState}, coverag
 end
 
 # This should later be replaced with PPA
-function compute_coverage_value(is_covered::Bool, previous_coverage::Float64)::Float64
-    if is_covered || (previous_coverage > 0)
-        1
-    else
-        -1
-    end
+function compute_coverage_value(face::Face, distance::Array{Float64}, previous_coverage::Float64)::Float64
+    # update
+
+    alpha = 1000#f.size#1??
+    face_normal = face.normal
+
+    # get pixel density
+    prior_pixel_density = previous_coverage
+
+    current_pixel_density = alpha * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
+
+    # Sum pixel density
+    face.weight * (sqrt(current_pixel_density + prior_pixel_density) - sqrt(prior_pixel_density))
 end
 
 function empty(p::MultiRobotTargetCoverageProblem)
@@ -105,15 +114,17 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
 
     target_traj = configs.target_trajectories
     num_targets = length(target_traj[1, :])
-    coverage_data = Array{Float64,2}(undef, configs.horizon, num_targets)
+    num_faces = 7 #TODO Do not make this hardcoded! It should be 6 (for hexagon) and 1 normal on top
+    coverage_data = Array{Float64,3}(undef, configs.horizon, num_targets, num_faces)
 
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
     for time in 1:configs.horizon
         for (target_idx, target) in enumerate(target_traj[time, :])
-            # Set coverage data to the coverage value and the target
-            # Set to 0 for testing
-            coverage_data[time, target_idx] = -1
+            # Set coverage data to the coverage value for each face
+            for (f_id, face) in enumerate(target.faces)
+                coverage_data[time, target_idx, f_id] = 0
+            end
         end
     end
     coverage_data
@@ -140,14 +151,20 @@ function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectori
         for time in 1:configs.horizon
             robot_state = current_robot_trajectory[time]
             for (target_idx, target) in enumerate(target_traj[time, :])
+                #TODO Loop over faces
+                if detectTarget(robot_state.state, target, configs.sensor)
+                    for (f_idx, face) in enumerate(target.faces)
+                        previous_coverage = coverage_data[time, target_idx, f_idx]
+                        distance = [face.pos[1]; face.pos[2]; target_height / 2] - [robot_state.state.x; robot_state.state.y; drone_height]
+                        num_pixels = compute_coverage_value(face, distance, previous_coverage)
+                        coverage_data[time, target_idx, f_idx] = num_pixels
+                    end
+                end
                 # Update coverage based on previous coverage values Need to
                 # check if other robots have covered this target before
                 # assigning new coverage
-                previous_coverage = coverage_data[time, target_idx]
-                is_covered = detectTarget(robot_state.state, target, configs.sensor)
-                cval = compute_coverage_value(is_covered, previous_coverage)
+                # compute current number of pixels on this face
                 # Set coverage data to the coverage value and the target
-                coverage_data[time, target_idx] = cval
             end
         end
     end
@@ -195,6 +212,7 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
 
     # This is why we passed prior stuff to single robot
     # Is this covered? Do a quick lookup
+    # TODO coverage should be coming of of multirobot problem
     single_problem = SingleRobotMultiTargetViewCoverageProblem(
         configs.grid,
         configs.sensor,
@@ -211,7 +229,6 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
 
     solution_trajectory = compute_path(single_problem, policy, state)
 
-    p.coverage_data = covered_states
     (block, solution_trajectory)
     # call solve_sequential on this
     # subtype PartitionProblem
@@ -230,6 +247,8 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
     # Check if target is already in list of covered targets
     # Sum over rewards for targets for trajectories
 
+
+    # TODO CoverageData object for each robot
     sum_reward = 0
     for (robot_id, robot_trajectory) in X
         for state in robot_trajectory

@@ -28,14 +28,57 @@ function draw_grid(g::MDMA_Grid, cr::CairoContext, point_size, ppm, buf)
     end
 end
 
+# function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
+#     save(cr)
+#     set_source_rgba(cr, 0, 0.3, 0.5, 1);
+#     arc(cr, t.x*ppm + buf*ppm, t.y*ppm + buf*ppm, size, 0, 2*pi);
+#     fill(cr);
+#     restore(cr)
+# end
+
 function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
     save(cr)
-    set_source_rgba(cr, 0, 0.3, 0.5, 1);
-    arc(cr, t.x*ppm + buf*ppm, t.y*ppm + buf*ppm, size, 0, 2*pi);
-    fill(cr);
+    set_source_rgba(cr, 0.0, 0.3, 0.6, 1)
+    root = buf * ppm
+
+    base_angle = t.heading
+    tx = t.x * ppm + root
+    ty = t.y * ppm + root
+    dphi = (2 * pi) / (t.nfaces - 1)
+    side_length = 2 * t.apothem * tan(dphi/2)
+    # r = ppm * sqrt(t.apothem^2 + (side_length / 2)^2)
+    # r = ppm*(t.apothem)/cos(dphi/2)
+    r = t.apothem*ppm
+
+    # # Draw heading
+    # move_to(cr, tx, ty)
+    # set_source_rgba(cr, 0.0, 0.3, 0.6, 1)
+    # rel_line_to(cr, ppm * t.apothem * face.normal[1], ppm * t.apothem * face.normal[2])
+    # Draw just normals for now
+    for (i, face) in enumerate(t.faces[1:length(t.faces)-1])
+        x = face.pos[1] * ppm + root
+        y = face.pos[2] * ppm + root
+        # move_to(cr, x, y)
+        set_line_width(cr, 5)
+        # rel_line_to(cr, ppm*t.apothem * face.normal[1], ppm*t.apothem * face.normal[2])
+        theta_offset = dphi/2
+        fx_low = tx + r  * cos(base_angle + (i * dphi) - theta_offset)
+        fx_high = tx + r * cos(base_angle + (i * dphi) + theta_offset)
+        fy_low = ty + r  * sin(base_angle + (i * dphi) - theta_offset)
+        fy_high = ty + r * sin(base_angle + (i * dphi) + theta_offset)
+        set_source_rgba(cr, 0.0, 0.8, 0.3, 1)
+        move_to(cr, fx_low, fy_low)
+        line_to(cr, fx_high, fy_high)
+        move_to(cr, x, y)
+        set_source_rgba(cr, 0.8, 0.3, 0.3, 1)
+        rel_line_to(cr, ppm * face.normal[1], ppm * face.normal[2])
+    end
+    stroke(cr)
+    set_source_rgba(cr, 0, 0.3, 0.5, 1)
+    arc(cr, t.x * ppm + buf * ppm, t.y * ppm + buf * ppm, size, 0, 2 * pi)
+    fill(cr)
     restore(cr)
 end
-
 function draw_targets(cr::CairoContext, targs::Vector{Target}, ppm, size, buf)
 
     for (i,t) in enumerate(targs)
@@ -102,7 +145,7 @@ function draw_scene(rconf::RenderConf, model,  paths, cutoff)
     set_font_size(cr, 80.0)
     set_source_rgba(cr, 0, 0, 0, 1)
     move_to(cr, model.grid.width / 2 * ppm + -2 * ppm, model.grid.height * ppm + 1.6 * buf * ppm)
-    show_text(cr, "𝐷 = $(model.move_dist)  t = $(cutoff)")
+    show_text(cr, "N = $(model.num_robots)  t = $(cutoff)")
     restore(cr)
 
 

@@ -13,7 +13,7 @@ export Trajectory, MDPState, State, Sensor, MDMA_Grid, random_state
 # |    2 | (T1,0)  | (T2,1)  | (T3,1)  |
 # |    3 | (T1,1)  | (T2,1)  | (T3,1)  |
 # |    4 | (T1,1)  | (T2,1)  | (T3,1)  |
-const CoverageData = Array{Float64,2}
+const CoverageData = Array{Float64,3}
 
 # Single Agent Types
 const State = UAVState
