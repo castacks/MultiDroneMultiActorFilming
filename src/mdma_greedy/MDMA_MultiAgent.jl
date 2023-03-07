@@ -68,7 +68,6 @@ end
 mutable struct MultiRobotTargetCoverageProblem <: PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
     # Target tracking problems are defined by vectors of robot states
     partition_matroid::Vector{MDPState} # Most recent version of states of robots
-    coverage_data::CoverageData
     configs::MultiDroneMultiActorConfigs
 
 end
@@ -82,10 +81,10 @@ function extract_single_robot_problems(model::MultiRobotTargetCoverageProblem, c
     problems
 end
 # Construct a target coverage problem with configs.
-function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState}, coverage_data::CoverageData,
+function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},
     kwargs...)
     configs = MultiDroneMultiActorConfigs(; kwargs...)
-    MultiRobotTargetCoverageProblem(robot_states, coverage_data, configs)
+    MultiRobotTargetCoverageProblem(robot_states, configs)
 end
 
 # This should later be replaced with PPA
