@@ -178,9 +178,11 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
 
                 distance = [face.pos[1]; face.pos[2]; target_height / 2] - [action.state.x; action.state.y; drone_height]
 
-                current_pixel_density = alpha * face.weight * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
+                # Includes the sum
+                current_pixel_density = compute_coverage_value(face, distance, prior_pixel_density)
+
                 # Sum marginal reward
-                reward += (sqrt(current_pixel_density+prior_pixel_density) - sqrt(prior_pixel_density))
+                reward += sqrt(current_pixel_density) - sqrt(prior_pixel_density)
 
             end
 

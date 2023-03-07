@@ -12,7 +12,7 @@ import SubmodularMaximization.solve_block
 import SubmodularMaximization.objective
 
 export MultiDroneMultiActorConfigs, MultiRobotTargetCoverageProblem
-export generate_empty_coverage_data, compute_prior_coverage, solve_block, empty, objective
+export generate_empty_coverage_data, compute_prior_coverage, solve_block, empty, objective, compute_coverage_value
 
 
 # Stores configuration variables for multi-robot target tracking
@@ -101,7 +101,6 @@ function compute_coverage_value(face::Face, distance::Array{Float64}, previous_c
     current_pixel_density = alpha * face.weight * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
 
     # Sum pixel density
-    # face.weight * (sqrt(current_pixel_density + prior_pixel_density) - sqrt(prior_pixel_density))
     current_pixel_density + prior_pixel_density
 end
 
