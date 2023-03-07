@@ -92,16 +92,17 @@ end
 function compute_coverage_value(face::Face, distance::Array{Float64}, previous_coverage::Float64)::Float64
     # update
 
-    alpha = 1000#f.size#1??
+    alpha = 10#f.size#1??
     face_normal = face.normal
 
     # get pixel density
     prior_pixel_density = previous_coverage
 
-    current_pixel_density = alpha * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
+    current_pixel_density = alpha * face.weight * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
 
     # Sum pixel density
-    face.weight * (sqrt(current_pixel_density + prior_pixel_density) - sqrt(prior_pixel_density))
+    # face.weight * (sqrt(current_pixel_density + prior_pixel_density) - sqrt(prior_pixel_density))
+    current_pixel_density + prior_pixel_density
 end
 
 function empty(p::MultiRobotTargetCoverageProblem)
@@ -249,6 +250,8 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
 
 
     # TODO CoverageData object for each robot
+    # At the moment the coverage data is set to empty,
+    # So the reward will not matsc
     sum_reward = 0
     for (robot_id, robot_trajectory) in X
         for state in robot_trajectory
@@ -258,7 +261,7 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
                 configs.horizon,
                 configs.target_trajectories,
                 Int64(configs.move_dist),
-                p.coverage_data,
+                generate_empty_coverage_data(p.configs),
                 state
             )
             sum_reward += reward(single_problem, state)

@@ -169,31 +169,31 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
         target_coverage = coverage_data[time, target_id, :]
         if detectTarget(action.state, t, model.sensor)
             #print("\ntarget detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
-            for (f_id, f) in enumerate(t.faces)
-                alpha = 1000#f.size#1??
-                face_normal = f.normal
+            for (f_id, face) in enumerate(t.faces)
+                alpha = 10#f.size#1??
+                face_normal = face.normal
 
                 # get pixel density
                 prior_pixel_density = target_coverage[f_id]
 
-                d = [f.pos[1]; f.pos[2]; target_height / 2] - [action.state.x; action.state.y; drone_height]
-                current_pixel_density = alpha * -dot(d, face_normal) * isvisible(d, face_normal) / norm(d)^3
+                distance = [face.pos[1]; face.pos[2]; target_height / 2] - [action.state.x; action.state.y; drone_height]
 
+                current_pixel_density = alpha * face.weight * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
                 # Sum marginal reward
-                reward += f.weight * (sqrt(current_pixel_density+prior_pixel_density) - sqrt(prior_pixel_density))
+                reward += (sqrt(current_pixel_density+prior_pixel_density) - sqrt(prior_pixel_density))
 
             end
 
         end
     end
 
-    # if (action.state.heading == state.state.heading)
-    #     reward += 0.02
-    # end
+    if (action.state.heading == state.state.heading)
+        reward += 0.02
+    end
 
-    # if(action.state.x == state.state.x) && (action.state.y == state.state.y)
-    #     reward += 0.01
-    # end
+    if(action.state.x == state.state.x) && (action.state.y == state.state.y)
+        reward += 0.01
+    end
 
     reward
 end
