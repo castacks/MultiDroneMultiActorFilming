@@ -2,11 +2,12 @@
 
 import JSON3
 using Test
+using SubmodularMaximization
 using MDMA
 
-export configs_from_file
+export configs_from_file, save_solution, load_solution
 
-function configs_from_file(filename::String,experiment_name::String,move_dist::Number)::MultiDroneMultiActorConfigs
+function configs_from_file(filename::String, experiment_name::String, move_dist::Number)::MultiDroneMultiActorConfigs
 
     json_string = read(filename, String)
     json_root = JSON3.read(json_string)
@@ -41,13 +42,13 @@ function configs_from_file(filename::String,experiment_name::String,move_dist::N
     fov = robot_fovs[1]
     sensor = ViewConeSensor(fov, sense_dist)
 
-    return MultiDroneMultiActorConfigs(experiment_name=experiment_name,num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
+    return MultiDroneMultiActorConfigs(experiment_name=experiment_name, num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
 
 end
 
 # Serialize the solution into a json object
 function save_solution(experiment_name::String, outdir::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
-    root_dict = Dict("value" => solution.value, "elements"=>solution.elements)
+    root_dict = Dict("value" => solution.value, "elements" => solution.elements)
 
     directory = "$(outdir)/$(experiment_name)"
     mkpath(directory)
@@ -56,13 +57,39 @@ function save_solution(experiment_name::String, outdir::String, solution::Soluti
         JSON3.pretty(io, root_dict)
     end
 
+    println("Saving solution to $(directory)/solution.json")
     render_paths(solution, multi_configs)
-
-
 
 end
 
 
+function load_solution(filename)
+    json_string = read(filename, String)
+    root_dict = JSON3.read(json_string)
+
+    solution_value = root_dict["value"]
+    solution_elements_dict = root_dict["elements"]
+    # Solution Elements is an array of array of (Tuple, Vector{MDPState})
+
+    elements = Tuple{Int64,Vector{MDPState}}[]
+    for robot_dict in solution_elements_dict
+        robot_id = robot_dict[1]
+        robot_states = MDPState[]
+        for states in robot_dict[2]
+            state_dict = states["state"]
+            depth = states["depth"]
+            horizon = states["horizon"]
+            prev = nothing
+            state = UAVState(state_dict["x"], state_dict["y"], Symbol(state_dict["heading"]))
+            push!(robot_states, MDPState(state, depth, horizon, prev))
+        end
+        push!(elements, (robot_id, robot_states))
+    end
+
+    Solution(solution_value, elements)
+
+end
+
 @testset "test_file_parse" begin
-    configs_from_file("../../blender/base_ball_data.json","base_ball", 3)
+    configs_from_file("../../blender/base_ball_data.json", "base_ball", 3)
 end
