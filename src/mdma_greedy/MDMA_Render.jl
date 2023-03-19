@@ -38,7 +38,7 @@ end
 
 function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
     save(cr)
-    set_source_rgba(cr, 0.0, 0.3, 0.6, 1)
+    set_source_rgba(cr, 0, 0.3, 0.5, 1)
     root = buf * ppm
 
     base_angle = t.heading
@@ -56,22 +56,26 @@ function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
     # rel_line_to(cr, ppm * t.apothem * face.normal[1], ppm * t.apothem * face.normal[2])
     # Draw just normals for now
     for (i, face) in enumerate(t.faces[1:length(t.faces)-1])
+        set_line_width(cr, 1 + 2 * face.weight)
+        save(cr)
         x = face.pos[1] * ppm + root
         y = face.pos[2] * ppm + root
         # move_to(cr, x, y)
-        set_line_width(cr, 5)
         # rel_line_to(cr, ppm*t.apothem * face.normal[1], ppm*t.apothem * face.normal[2])
         theta_offset = dphi/2
         fx_low = tx + r  * cos(base_angle + (i * dphi) - theta_offset)
         fx_high = tx + r * cos(base_angle + (i * dphi) + theta_offset)
         fy_low = ty + r  * sin(base_angle + (i * dphi) - theta_offset)
         fy_high = ty + r * sin(base_angle + (i * dphi) + theta_offset)
-        set_source_rgba(cr, 0.0, 0.8, 0.3, 1)
+        set_source_rgba(cr, 0, 0.3, 0.5, 1)
+        stroke(cr)
         move_to(cr, fx_low, fy_low)
         line_to(cr, fx_high, fy_high)
         move_to(cr, x, y)
-        set_source_rgba(cr, 0.8, 0.3, 0.3, 1)
+        # set_source_rgba(cr, 0.8, 0.3, 0.3, 1)
+        # set_line_width(cr, 5)
         rel_line_to(cr, ppm * face.normal[1], ppm * face.normal[2])
+        restore(cr)
     end
     stroke(cr)
     set_source_rgba(cr, 0, 0.3, 0.5, 1)
@@ -132,6 +136,14 @@ function draw_arc(cr::CairoContext, radius, x,y, heading,fov,ppm, fade,cfade, bu
 end
 
 
+function render_paths(solution, multi_configs::MultiDroneMultiActorConfigs)
+    paths = Vector{Vector{MDMA.MDPState}}(undef, 0)
+    for sol in solution.elements
+        push!(paths, sol[2])
+    end
+    draw_frames(RenderConf(50, 4, false, false), multi_configs, paths)
+end
+
 function draw_scene(rconf::RenderConf, model,  paths, cutoff)
     c, cr = init_cairo(model, rconf)
     ppm = rconf.ppm
@@ -179,7 +191,7 @@ function draw_scene(rconf::RenderConf, model,  paths, cutoff)
 
     targets = model.target_trajectories[cutoff, :]
     draw_targets(cr, targets, ppm, 15, buf)
-    filepath = "output/$(lpad(cutoff, 2, "0")).png"
+    filepath = "output/$(model.experiment_name)/renders/$(lpad(cutoff, 2, "0")).png"
     println("Writing to ", filepath)
     write_to_png(c, filepath)
 

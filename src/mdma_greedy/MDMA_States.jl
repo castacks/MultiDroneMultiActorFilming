@@ -2,7 +2,7 @@ using Test
 using LinearAlgebra
 using SubmodularMaximization
 
-export Camera, Target, ViewConeSensor, PinholeCameraModel,  Face, rotMatrix, UAVState, drone_height, target_height
+export Camera, Target, ViewConeSensor, PinholeCameraModel,  Face, rotMatrix, UAVState, drone_height, target_height, multiply_face_weights
 
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
@@ -45,7 +45,7 @@ function dir_to_index(d::Symbol)
 end
 
 # Target Faces
-struct Face
+mutable struct Face
     normal::Vector{Float64} # 3d normal
     pos::Vector{Float64} # position
     size::Float64 # Size of face, total face area
@@ -86,14 +86,18 @@ mutable struct Target
             norm = [cos(theta); sin(theta); 0.]
             pos = a * norm
             # Make sure faces are relative to Target position
-            f = Face(x+pos[1], y+pos[2], side_length * target_height, 1 / n, norm) # Possible weight 0.5*cos(theta+pi)+0.5
+            f = Face(x+pos[1], y+pos[2], side_length * target_height, 1., norm) # Possible weight 0.5*cos(theta+pi)+0.5
+            # Set front faces to twice the weight
+            if i in 1:2 || i == n-1
+                f.weight = 4.0
+            end
             faces[i] = f
         end
 
         # Adding top face
         norm = [0.0; 0.0; 1.0]
         # Top face should be in center of target
-        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1 / n, norm)
+        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1., norm)
         faces[n] = f
 
 
@@ -105,6 +109,12 @@ function Target(x::Number, y::Number, h::Number, id::Number)
     Target(Float64(x),Float64(y),h,1.0, UInt32(7), UInt32(id))
 end
 
+function multiply_face_weights(t::Target, weight::Number)::Target
+    for f in t.faces
+        f.weight *= weight
+    end
+    t
+end
 #  State struct for agents. Used specifically as part of the action space
 struct UAVState
     x::Int64

@@ -1,14 +1,15 @@
 # This file contains code for interfacing with Airsim
 
-import JSON
+import JSON3
 using Test
 using MDMA
 
 export configs_from_file
 
-function configs_from_file(filename::String, move_dist::Number)::MultiDroneMultiActorConfigs
+function configs_from_file(filename::String,experiment_name::String,move_dist::Number)::MultiDroneMultiActorConfigs
 
-    json_root = JSON.parsefile(filename)
+    json_string = read(filename, String)
+    json_root = JSON3.read(json_string)
 
     scene = json_root["scene"]
     scale = scene["scale"]
@@ -28,7 +29,8 @@ function configs_from_file(filename::String, move_dist::Number)::MultiDroneMulti
             x = loc[1]
             y = loc[2]
             h = rot[3] # Take rotatin around z as the "heading"
-            target_row[id] = Target(x, y, h, id)
+            weight = loc_pos["weight"]
+            target_row[id] = multiply_face_weights(Target(x, y, h, id), weight)
         end
         target_trajectories[time, :] = target_row
     end
@@ -39,11 +41,28 @@ function configs_from_file(filename::String, move_dist::Number)::MultiDroneMulti
     fov = robot_fovs[1]
     sensor = ViewConeSensor(fov, sense_dist)
 
-    return MultiDroneMultiActorConfigs(num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
+    return MultiDroneMultiActorConfigs(experiment_name=experiment_name,num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
+
+end
+
+# Serialize the solution into a json object
+function save_solution(experiment_name::String, outdir::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
+    root_dict = Dict("value" => solution.value, "elements"=>solution.elements)
+
+    directory = "$(outdir)/$(experiment_name)"
+    mkpath(directory)
+    mkpath("$(directory)/renders")
+    open("$(directory)/solution.json", "w") do io
+        JSON3.pretty(io, root_dict)
+    end
+
+    render_paths(solution, multi_configs)
+
+
 
 end
 
 
 @testset "test_file_parse" begin
-    configs_from_file("../../blender/four_split_data.json", 3)
+    configs_from_file("../../blender/base_ball_data.json","base_ball", 3)
 end

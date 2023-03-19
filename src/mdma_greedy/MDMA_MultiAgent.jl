@@ -17,6 +17,7 @@ export generate_empty_coverage_data, compute_prior_coverage, solve_block, empty,
 
 # Stores configuration variables for multi-robot target tracking
 mutable struct MultiDroneMultiActorConfigs
+    experiment_name::String
     num_robots::Int64
     target_trajectories::Array{Target,2}
     # Will need a grid for each robot
@@ -29,6 +30,7 @@ mutable struct MultiDroneMultiActorConfigs
     # Initialization
 
     function MultiDroneMultiActorConfigs(;
+        experiment_name,
         num_robots,
         target_trajectories,
         grid,
@@ -36,7 +38,7 @@ mutable struct MultiDroneMultiActorConfigs
         horizon,
         move_dist,
     )
-        new(num_robots, target_trajectories, grid, sensor, horizon, move_dist)
+        new(experiment_name,num_robots, target_trajectories, grid, sensor, horizon, move_dist)
     end
 end
 
