@@ -7,5 +7,6 @@ include("./MDMA_MultiAgent.jl")
 include("./MDMA_Single_Robot.jl")
 include("./MDMA_Render.jl")
 include("./MDMA_Interface.jl")
+include("./MDMA_Experiment.jl")
 
 end

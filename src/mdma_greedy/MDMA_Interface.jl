@@ -47,10 +47,10 @@ function configs_from_file(filename::String, experiment_name::String, move_dist:
 end
 
 # Serialize the solution into a json object
-function save_solution(experiment_name::String, outdir::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
+function save_solution(experiment_name::String, path_to_experiments::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
     root_dict = Dict("value" => solution.value, "elements" => solution.elements)
 
-    directory = "$(outdir)/$(experiment_name)"
+    directory = "$(path_to_experiments)/$(experiment_name)/mdma"
     mkpath(directory)
     mkpath("$(directory)/renders")
     open("$(directory)/solution.json", "w") do io
@@ -58,7 +58,7 @@ function save_solution(experiment_name::String, outdir::String, solution::Soluti
     end
 
     println("Saving solution to $(directory)/solution.json")
-    render_paths(solution, multi_configs)
+    render_paths(solution, multi_configs, "$(directory)/renders")
 
 end
 
@@ -88,8 +88,4 @@ function load_solution(filename)
 
     Solution(solution_value, elements)
 
-end
-
-@testset "test_file_parse" begin
-    configs_from_file("../../blender/base_ball_data.json", "base_ball", 3)
 end

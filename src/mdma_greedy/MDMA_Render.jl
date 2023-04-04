@@ -136,15 +136,15 @@ function draw_arc(cr::CairoContext, radius, x,y, heading,fov,ppm, fade,cfade, bu
 end
 
 
-function render_paths(solution, multi_configs::MultiDroneMultiActorConfigs)
+function render_paths(solution, multi_configs::MultiDroneMultiActorConfigs, dirpath::String)
     paths = Vector{Vector{MDMA.MDPState}}(undef, 0)
     for sol in solution.elements
         push!(paths, sol[2])
     end
-    draw_frames(RenderConf(50, 4, false, false), multi_configs, paths)
+    draw_frames(RenderConf(50, 4, false, false), multi_configs, paths, dirpath)
 end
 
-function draw_scene(rconf::RenderConf, model,  paths, cutoff)
+function draw_scene(rconf::RenderConf, model,  paths, cutoff, dirpath)
     c, cr = init_cairo(model, rconf)
     ppm = rconf.ppm
     buf = rconf.buf
@@ -191,7 +191,7 @@ function draw_scene(rconf::RenderConf, model,  paths, cutoff)
 
     targets = model.target_trajectories[cutoff, :]
     draw_targets(cr, targets, ppm, 15, buf)
-    filepath = "output/$(model.experiment_name)/renders/$(lpad(cutoff, 2, "0")).png"
+    filepath = "$(dirpath)/$(lpad(cutoff, 2, "0")).png"
     println("Writing to ", filepath)
     write_to_png(c, filepath)
 
@@ -207,8 +207,8 @@ function init_cairo(model,conf::RenderConf)
     return (c, cr)
 end
 
-function draw_frames(rconf::RenderConf, model, paths)
+function draw_frames(rconf::RenderConf, model, paths, dirpath)
   for i in 1:model.horizon
-      draw_scene(rconf, model, paths, i)
+      draw_scene(rconf, model, paths, i, dirpath)
   end
 end
