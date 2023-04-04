@@ -129,7 +129,7 @@ function draw_arc(cr::CairoContext, radius, x,y, heading,fov,ppm, fade,cfade, bu
     arc(cr, xc, yc, radius, angle2, angle2);
     line_to(cr, xc, yc);
     close_path(cr);
-    set_source_rgba(cr, (cfade), (1-cfade)*0.5, (1-cfade)*1.1, fade/2);
+    set_source_rgba(cr, (cfade), (1-cfade)*0.5, (1-cfade)*1.1, fade/5);
     fill_preserve(cr);
 
     stroke(cr);
