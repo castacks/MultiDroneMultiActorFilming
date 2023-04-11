@@ -90,7 +90,7 @@ function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},
 end
 
 # This should later be replaced with PPA
-function compute_coverage_value(face::Face, distance::Array{Float64}, previous_coverage::Float64)::Float64
+function compute_coverage_value(face::Face, heading::Array{Float64}, distance::Array{Float64}, previous_coverage::Float64)::Float64
     # update
 
     alpha = 10#f.size#1??
@@ -99,7 +99,7 @@ function compute_coverage_value(face::Face, distance::Array{Float64}, previous_c
     # get pixel density
     prior_pixel_density = previous_coverage
 
-    current_pixel_density = alpha * face.weight * -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
+    current_pixel_density = alpha * face.weight * abs(dot(distance, heading))* -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
 
     # Sum pixel density
     current_pixel_density + prior_pixel_density
@@ -157,7 +157,9 @@ function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectori
                     for (f_idx, face) in enumerate(target.faces)
                         previous_coverage = coverage_data[time, target_idx, f_idx]
                         distance = [face.pos[1]; face.pos[2]; target_height / 2] - [robot_state.state.x; robot_state.state.y; drone_height]
-                        num_pixels = compute_coverage_value(face, distance, previous_coverage)
+                        theta = dirAngle(robot_state.state.heading)
+                        heading = [cos(theta), sin(theta), 0];
+                        num_pixels = compute_coverage_value(face, heading, distance, previous_coverage)
                         coverage_data[time, target_idx, f_idx] = num_pixels
                     end
                 end
@@ -254,6 +256,7 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
     # So the reward will not matsc
     sum_reward = 0
     for (robot_id, robot_trajectory) in X
+        robot_reward = 0
         for state in robot_trajectory
             single_problem = SingleRobotMultiTargetViewCoverageProblem(
                 configs.grid,
@@ -266,7 +269,9 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
             )
             sum_reward += reward(single_problem, state)
 
+            robot_reward = reward(single_problem, state)
         end
+        println("Robot id: $(robot_id), Reward: $(robot_reward)")
         # This is why we passed prior stuff to single robot
         # Is this covered? Do a quick lookup
         # For the reward only the

@@ -168,22 +168,25 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
         # Pixel density by face should be stored
         target_coverage = coverage_data[time, target_id, :]
         if detectTarget(action.state, t, model.sensor)
-            #print("\ntarget detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
+            # print("\Target detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
+            # println()
+            # println("Robot Heading $(action.state.heading)")
             for (f_id, face) in enumerate(t.faces)
-                alpha = 10#f.size#1??
                 face_normal = face.normal
 
                 # get pixel density
                 prior_pixel_density = target_coverage[f_id]
 
                 distance = [face.pos[1]; face.pos[2]; target_height / 2] - [action.state.x; action.state.y; drone_height]
+                theta = dirAngle(action.state.heading)
+                heading = [cos(theta), sin(theta), 0];
 
                 # Includes the sum
-                current_pixel_density = compute_coverage_value(face, distance, prior_pixel_density)
+                current_pixel_density = compute_coverage_value(face, heading, distance, prior_pixel_density)
+
 
                 # Sum marginal reward
                 reward += sqrt(current_pixel_density) - sqrt(prior_pixel_density)
-
             end
 
         end

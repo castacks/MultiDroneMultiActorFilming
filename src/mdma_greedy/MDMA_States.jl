@@ -20,22 +20,34 @@ struct PinholeCameraModel
     cutoff::Float64
     function PinholeCameraModel(focal_length::Vector{Float64}, resolution::Vector{Float64}, lens_dim::Vector{Float64}, skew::Float64, pitch::Float64, cutoff::Float64)
         # world units to pixel units
-        focal_length[1] = resolution[1]/lens_dim[1] * focal_length[1]
-        focal_length[2] = resolution[2]/lens_dim[2] * focal_length[2]
-        principal_point_offset = resolution/2
+        focal_length[1] = resolution[1] / lens_dim[1] * focal_length[1]
+        focal_length[2] = resolution[2] / lens_dim[2] * focal_length[2]
+        principal_point_offset = resolution / 2
 
         intrinsics = [[focal_length[1], 0, 0] [skew, focal_length[2], 0] [principal_point_offset[1], principal_point_offset[2], 1]] #[[focal_length[1], skew, principal_point_offset[1]] [0, focal_length[2], principal_point_offset[2]] [0, 0, 1]]
-        extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, -cos(pitch), sin(pitch)]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
 
-        fov = 2*atan(resolution[1], 2*focal_length[1])
-        return new(intrinsics,extrinsics,resolution,fov,cutoff)
+        # One matrix is flipping from world coordinate to drone coordinate
+        # then from drone to camera coordinate
+        # Drone -> camera redifine the axis
+        # Rotation on y axis
+        extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, cos(pitch), -sin(pitch)]]
+
+        # extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, cos(pitch), -sin(pitch)]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+
+
+        # extrinsics = [[0, 0, 1] [-1, 0, 0] [0, 1, 0]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+        # extrinsics = [[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+
+        fov = 2 * atan(resolution[1], 2 * focal_length[1])
+        println("Fov: $(fov)")
+        return new(intrinsics, extrinsics, resolution, fov, cutoff)
     end
 end
 
 Camera = Union{ViewConeSensor, PinholeCameraModel}
 
 const drone_height = 7 # meters
-const target_height = 2 # meters
+const target_height = 7 # meters
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)
