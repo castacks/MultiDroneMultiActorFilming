@@ -165,46 +165,53 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
     time = action.depth
     targets = model.target_trajectories[time, :]
     for (target_id, t) in enumerate(targets)
-        target_coverage = coverage_data[time, target_id]
+        # Pixel density by face should be stored
+        target_coverage = coverage_data[time, target_id, :]
         if detectTarget(action.state, t, model.sensor)
-            #print("\ntarget detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
-            for f in t.faces
-                alpha = 1#f.size#1??
-                #d = [t.x; t.y] + t.apothem * f.normal - [action.state.x; action.state.y] # robot to center of face
-                d = [action.state.x; action.state.y; drone_height] - [f.pos[1]; f.pos[2]; target_height / 2]
-                if f.normal == [0.0; 0.0]
-                    face_normal = [f.normal[1]; f.normal[2]; 1.0]
-                else
-                    face_normal = [f.normal[1]; f.normal[2]; 0.0]
-                end
-                # println(d, norm(d))
-                # println(f.normal, dot(d, f.normal))
-                r = f.weight * sqrt(alpha * -dot(d, face_normal) * inview(d, face_normal) / norm(d)^3)
-                #print("\nReward ", d, " ", face_normal, " ", alpha, " ", r, " ", reward)
-                reward += r
-            end
-            if (target_coverage > 0)
-                reward = 0
+            # print("\Target detected ", t.x, " ", t.y, " ", action.state.x, " ", action.state.y)
+            # println()
+            # println("Robot Heading $(action.state.heading)")
+            for (f_id, face) in enumerate(t.faces)
+                face_normal = face.normal
+
+                # get pixel density
+                prior_pixel_density = target_coverage[f_id]
+
+                distance = [face.pos[1]; face.pos[2]; target_height / 2] - [action.state.x; action.state.y; drone_height]
+                theta = dirAngle(action.state.heading)
+                heading = [cos(theta), sin(theta), 0];
+
+                # Includes the sum
+                current_pixel_density = compute_coverage_value(face, heading, distance, prior_pixel_density)
+
+
+                # Sum marginal reward
+                reward += sqrt(current_pixel_density) - sqrt(prior_pixel_density)
             end
 
         end
     end
 
     if (action.state.heading == state.state.heading)
-        reward += 0.1
+        reward += 0.02
     end
 
-    if (action.state.x == state.state.x) && (action.state.y == state.state.y)
-        reward += 0.05
+    if(action.state.x == state.state.x) && (action.state.y == state.state.y)
+        reward += 0.01
     end
+
     reward
 end
 
-function inview(robot_to_face_distance::Vector{Float64}, face_normal::Vector{Float64})
+function plot_heatmap()
+end
+
+
+function isvisible(robot_to_face_distance::Vector{Float64}, face_normal::Vector{Float64})
     if dot(robot_to_face_distance, face_normal) < 0
-        return true
+        return 1
     else
-        return false
+        return 0
     end
 end
 # For reward only the action matters in this case

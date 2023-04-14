@@ -4,11 +4,11 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-docker build .. --no-cache -t airlab 
-yes | docker image prune || true
+sudo docker build .. --no-cache -t airlab 
+yes | sudo docker image prune || true
 
 docker_run () {
-    docker run \
+    sudo docker run \
            --volume $PWD/../src:/airlab/src\
            --volume $PWD/../examples:/airlab/examples \
            --volume $PWD/../SubmodularMaximization.jl:/airlab/ \

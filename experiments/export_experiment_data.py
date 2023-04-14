@@ -59,7 +59,7 @@ for t in range(1, scene.frame_end + 1):
         true_loc = ob.matrix_world.to_translation()
         true_rot = ob.matrix_world.to_quaternion().to_euler()
         targets.append(
-            {"location": [x for x in true_loc], "rotation": [x for x in true_rot]}
+            {"location": [x for x in true_loc], "rotation": [x for x in true_rot], "weight": ob['weight']}
         )
 
     position_data["actor_positions"].append(targets)

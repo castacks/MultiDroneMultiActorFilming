@@ -1,14 +1,16 @@
 # This file contains code for interfacing with Airsim
 
-import JSON
+import JSON3
 using Test
+using SubmodularMaximization
 using MDMA
 
-export configs_from_file
+export configs_from_file, save_solution, load_solution
 
-function configs_from_file(filename::String, move_dist::Number)::MultiDroneMultiActorConfigs
+function configs_from_file(filename::String, experiment_name::String, move_dist::Number)::MultiDroneMultiActorConfigs
 
-    json_root = JSON.parsefile(filename)
+    json_string = read(filename, String)
+    json_root = JSON3.read(json_string)
 
     scene = json_root["scene"]
     scale = scene["scale"]
@@ -28,7 +30,8 @@ function configs_from_file(filename::String, move_dist::Number)::MultiDroneMulti
             x = loc[1]
             y = loc[2]
             h = rot[3] # Take rotatin around z as the "heading"
-            target_row[id] = Target(x, y, h, id)
+            weight = loc_pos["weight"]
+            target_row[id] = multiply_face_weights(Target(x, y, h, id), weight)
         end
         target_trajectories[time, :] = target_row
     end
@@ -39,11 +42,50 @@ function configs_from_file(filename::String, move_dist::Number)::MultiDroneMulti
     fov = robot_fovs[1]
     sensor = ViewConeSensor(fov, sense_dist)
 
-    return MultiDroneMultiActorConfigs(num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
+    return MultiDroneMultiActorConfigs(experiment_name=experiment_name, num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
+
+end
+
+# Serialize the solution into a json object
+function save_solution(experiment_name::String, path_to_experiments::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
+    root_dict = Dict("value" => solution.value, "elements" => solution.elements)
+
+    directory = "$(path_to_experiments)/$(experiment_name)/mdma"
+    mkpath(directory)
+    mkpath("$(directory)/renders")
+    open("$(directory)/solution.json", "w") do io
+        JSON3.pretty(io, root_dict)
+    end
+
+    println("Saving solution to $(directory)/solution.json")
+    render_paths(solution, multi_configs, "$(directory)/renders")
 
 end
 
 
-@testset "test_file_parse" begin
-    configs_from_file("../../blender/four_split_data.json", 3)
+function load_solution(filename)
+    json_string = read(filename, String)
+    root_dict = JSON3.read(json_string)
+
+    solution_value = root_dict["value"]
+    solution_elements_dict = root_dict["elements"]
+    # Solution Elements is an array of array of (Tuple, Vector{MDPState})
+
+    elements = Tuple{Int64,Vector{MDPState}}[]
+    for robot_dict in solution_elements_dict
+        robot_id = robot_dict[1]
+        robot_states = MDPState[]
+        for states in robot_dict[2]
+            state_dict = states["state"]
+            depth = states["depth"]
+            horizon = states["horizon"]
+            prev = nothing
+            state = UAVState(state_dict["x"], state_dict["y"], Symbol(state_dict["heading"]))
+            push!(robot_states, MDPState(state, depth, horizon, prev))
+        end
+        push!(elements, (robot_id, robot_states))
+    end
+
+    Solution(solution_value, elements)
+
 end

@@ -112,7 +112,7 @@ end
 
 function detectTarget(dstate::UAVState, astate::Target, camera::PinholeCameraModel)::Bool
     rel_target_pos = [astate.x; astate.y; target_height] - [dstate.x; dstate.y; drone_height]
-    theta = -dirAngle(dstate.heading)
+    theta = dirAngle(dstate.heading)
     if dot([cos(theta); sin(theta); 0], rel_target_pos) >= 0
         image_coord = camera.intrinsics*camera.extrinsics*rel_target_pos
         #print("\nScale ", image_coord[3])

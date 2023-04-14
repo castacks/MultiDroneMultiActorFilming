@@ -2,7 +2,7 @@ using Test
 using LinearAlgebra
 using SubmodularMaximization
 
-export Camera, Target, ViewConeSensor, PinholeCameraModel,  Face, rotMatrix, UAVState, drone_height, target_height
+export Camera, Target, ViewConeSensor, PinholeCameraModel,  Face, rotMatrix, UAVState, drone_height, target_height, multiply_face_weights
 
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
@@ -18,25 +18,36 @@ struct PinholeCameraModel
     resolution::Vector{Float64}
     fov::Float64
     cutoff::Float64
-    function PinholeCameraModel(focal_length::Vector{Float64}, resolution::Vector{Float64}, lens_dim::Vector{Float64}, skew::Float64, pitch::Float64)
+    function PinholeCameraModel(focal_length::Vector{Float64}, resolution::Vector{Float64}, lens_dim::Vector{Float64}, skew::Float64, pitch::Float64, cutoff::Float64)
         # world units to pixel units
-        focal_length[1] = resolution[1]/lens_dim[1] * focal_length[1]
-        focal_length[2] = resolution[2]/lens_dim[2] * focal_length[2]
-        principal_point_offset = resolution/2
+        focal_length[1] = resolution[1] / lens_dim[1] * focal_length[1]
+        focal_length[2] = resolution[2] / lens_dim[2] * focal_length[2]
+        principal_point_offset = resolution / 2
 
         intrinsics = [[focal_length[1], 0, 0] [skew, focal_length[2], 0] [principal_point_offset[1], principal_point_offset[2], 1]] #[[focal_length[1], skew, principal_point_offset[1]] [0, focal_length[2], principal_point_offset[2]] [0, 0, 1]]
-        extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, -cos(pitch), sin(pitch)]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
 
-        fov = 2*atan(resolution[1], 2*focal_length[1])
-        cutoff = 6
-        return new(intrinsics,extrinsics,resolution,fov,cutoff)
+        # One matrix is flipping from world coordinate to drone coordinate
+        # then from drone to camera coordinate
+        # Drone -> camera redifine the axis
+        # Rotation on y axis
+        extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, cos(pitch), -sin(pitch)]]
+
+        # extrinsics = [[0, sin(pitch), cos(pitch)] [-1, 0, 0] [0, cos(pitch), -sin(pitch)]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+
+
+        # extrinsics = [[0, 0, 1] [-1, 0, 0] [0, 1, 0]] #[[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+        # extrinsics = [[1, 0, 0] [0, cos(pitch), -sin(pitch)] [0, sin(pitch), cos(pitch)]]
+
+        fov = 2 * atan(resolution[1], 2 * focal_length[1])
+        println("Fov: $(fov)")
+        return new(intrinsics, extrinsics, resolution, fov, cutoff)
     end
 end
 
 Camera = Union{ViewConeSensor, PinholeCameraModel}
 
 const drone_height = 7 # meters
-const target_height = 2 # meters
+const target_height = 7 # meters
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)
@@ -46,8 +57,8 @@ function dir_to_index(d::Symbol)
 end
 
 # Target Faces
-struct Face
-    normal::Vector{Float64} # 2d normal
+mutable struct Face
+    normal::Vector{Float64} # 3d normal
     pos::Vector{Float64} # position
     size::Float64 # Size of face, total face area
     weight::Float64 # Observation Weight
@@ -74,29 +85,48 @@ mutable struct Target
     id::UInt32
 
     function Target(x::Number, y::Number, h::Number, a::Number, n::UInt32, id::UInt32)
+        # n represents the number of total faces
         faces = Vector{Face}(undef, n)
-        dphi = (2*pi)/(n-1)
-        side_length = 0.1
+
+        # Change in angle
+        dphi = (2 * pi) / (n - 1)
+        side_length = 2*a*tan(dphi/2)
         # Need to generate n faces with n normal vectors
-        for i = 1:(n-1) # TODO: Add z dimension to face generation
-            theta = dphi*i + h
-            norm = [cos(theta); sin(theta)]
-            pos = a*norm
-            f = Face(pos[1], pos[2], side_length*target_height, 1/n, norm) # Possible weight 0.5*cos(theta+pi)+0.5
+        for i = 1:(n-1)
+            # Account for heading, which is z rotation
+            theta = (dphi * i) + h
+            norm = [cos(theta); sin(theta); 0.]
+            pos = a * norm
+            # Make sure faces are relative to Target position
+            f = Face(x+pos[1], y+pos[2], side_length * target_height, 1., norm) # Possible weight 0.5*cos(theta+pi)+0.5
+            # Set front faces to twice the weight
+            # if i in 1:2 || i == n-1
+            #     f.weight = 4.0
+            # end
             faces[i] = f
         end
-        norm = [0.0; 0.0]
-        pos = a*norm
-        f = Face(pos[1], pos[2], 3*sqrt(3)*side_length^2/2, 1/n, norm)
+
+        # Adding top face
+        norm = [0.0; 0.0; 1.0]
+        # Top face should be in center of target
+        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1., norm)
         faces[n] = f
-        new(x,y,h,a,faces, id)
+
+
+        new(Float64(x), Float64(y), h, a, faces,length(faces), id)
     end
 end
 
 function Target(x::Number, y::Number, h::Number, id::Number)
-    Target(x,y,h,1.0, UInt32(6), UInt32(id))
+    Target(Float64(x),Float64(y),h,1.0, UInt32(7), UInt32(id))
 end
 
+function multiply_face_weights(t::Target, weight::Number)::Target
+    for f in t.faces
+        f.weight *= weight
+    end
+    t
+end
 #  State struct for agents. Used specifically as part of the action space
 struct UAVState
     x::Int64
