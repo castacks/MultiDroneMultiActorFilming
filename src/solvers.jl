@@ -39,12 +39,37 @@ end
 
 # sequential solver
 function solve_sequential(p::PartitionProblem)
-  selection = empty(p)
+ selection = empty(p)
 
   for ii = 1:get_num_agents(p)
     solution_element = solve_block(p, ii, selection)
 
     push!(selection, solution_element)
+  end
+
+  evaluate_solution(p, selection)
+end
+
+# multiround sequential solver
+#solve_sequential_multiround(p, 3)
+function solve_sequential_multiround(p::PartitionProblem, num_rounds::Int)
+  selection = empty(p)
+
+  for iter = 1:num_rounds
+    for ii = 1:get_num_agents(p)
+      # filter returns element values, findall returns element indices
+      prev_sol = findall(t -> t[1]==ii,selection)
+      
+      # check if ii in selection
+      if !isempty(prev_sol) 
+        # remove ii from selection
+        deleteat!(selection, prev_sol)
+      end
+
+      solution_element = solve_block(p, ii, selection)
+
+      push!(selection, solution_element)
+    end
   end
 
   evaluate_solution(p, selection)
