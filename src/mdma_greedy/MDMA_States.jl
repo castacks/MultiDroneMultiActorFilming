@@ -46,8 +46,8 @@ end
 
 Camera = Union{ViewConeSensor, PinholeCameraModel}
 
-const drone_height = 7 # meters
-const target_height = 7 # meters
+const drone_height::Int64 = 7 # meters
+const target_height::Int64 = 7 # meters
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)

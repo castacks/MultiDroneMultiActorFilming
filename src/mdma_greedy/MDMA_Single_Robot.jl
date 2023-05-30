@@ -177,9 +177,11 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
                 # get pixel density
                 prior_pixel_density = target_coverage[f_id]
 
-                distance = [face.pos[1]; face.pos[2]; target_height / 2] - [action.state.x; action.state.y; drone_height]
+                # distance = (face.pos[1]; face.pos[2]; target_height / 2) - (action.state.x; action.state.y; drone_height)
+
+                distance = (face.pos[1] - action.state.x, face.pos[2] - action.state.y, target_height / 2 - drone_height)
                 theta = dirAngle(action.state.heading)
-                heading = [cos(theta), sin(theta), 0];
+                heading = (cos(theta), sin(theta), 0.0)
 
                 # Includes the sum
                 current_pixel_density = compute_coverage_value(face, heading, distance, prior_pixel_density)
@@ -207,7 +209,7 @@ function plot_heatmap()
 end
 
 
-function isvisible(robot_to_face_distance::Vector{Float64}, face_normal::Vector{Float64})
+function isvisible(robot_to_face_distance::Tuple{Float64, Float64, Float64}, face_normal::Vector{Float64})
     if dot(robot_to_face_distance, face_normal) < 0
         return 1
     else

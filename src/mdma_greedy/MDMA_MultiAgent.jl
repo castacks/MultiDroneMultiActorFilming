@@ -45,21 +45,6 @@ end
 
 # Note that inferred parameters can still be overriden, but we probably don't
 # want to do so
-# function MultiDroneMultiActorConfigs(num_robots;
-#     kwargs...)
-#     grid = Grid(num_robots=num_robots)
-#     MultiDroneMultiActorConfigs(; grid=grid, kwargs...)
-# end
-
-# function MultiDroneMultiActorConfigs(configs::MultiDroneMultiActorConfigs;
-#     kwargs...)
-
-#     fields = fieldnames(MultiDroneMultiActorConfigs)
-#     old_settings = Dict(field => getfield(configs, field) for field in fields)
-#     settings = merge(old_settings, kwargs)
-
-#     MultiDroneMultiActorConfigs(; settings...)
-# end
 
 # Solution elements consist of the robot index and the associated trajectory
 # We construct solutions as such because the output may not have the same
@@ -90,7 +75,7 @@ function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},
 end
 
 # This should later be replaced with PPA
-function compute_coverage_value(face::Face, heading::Array{Float64}, distance::Array{Float64}, previous_coverage::Float64)::Float64
+function compute_coverage_value(face::Face, heading::Tuple{Float64, Float64, Float64}, distance::Tuple{Float64, Float64, Float64}, previous_coverage::Float64)::Float64
     # update
 
     alpha = 10#f.size#1??
@@ -123,7 +108,7 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
     for time in 1:configs.horizon
         for (target_idx, target) in enumerate(target_traj[time, :])
             # Set coverage data to the coverage value for each face
-            for (f_id, face) in enumerate(target.faces)
+            for (f_id, _) in enumerate(target.faces)
                 coverage_data[time, target_idx, f_id] = 0
             end
         end
@@ -156,9 +141,9 @@ function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectori
                 if detectTarget(robot_state.state, target, configs.sensor)
                     for (f_idx, face) in enumerate(target.faces)
                         previous_coverage = coverage_data[time, target_idx, f_idx]
-                        distance = [face.pos[1]; face.pos[2]; target_height / 2] - [robot_state.state.x; robot_state.state.y; drone_height]
+                        distance = (face.pos[1] - robot_state.state.x, face.pos[2] - robot_state.state.y, target_height / 2 - drone_height)
                         theta = dirAngle(robot_state.state.heading)
-                        heading = [cos(theta), sin(theta), 0];
+                        heading = (cos(theta), sin(theta), 0.);
                         num_pixels = compute_coverage_value(face, heading, distance, previous_coverage)
                         coverage_data[time, target_idx, f_idx] = num_pixels
                     end
@@ -271,7 +256,7 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
 
             robot_reward = reward(single_problem, state)
         end
-        println("Robot id: $(robot_id), Reward: $(robot_reward)")
+        # println("Robot id: $(robot_id), Reward: $(robot_reward)")
         # This is why we passed prior stuff to single robot
         # Is this covered? Do a quick lookup
         # For the reward only the
