@@ -47,10 +47,10 @@ function configs_from_file(filename::String, experiment_name::String, move_dist:
 end
 
 # Serialize the solution into a json object
-function save_solution(experiment_name::String, path_to_experiments::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
+function save_solution(experiment_name::String, path_to_experiments::String,subdir::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
     root_dict = Dict("value" => solution.value, "elements" => solution.elements)
 
-    directory = "$(path_to_experiments)/$(experiment_name)/mdma"
+    directory = "$(path_to_experiments)/$(experiment_name)/$(subdir)"
     mkpath(directory)
     mkpath("$(directory)/renders")
     open("$(directory)/solution.json", "w") do io

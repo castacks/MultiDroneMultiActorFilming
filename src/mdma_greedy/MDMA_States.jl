@@ -129,15 +129,16 @@ function multiply_face_weights(t::Target, weight::Number)::Target
 end
 #  State struct for agents. Used specifically as part of the action space
 struct UAVState
-    x::Int64
-    y::Int64
+    x::Float64
+    y::Float64
     heading::Symbol
-    function UAVState(x::Integer, y::Integer, h::Symbol)
+    function UAVState(x::Float64, y::Float64, h::Symbol)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
         new(x,y,h)
     end
 end
 
+UAVState(x::Integer, y::Integer, h::Symbol) = UAVState(Float64(x), Float64(y), h)
 
 mutable struct ViewConeObservation
     n::Int64 # Number of actors detected

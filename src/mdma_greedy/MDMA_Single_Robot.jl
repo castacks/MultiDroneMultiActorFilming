@@ -96,7 +96,7 @@ function POMDPs.actions(model::AbstractSingleRobotProblem, state::MDPState)
 end
 
 function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
-    cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), (model.horizon + 1) - s.depth)
+    cart = CartesianIndex(Integer(s.state.y), Integer(s.state.x), dir_to_index(s.state.heading), (model.horizon + 1) - s.depth)
     # cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
     grid = model.grid
     d = dims(grid)
@@ -137,6 +137,7 @@ function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Intege
 end
 
 in_bounds(grid::MDMA_Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
+in_bounds(grid::MDMA_Grid, x::AbstractFloat, y::AbstractFloat) = in_bounds(grid, UAVState(x, y, :N))
 in_bounds(grid::MDMA_Grid, state::MDPState) = in_bounds(grid, state.state)
 function in_bounds(grid::MDMA_Grid, state::State)
     if state.x > 0 && state.x <= grid.width

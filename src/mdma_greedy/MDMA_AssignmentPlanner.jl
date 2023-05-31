@@ -80,11 +80,6 @@ function solve_block(p::MDMA.MultiRobotTargetAssignmentProblem, block::Integer,
     solution_trajectory = compute_path(single_problem, policy, state)
 
     (block, solution_trajectory)
-    # call solve_sequential on this
-    # subtype PartitionProblem
-    # also solve_myopic and rebeccas solver
-    # also implement evaluate_solution
-    # where we end up calling objective
 end
 
 # Can just call reward from single robot planner

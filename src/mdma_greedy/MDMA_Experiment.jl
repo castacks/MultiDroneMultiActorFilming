@@ -28,11 +28,11 @@ function run_experiment(experiment_name::String, path_to_experiments::String, _:
     multi_problem = MDMA.MultiRobotTargetCoverageProblem(robot_states, multi_configs)
 
     # Solving output
-    println("Solving Solution for $(experiment_name)")
+    println("Solving Solution for $(experiment_name) using GreedyPlanner")
     solution = solve_sequential(multi_problem)
 
     # Save the solution
-    MDMA.save_solution(experiment_name, path_to_experiments, solution, multi_configs)
+    MDMA.save_solution(experiment_name, path_to_experiments,"greedy", solution, multi_configs)
 end
 
 function run_experiment(experiment_name::String, path_to_experiments::String, _::AssignmentPlanner)
@@ -43,22 +43,27 @@ function run_experiment(experiment_name::String, path_to_experiments::String, _:
     multi_configs = configs_from_file("$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json", experiment_name, move_dist)
     multi_configs.sensor = sensor
     robot_states = map(x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid), 1:multi_configs.num_robots)
-    robot_states = map(x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid), 1:multi_configs.num_robots)
 
     multi_problem = MDMA.MultiRobotTargetAssignmentProblem(robot_states, multi_configs)
 
     # Solving output
-    println("Solving Solution for $(experiment_name)")
+    println("Solving Solution for $(experiment_name) using AssignmentPlanner")
     solution = solve_sequential(multi_problem)
 
     # Save the solution
-    MDMA.save_solution(experiment_name, path_to_experiments, solution, multi_configs)
+    MDMA.save_solution(experiment_name, path_to_experiments,"assignment",solution, multi_configs)
 end
 
-function run_experiment(experiment_name::String, path_to_experiments::String, _::FormationPlanner)
-    # TODO Save solution
+function run_experiment(experiment_name::String, path_to_experiments::String, _::FormationPlanner)  cutoff = 10.
+    sensor = MDMA.ViewConeSensor(pi / 2, cutoff)
+    move_dist = 3
+    multi_configs = configs_from_file("$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json", experiment_name, move_dist)
+    multi_configs.sensor = sensor
+    robot_states = map(x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid), 1:multi_configs.num_robots)
+    formation_configs = formation_from_multi(10., robot_states, multi_configs)
+
+    println("Solving Solution for $(experiment_name) using FormationPlanner")
+    solution = solve_formation(formation_configs)
+    MDMA.save_solution(experiment_name, path_to_experiments,"formation",solution, multi_configs)
 end
 
-function run_experiments(experiment_names::Vector{String}, path_to_experiments::String)
-    # TODO Loop over all the names and run the experiments. If one fails continue
-end
