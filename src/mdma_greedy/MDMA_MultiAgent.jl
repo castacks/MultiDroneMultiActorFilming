@@ -12,7 +12,8 @@ import SubmodularMaximization.solve_block
 import SubmodularMaximization.objective
 
 export MultiDroneMultiActorConfigs, MultiRobotTargetCoverageProblem
-export generate_empty_coverage_data, compute_prior_coverage, solve_block, empty, objective, compute_coverage_value
+export generate_empty_coverage_data,
+    compute_prior_coverage, solve_block, empty, objective, compute_coverage_value
 
 
 # Stores configuration variables for multi-robot target tracking
@@ -38,7 +39,15 @@ mutable struct MultiDroneMultiActorConfigs
         horizon,
         move_dist,
     )
-        new(experiment_name,num_robots, target_trajectories, grid, sensor, horizon, move_dist)
+        new(
+            experiment_name,
+            num_robots,
+            target_trajectories,
+            grid,
+            sensor,
+            horizon,
+            move_dist,
+        )
     end
 end
 
@@ -52,30 +61,48 @@ end
 #
 # Warning: this "problem" object may become invalid if any of the underlying
 # objects change and may copy some but not of the inputs.
-mutable struct MultiRobotTargetCoverageProblem <: PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
+mutable struct MultiRobotTargetCoverageProblem <:
+               PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
     # Target tracking problems are defined by vectors of robot states
     partition_matroid::Vector{MDPState} # Most recent version of states of robots
     configs::MultiDroneMultiActorConfigs
 
 end
 
-function extract_single_robot_problems(model::MultiRobotTargetCoverageProblem, coverage::CoverageData)::Vector{SingleRobotMultiTargetViewCoverageProblem}
+function extract_single_robot_problems(
+    model::MultiRobotTargetCoverageProblem,
+    coverage::CoverageData,
+)::Vector{SingleRobotMultiTargetViewCoverageProblem}
     problems = Vector{SingleRobotMultiTargetViewCoverageProblem}(undef)
     config = model.configs
     for initial_state in model.partition_matroid
-        push!(MDMA.SingleRobotMultiTargetViewCoverageProblem(config.grid, config.sensor, config.horizon, config.target_trajectories, model.configs.move_dist, coverage, initial_state))
+        push!(
+            MDMA.SingleRobotMultiTargetViewCoverageProblem(
+                config.grid,
+                config.sensor,
+                config.horizon,
+                config.target_trajectories,
+                model.configs.move_dist,
+                coverage,
+                initial_state,
+            ),
+        )
     end
     problems
 end
 # Construct a target coverage problem with configs.
-function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState},
-    kwargs...)
+function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState}, kwargs...)
     configs = MultiDroneMultiActorConfigs(; kwargs...)
     MultiRobotTargetCoverageProblem(robot_states, configs)
 end
 
 # This should later be replaced with PPA
-function compute_coverage_value(face::Face, heading::Tuple{Float64, Float64, Float64}, distance::Tuple{Float64, Float64, Float64}, previous_coverage::Float64)::Float64
+function compute_coverage_value(
+    face::Face,
+    heading::Tuple{Float64,Float64,Float64},
+    distance::Tuple{Float64,Float64,Float64},
+    previous_coverage::Float64,
+)::Float64
     # update
 
     alpha = 10#f.size#1??
@@ -84,7 +111,12 @@ function compute_coverage_value(face::Face, heading::Tuple{Float64, Float64, Flo
     # get pixel density
     prior_pixel_density = previous_coverage
 
-    current_pixel_density = alpha * face.weight * abs(dot(distance, heading))* -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
+    current_pixel_density =
+        alpha *
+        face.weight *
+        abs(dot(distance, heading)) *
+        -dot(distance, face_normal) *
+        isvisible(distance, face_normal) / norm(distance)^3
 
     # Sum pixel density
     current_pixel_density + prior_pixel_density
@@ -105,7 +137,7 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
 
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
-    for time in 1:configs.horizon
+    for time = 1:configs.horizon
         for (target_idx, target) in enumerate(target_traj[time, :])
             # Set coverage data to the coverage value for each face
             for (f_id, _) in enumerate(target.faces)
@@ -116,7 +148,10 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
     coverage_data
 end
 
-function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectories::Vector{Trajectory})::CoverageData
+function compute_prior_coverage(
+    configs::MultiDroneMultiActorConfigs,
+    trajectories::Vector{Trajectory},
+)::CoverageData
 
     # final_states = map(last, trajectories)
 
@@ -134,17 +169,26 @@ function compute_prior_coverage(configs::MultiDroneMultiActorConfigs, trajectori
     # If a target is detected by at least one robot it is covered
     # loop over each trajectory and compute detections. Is that really the best?
     for current_robot_trajectory in trajectories
-        for time in 1:configs.horizon
+        for time = 1:configs.horizon
             robot_state = current_robot_trajectory[time]
             for (target_idx, target) in enumerate(target_traj[time, :])
                 #TODO Loop over faces
                 if detectTarget(robot_state.state, target, configs.sensor)
                     for (f_idx, face) in enumerate(target.faces)
                         previous_coverage = coverage_data[time, target_idx, f_idx]
-                        distance = (face.pos[1] - robot_state.state.x, face.pos[2] - robot_state.state.y, target_height / 2 - drone_height)
+                        distance = (
+                            face.pos[1] - robot_state.state.x,
+                            face.pos[2] - robot_state.state.y,
+                            target_height / 2 - drone_height,
+                        )
                         theta = dirAngle(robot_state.state.heading)
-                        heading = (cos(theta), sin(theta), 0.);
-                        num_pixels = compute_coverage_value(face, heading, distance, previous_coverage)
+                        heading = (cos(theta), sin(theta), 0.0)
+                        num_pixels = compute_coverage_value(
+                            face,
+                            heading,
+                            distance,
+                            previous_coverage,
+                        )
                         coverage_data[time, target_idx, f_idx] = num_pixels
                     end
                 end
@@ -171,8 +215,11 @@ end
 #
 
 # function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Int64, selections::Vector{Tuple{Int64, Vector{MDMA.MDPState}}})
-function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
-    selections::Vector{Tuple{Int64,Vector{MDMA.MDPState}}})
+function solve_block(
+    p::MDMA.MultiRobotTargetCoverageProblem,
+    block::Integer,
+    selections::Vector{Tuple{Int64,Vector{MDMA.MDPState}}},
+)
 
 
     println("Processing Robot ", block)
@@ -208,7 +255,7 @@ function solve_block(p::MDMA.MultiRobotTargetCoverageProblem, block::Integer,
         configs.target_trajectories,
         Int64(configs.move_dist),
         covered_states,
-        state
+        state,
     )
 
 
@@ -250,7 +297,7 @@ function objective(p::MultiRobotTargetCoverageProblem, X)::Float64
                 configs.target_trajectories,
                 Int64(configs.move_dist),
                 generate_empty_coverage_data(p.configs),
-                state
+                state,
             )
             sum_reward += reward(single_problem, state)
 

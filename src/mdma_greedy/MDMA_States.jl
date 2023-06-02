@@ -2,7 +2,16 @@ using Test
 using LinearAlgebra
 using SubmodularMaximization
 
-export Camera, Target, ViewConeSensor, PinholeCameraModel,  Face, rotMatrix, UAVState, drone_height, target_height, multiply_face_weights
+export Camera,
+    Target,
+    ViewConeSensor,
+    PinholeCameraModel,
+    Face,
+    rotMatrix,
+    UAVState,
+    drone_height,
+    target_height,
+    multiply_face_weights
 
 # Sensor representing a cone of vision from a drone
 # Has an FOV as well as a maximum distance.
@@ -18,13 +27,24 @@ struct PinholeCameraModel
     resolution::Vector{Float64}
     fov::Float64
     cutoff::Float64
-    function PinholeCameraModel(focal_length::Vector{Float64}, resolution::Vector{Float64}, lens_dim::Vector{Float64}, skew::Float64, pitch::Float64, cutoff::Float64)
+    function PinholeCameraModel(
+        focal_length::Vector{Float64},
+        resolution::Vector{Float64},
+        lens_dim::Vector{Float64},
+        skew::Float64,
+        pitch::Float64,
+        cutoff::Float64,
+    )
         # world units to pixel units
         focal_length[1] = resolution[1] / lens_dim[1] * focal_length[1]
         focal_length[2] = resolution[2] / lens_dim[2] * focal_length[2]
         principal_point_offset = resolution / 2
 
-        intrinsics = [[focal_length[1], 0, 0] [skew, focal_length[2], 0] [principal_point_offset[1], principal_point_offset[2], 1]] #[[focal_length[1], skew, principal_point_offset[1]] [0, focal_length[2], principal_point_offset[2]] [0, 0, 1]]
+        intrinsics = [[focal_length[1], 0, 0] [skew, focal_length[2], 0] [
+            principal_point_offset[1],
+            principal_point_offset[2],
+            1,
+        ]] #[[focal_length[1], skew, principal_point_offset[1]] [0, focal_length[2], principal_point_offset[2]] [0, 0, 1]]
 
         # One matrix is flipping from world coordinate to drone coordinate
         # then from drone to camera coordinate
@@ -44,7 +64,7 @@ struct PinholeCameraModel
     end
 end
 
-Camera = Union{ViewConeSensor, PinholeCameraModel}
+Camera = Union{ViewConeSensor,PinholeCameraModel}
 
 const drone_height::Int64 = 7 # meters
 const target_height::Int64 = 7 # meters
@@ -52,7 +72,7 @@ const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)
     if d in cardinaldir
-        return findall(x->x==d, cardinaldir)[1]
+        return findall(x -> x == d, cardinaldir)[1]
     end
 end
 
@@ -64,14 +84,16 @@ mutable struct Face
     weight::Float64 # Observation Weight
     function Face(x::Float64, y::Float64, s::Float64, w::Float64, n::Vector{Float64})
         pos = [x; y]
-        return new(n,pos,s,w)
+        return new(n, pos, s, w)
     end
 end
 
 
 function rotMatrix(theta::Float64)
-    [cos(theta) -sin(theta);
-     sin(theta) cos(10)]
+    [
+        cos(theta) -sin(theta)
+        sin(theta) cos(10)
+    ]
 end
 
 # Target information
@@ -90,15 +112,15 @@ mutable struct Target
 
         # Change in angle
         dphi = (2 * pi) / (n - 1)
-        side_length = 2*a*tan(dphi/2)
+        side_length = 2 * a * tan(dphi / 2)
         # Need to generate n faces with n normal vectors
         for i = 1:(n-1)
             # Account for heading, which is z rotation
             theta = (dphi * i) + h
-            norm = [cos(theta); sin(theta); 0.]
+            norm = [cos(theta); sin(theta); 0.0]
             pos = a * norm
             # Make sure faces are relative to Target position
-            f = Face(x+pos[1], y+pos[2], side_length * target_height, 1., norm) # Possible weight 0.5*cos(theta+pi)+0.5
+            f = Face(x + pos[1], y + pos[2], side_length * target_height, 1.0, norm) # Possible weight 0.5*cos(theta+pi)+0.5
             # Set front faces to twice the weight
             # if i in 1:2 || i == n-1
             #     f.weight = 4.0
@@ -109,16 +131,16 @@ mutable struct Target
         # Adding top face
         norm = [0.0; 0.0; 1.0]
         # Top face should be in center of target
-        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1., norm)
+        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1.0, norm)
         faces[n] = f
 
 
-        new(Float64(x), Float64(y), h, a, faces,length(faces), id)
+        new(Float64(x), Float64(y), h, a, faces, length(faces), id)
     end
 end
 
 function Target(x::Number, y::Number, h::Number, id::Number)
-    Target(Float64(x),Float64(y),h,1.0, UInt32(7), UInt32(id))
+    Target(Float64(x), Float64(y), h, 1.0, UInt32(7), UInt32(id))
 end
 
 function multiply_face_weights(t::Target, weight::Number)::Target
@@ -134,7 +156,7 @@ struct UAVState
     heading::Symbol
     function UAVState(x::Float64, y::Float64, h::Symbol)
         h in cardinaldir || throw(ArgumentError("invalid cardinaldir: $h"))
-        new(x,y,h)
+        new(x, y, h)
     end
 end
 
@@ -148,11 +170,11 @@ end
 
 
 function drawTargets()
-    f = Figure(resolution=(800,800))
-    Axis(f[1,1], backgroundcolor="black")
+    f = Figure(resolution = (800, 800))
+    Axis(f[1, 1], backgroundcolor = "black")
 
     xs = LinRange(-10, 10, 20)
     ys = LinRange(-10, 10, 20)
-    t = Target(5., 5., 0., 5., UInt32(6), 1)
+    t = Target(5.0, 5.0, 0.0, 5.0, UInt32(6), 1)
 
 end

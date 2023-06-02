@@ -6,7 +6,13 @@ using SubmodularMaximization
 using SparseArrays
 using LinearAlgebra
 
-export get_states, dims, num_states, SingleRobotMultiTargetViewCoverageProblem, solve_single_robot, compute_path, reward
+export get_states,
+    dims,
+    num_states,
+    SingleRobotMultiTargetViewCoverageProblem,
+    solve_single_robot,
+    compute_path,
+    reward
 
 ##################################################
 ## Override function solve_single_robot         ##
@@ -60,10 +66,18 @@ mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotP
         target_trajectories::Array{Target,2},
         move_dist::Integer,
         coverage_data::CoverageData,
-        initial_state::MDPState
+        initial_state::MDPState,
     )
 
-        new(grid, sensor, horizon, target_trajectories, move_dist, coverage_data, initial_state)
+        new(
+            grid,
+            sensor,
+            horizon,
+            target_trajectories,
+            move_dist,
+            coverage_data,
+            initial_state,
+        )
     end
 end
 get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.grid)
@@ -71,7 +85,11 @@ horizon(x::AbstractSingleRobotProblem) = x.horizon
 
 
 # POMDPs.transition(model::AbstractSingleRobotProblem, state::UAVState, action::UAVState) = transition(model, MDPState(state), action)
-function POMDPs.transition(model::AbstractSingleRobotProblem, state::MDPState, action::MDPState)
+function POMDPs.transition(
+    model::AbstractSingleRobotProblem,
+    state::MDPState,
+    action::MDPState,
+)
 
     nbors = neighbors(model, state, model.move_dist)
     if action in nbors
@@ -96,7 +114,12 @@ function POMDPs.actions(model::AbstractSingleRobotProblem, state::MDPState)
 end
 
 function POMDPs.stateindex(model::AbstractSingleRobotProblem, s::MDPState)
-    cart = CartesianIndex(Integer(s.state.y), Integer(s.state.x), dir_to_index(s.state.heading), (model.horizon + 1) - s.depth)
+    cart = CartesianIndex(
+        Integer(s.state.y),
+        Integer(s.state.x),
+        dir_to_index(s.state.heading),
+        (model.horizon + 1) - s.depth,
+    )
     # cart = CartesianIndex(s.state.y, s.state.x, dir_to_index(s.state.heading), s.depth)
     grid = model.grid
     d = dims(grid)
@@ -114,7 +137,11 @@ end
 
 # neighbors(grid::Grid, mstate::MDPState, d::Integer) = neighbors(grid, mstate.state, d)
 # Compute neighbors within a certain distance of the state in the grid
-function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Integer)::Vector{MDPState}
+function neighbors(
+    model::AbstractSingleRobotProblem,
+    state::MDPState,
+    d::Integer,
+)::Vector{MDPState}
 
     actions = Vector{MDPState}(undef, 0)
     diff = d ÷ 2 + 1# Search within a square region around the object
@@ -137,7 +164,8 @@ function neighbors(model::AbstractSingleRobotProblem, state::MDPState, d::Intege
 end
 
 in_bounds(grid::MDMA_Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
-in_bounds(grid::MDMA_Grid, x::AbstractFloat, y::AbstractFloat) = in_bounds(grid, UAVState(x, y, :N))
+in_bounds(grid::MDMA_Grid, x::AbstractFloat, y::AbstractFloat) =
+    in_bounds(grid, UAVState(x, y, :N))
 in_bounds(grid::MDMA_Grid, state::MDPState) = in_bounds(grid, state.state)
 function in_bounds(grid::MDMA_Grid, state::State)
     if state.x > 0 && state.x <= grid.width
@@ -151,7 +179,12 @@ end
 # Produces the policy for a single robot
 function solve_single_robot(problem::AbstractSingleRobotProblem)
 
-    solver = ValueIterationSolver(max_iterations=90, belres=1e-6, verbose=true, include_Q=false)
+    solver = ValueIterationSolver(
+        max_iterations = 90,
+        belres = 1e-6,
+        verbose = true,
+        include_Q = false,
+    )
     policy = solve(solver, problem)
 
     return policy
@@ -159,7 +192,11 @@ end
 
 
 # This should depend on the prior observations as well as other plans from robots
-function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::MDPState, action::MDPState)
+function POMDPs.reward(
+    model::SingleRobotMultiTargetViewCoverageProblem,
+    state::MDPState,
+    action::MDPState,
+)
     coverage_data = model.coverage_data
     # Want to just give a reward value if you detect an object
     reward = 0
@@ -180,12 +217,17 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
 
                 # distance = (face.pos[1]; face.pos[2]; target_height / 2) - (action.state.x; action.state.y; drone_height)
 
-                distance = (face.pos[1] - action.state.x, face.pos[2] - action.state.y, target_height / 2 - drone_height)
+                distance = (
+                    face.pos[1] - action.state.x,
+                    face.pos[2] - action.state.y,
+                    target_height / 2 - drone_height,
+                )
                 theta = dirAngle(action.state.heading)
                 heading = (cos(theta), sin(theta), 0.0)
 
                 # Includes the sum
-                current_pixel_density = compute_coverage_value(face, heading, distance, prior_pixel_density)
+                current_pixel_density =
+                    compute_coverage_value(face, heading, distance, prior_pixel_density)
 
 
                 # Sum marginal reward
@@ -199,18 +241,20 @@ function POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, state::
         reward += 0.02
     end
 
-    if(action.state.x == state.state.x) && (action.state.y == state.state.y)
+    if (action.state.x == state.state.x) && (action.state.y == state.state.y)
         reward += 0.01
     end
 
     reward
 end
 
-function plot_heatmap()
-end
+function plot_heatmap() end
 
 
-function isvisible(robot_to_face_distance::Tuple{Float64, Float64, Float64}, face_normal::Vector{Float64})
+function isvisible(
+    robot_to_face_distance::Tuple{Float64,Float64,Float64},
+    face_normal::Vector{Float64},
+)
     if dot(robot_to_face_distance, face_normal) < 0
         return 1
     else
@@ -218,7 +262,8 @@ function isvisible(robot_to_face_distance::Tuple{Float64, Float64, Float64}, fac
     end
 end
 # For reward only the action matters in this case
-POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, action::MDPState) = POMDPs.reward(model, action, action)
+POMDPs.reward(model::SingleRobotMultiTargetViewCoverageProblem, action::MDPState) =
+    POMDPs.reward(model, action, action)
 
 reward = POMDPs.reward
 
@@ -226,7 +271,7 @@ reward = POMDPs.reward
 function compute_path(model, policy, state)::Trajectory
     path = Vector{MDPState}(undef, 0)
     push!(path, state)
-    for x in 2:model.horizon
+    for x = 2:model.horizon
         state = action(policy, state)
         push!(path, state)
     end
@@ -245,7 +290,11 @@ end
 POMDPs.initialstate(model::AbstractSingleRobotProblem) = model.initial_state
 
 # Generate basic trajectories
-function generate_target_trajectories(grid::MDMA_Grid, horizon::Integer, initial::Vector{Target})::Array{Target,2}
+function generate_target_trajectories(
+    grid::MDMA_Grid,
+    horizon::Integer,
+    initial::Vector{Target},
+)::Array{Target,2}
     trajectory = Array{Target,2}(undef, horizon, length(initial))
     yend = 4
     x = grid.width - 5

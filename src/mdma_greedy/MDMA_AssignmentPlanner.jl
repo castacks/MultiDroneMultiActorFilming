@@ -12,21 +12,21 @@ import SubmodularMaximization.objective
 
 export MultiRobotTargetAssignmentProblem
 
-mutable struct MultiRobotTargetAssignmentProblem <: PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
+mutable struct MultiRobotTargetAssignmentProblem <:
+               PartitionProblem{Tuple{Int64,Vector{MDMA.MDPState}}}
     # Target tracking problems are defined by vectors of robot states
     partition_matroid::Vector{MDPState} # Most recent version of states of robots
     configs::MultiDroneMultiActorConfigs
 end
 
-function MultiRobotTargetAssignmentProblem(robot_states::Vector{MDPState},
-    kwargs...)
+function MultiRobotTargetAssignmentProblem(robot_states::Vector{MDPState}, kwargs...)
     configs = MultiDroneMultiActorConfigs(; kwargs...)
     MultiRobotTargetAssignmentProblem(robot_states, configs)
 end
 
 function compute_assignments(robot_id, num_targets, num_robots)
-    width = (num_targets / num_robots) < 1 ? 1 : Integer(floor(num_targets/num_robots))
-    offset = (width * (robot_id-1))+1
+    width = (num_targets / num_robots) < 1 ? 1 : Integer(floor(num_targets / num_robots))
+    offset = (width * (robot_id - 1)) + 1
     assignments = fill(false, (1, num_targets))
     assignments[offset:offset+width-1] = fill(true, (1, width))
     return assignments
@@ -42,14 +42,17 @@ end
 #  - In this case I'll just wrap the assignments
 function get_assignments(robot_id::Integer, num_targets::Integer, num_robots::Integer)
     if (num_targets % num_robots != 0)
-        return compute_assignments(robot_id%num_targets + 1, num_targets, num_robots)
+        return compute_assignments(robot_id % num_targets + 1, num_targets, num_robots)
     else
         return compute_assignments(robot_id, num_targets, num_robots)
     end
 end
 
-function solve_block(p::MDMA.MultiRobotTargetAssignmentProblem, block::Integer,
-    selections::Vector{Tuple{Int64,Vector{MDMA.MDPState}}})
+function solve_block(
+    p::MDMA.MultiRobotTargetAssignmentProblem,
+    block::Integer,
+    selections::Vector{Tuple{Int64,Vector{MDMA.MDPState}}},
+)
 
     println("Processing Robot ", block)
     # Get configs
@@ -70,7 +73,7 @@ function solve_block(p::MDMA.MultiRobotTargetAssignmentProblem, block::Integer,
         configs.target_trajectories,
         Int64(configs.move_dist),
         vec(assignments),
-        state
+        state,
     )
 
 
@@ -110,7 +113,7 @@ function objective(p::MultiRobotTargetAssignmentProblem, X)::Float64
                 configs.target_trajectories,
                 Int64(configs.move_dist),
                 vec(assignments),
-                state
+                state,
             )
             sum_reward += reward(single_problem, state)
 
@@ -139,16 +142,28 @@ mutable struct SingleRobotTargetAssignmentProblem <: AbstractSingleRobotProblem
         target_trajectories::Array{Target,2},
         move_dist::Integer,
         assignments::Vector{Bool},
-        initial_state::MDPState
+        initial_state::MDPState,
     )
 
-        new(grid, sensor, horizon, target_trajectories, move_dist, assignments, initial_state)
+        new(
+            grid,
+            sensor,
+            horizon,
+            target_trajectories,
+            move_dist,
+            assignments,
+            initial_state,
+        )
     end
 end
 
 
 # This should depend on the prior observations as well as other plans from robots
-function POMDPs.reward(model::SingleRobotTargetAssignmentProblem, state::MDPState, action::MDPState)
+function POMDPs.reward(
+    model::SingleRobotTargetAssignmentProblem,
+    state::MDPState,
+    action::MDPState,
+)
     # Want to just give a reward value if you detect an object
     reward = 0
     time = action.depth
@@ -160,14 +175,23 @@ function POMDPs.reward(model::SingleRobotTargetAssignmentProblem, state::MDPStat
                 for (f_id, face) in enumerate(t.faces)
                     face_normal = face.normal
 
-                    distance = (face.pos[1] - action.state.x, face.pos[2] - action.state.y, target_height / 2 - drone_height)
+                    distance = (
+                        face.pos[1] - action.state.x,
+                        face.pos[2] - action.state.y,
+                        target_height / 2 - drone_height,
+                    )
                     theta = dirAngle(action.state.heading)
                     heading = (cos(theta), sin(theta), 0.0)
 
                     alpha = 10
                     face_normal = face.normal
 
-                    current_pixel_density = alpha * face.weight * abs(dot(distance, heading))* -dot(distance, face_normal) * isvisible(distance, face_normal) / norm(distance)^3
+                    current_pixel_density =
+                        alpha *
+                        face.weight *
+                        abs(dot(distance, heading)) *
+                        -dot(distance, face_normal) *
+                        isvisible(distance, face_normal) / norm(distance)^3
 
                     reward += current_pixel_density
                 end
@@ -179,11 +203,12 @@ function POMDPs.reward(model::SingleRobotTargetAssignmentProblem, state::MDPStat
         reward += 0.02
     end
 
-    if(action.state.x == state.state.x) && (action.state.y == state.state.y)
+    if (action.state.x == state.state.x) && (action.state.y == state.state.y)
         reward += 0.01
     end
 
     reward
 end
 
-POMDPs.reward(model::SingleRobotTargetAssignmentProblem, action::MDPState) = POMDPs.reward(model, action, action)
+POMDPs.reward(model::SingleRobotTargetAssignmentProblem, action::MDPState) =
+    POMDPs.reward(model, action, action)

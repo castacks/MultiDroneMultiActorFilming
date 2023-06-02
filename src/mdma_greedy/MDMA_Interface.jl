@@ -7,7 +7,11 @@ using MDMA
 
 export configs_from_file, save_solution, load_solution
 
-function configs_from_file(filename::String, experiment_name::String, move_dist::Number)::MultiDroneMultiActorConfigs
+function configs_from_file(
+    filename::String,
+    experiment_name::String,
+    move_dist::Number,
+)::MultiDroneMultiActorConfigs
 
     json_string = read(filename, String)
     json_root = JSON3.read(json_string)
@@ -42,12 +46,26 @@ function configs_from_file(filename::String, experiment_name::String, move_dist:
     fov = robot_fovs[1]
     sensor = ViewConeSensor(fov, sense_dist)
 
-    return MultiDroneMultiActorConfigs(experiment_name=experiment_name, num_robots=num_robots, target_trajectories=target_trajectories, grid=grid, sensor=sensor, horizon=horizon, move_dist=move_dist)
+    return MultiDroneMultiActorConfigs(
+        experiment_name = experiment_name,
+        num_robots = num_robots,
+        target_trajectories = target_trajectories,
+        grid = grid,
+        sensor = sensor,
+        horizon = horizon,
+        move_dist = move_dist,
+    )
 
 end
 
 # Serialize the solution into a json object
-function save_solution(experiment_name::String, path_to_experiments::String,subdir::String, solution::Solution, multi_configs::MultiDroneMultiActorConfigs)
+function save_solution(
+    experiment_name::String,
+    path_to_experiments::String,
+    subdir::String,
+    solution::Solution,
+    multi_configs::MultiDroneMultiActorConfigs,
+)
     root_dict = Dict("value" => solution.value, "elements" => solution.elements)
 
     directory = "$(path_to_experiments)/$(experiment_name)/$(subdir)"
@@ -80,7 +98,8 @@ function load_solution(filename)
             depth = states["depth"]
             horizon = states["horizon"]
             prev = nothing
-            state = UAVState(state_dict["x"], state_dict["y"], Symbol(state_dict["heading"]))
+            state =
+                UAVState(state_dict["x"], state_dict["y"], Symbol(state_dict["heading"]))
             push!(robot_states, MDPState(state, depth, horizon, prev))
         end
         push!(elements, (robot_id, robot_states))
