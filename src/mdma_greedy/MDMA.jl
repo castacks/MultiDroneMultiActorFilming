@@ -10,5 +10,6 @@ include("./MDMA_FormationPlanner.jl")
 include("./MDMA_Render.jl")
 include("./MDMA_Interface.jl")
 include("./MDMA_Experiment.jl")
+include("./MDMA_Evaluation.jl")
 
 end
