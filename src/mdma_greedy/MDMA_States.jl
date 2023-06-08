@@ -66,8 +66,8 @@ end
 
 Camera = Union{ViewConeSensor,PinholeCameraModel}
 
-const drone_height::Int64 = 7 # meters
-const target_height::Int64 = 7 # meters
+const drone_height::Float64 = 5. # meters
+const target_height::Float64 = 0 # meters
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)
@@ -131,7 +131,8 @@ mutable struct Target
         # Adding top face
         norm = [0.0; 0.0; 1.0]
         # Top face should be in center of target
-        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1.0, norm)
+        # NOTE: Setting weight to zero as a test!
+        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 0.0, norm)
         faces[n] = f
 
 
