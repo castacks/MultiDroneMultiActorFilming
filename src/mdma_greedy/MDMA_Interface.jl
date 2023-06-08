@@ -5,7 +5,7 @@ using Test
 using SubmodularMaximization
 using MDMA
 
-export configs_from_file, save_solution, load_solution
+export configs_from_file, save_solution, load_solution, targets_from_file
 
 function configs_from_file(
     filename::String,
@@ -58,6 +58,34 @@ function configs_from_file(
 
 end
 
+function targets_from_file(
+    filename::String,
+)::Array{Target, 2}
+
+    json_string = read(filename, String)
+    json_root = JSON3.read(json_string)
+
+    horizon = json_root["num_frames"]
+    num_targets = json_root["num_targets"]
+
+    target_trajectories = Array{Target,2}(undef, horizon, num_targets)
+    for (time, target_set) in enumerate(json_root["actor_positions"])
+        target_row = Vector{Target}(undef, num_targets)
+        for (id, loc_pos) in enumerate(target_set)
+            loc = loc_pos["location"]
+            rot = loc_pos["rotation"]
+            x = loc[1]
+            y = loc[2]
+            h = rot[3] # Take rotatin around z as the "heading"
+            weight = loc_pos["weight"]
+            target_row[id] = multiply_face_weights(Target(x, y, h, id), weight)
+        end
+        target_trajectories[time, :] = target_row
+    end
+
+    return target_trajectories
+end
+
 # Serialize the solution into a json object
 function save_solution(
     experiment_name::String,
@@ -105,6 +133,6 @@ function load_solution(filename)
         push!(elements, (robot_id, robot_states))
     end
 
-    Solution(solution_value, elements)
+    Solution(Float64(solution_value), elements)
 
 end
