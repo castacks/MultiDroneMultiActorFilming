@@ -132,7 +132,7 @@ function generate_empty_coverage_data(configs::MultiDroneMultiActorConfigs)::Cov
 
     target_traj = configs.target_trajectories
     num_targets = length(target_traj[1, :])
-    num_faces = 7 #TODO Do not make this hardcoded! It should be 6 (for hexagon) and 1 normal on top
+    num_faces = 7 # TODO Do not make this hardcoded! It should be 6 (for hexagon) and 1 normal on top
     coverage_data = Array{Float64,3}(undef, configs.horizon, num_targets, num_faces)
 
     # If a target is detected by at least one robot it is covered
