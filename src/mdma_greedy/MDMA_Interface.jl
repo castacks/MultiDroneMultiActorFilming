@@ -58,9 +58,7 @@ function configs_from_file(
 
 end
 
-function targets_from_file(
-    filename::String,
-)::Array{Target, 2}
+function targets_from_file(filename::String)::Array{Target,2}
 
     json_string = read(filename, String)
     json_root = JSON3.read(json_string)

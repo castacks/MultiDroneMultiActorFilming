@@ -66,7 +66,7 @@ end
 
 Camera = Union{ViewConeSensor,PinholeCameraModel}
 
-const drone_height::Float64 = 5. # meters
+const drone_height::Float64 = 5.0 # meters
 const target_height::Float64 = 0 # meters
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 

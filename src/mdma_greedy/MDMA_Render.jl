@@ -10,7 +10,7 @@ end
 
 
 function draw_background(cr::CairoContext, width, height)
-    save(cr)
+    Cairo.save(cr)
     set_source_rgb(cr, 1, 1, 1)    # white
     rectangle(cr, 0.0, 0.0, width, height) # background
     fill(cr)
@@ -29,7 +29,7 @@ function draw_grid(g::MDMA_Grid, cr::CairoContext, point_size, ppm, buf)
 end
 
 # function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
-#     save(cr)
+#     Cairo.save(cr)
 #     set_source_rgba(cr, 0, 0.3, 0.5, 1);
 #     arc(cr, t.x*ppm + buf*ppm, t.y*ppm + buf*ppm, size, 0, 2*pi);
 #     fill(cr);
@@ -37,7 +37,7 @@ end
 # end
 
 function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
-    save(cr)
+    Cairo.save(cr)
     set_source_rgba(cr, 0, 0.3, 0.5, 1)
     root = buf * ppm
 
@@ -57,7 +57,7 @@ function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
     # Draw just normals for now
     for (i, face) in enumerate(t.faces[1:length(t.faces)-1])
         set_line_width(cr, 1 + 2 * face.weight)
-        save(cr)
+        Cairo.save(cr)
         x = face.pos[1] * ppm + root
         y = face.pos[2] * ppm + root
         # move_to(cr, x, y)
@@ -68,7 +68,7 @@ function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
         fy_low = ty + r * sin(base_angle + (i * dphi) - theta_offset)
         fy_high = ty + r * sin(base_angle + (i * dphi) + theta_offset)
         set_source_rgba(cr, 0, 0.3, 0.5, 1)
-        stroke(cr)
+        Cairo.stroke(cr)
         move_to(cr, fx_low, fy_low)
         line_to(cr, fx_high, fy_high)
         move_to(cr, x, y)
@@ -77,7 +77,7 @@ function draw_target(cr::CairoContext, t::Target, ppm, size, buf)
         rel_line_to(cr, ppm * face.normal[1], ppm * face.normal[2])
         restore(cr)
     end
-    stroke(cr)
+    Cairo.stroke(cr)
     set_source_rgba(cr, 0, 0.3, 0.5, 1)
     arc(cr, t.x * ppm + buf * ppm, t.y * ppm + buf * ppm, size, 0, 2 * pi)
     fill(cr)
@@ -93,7 +93,7 @@ function draw_targets(cr::CairoContext, targs::Vector{Target}, ppm, size, buf)
 end
 
 function draw_state(cr::CairoContext, state::UAVState, model, ppm, fade, cfade, buf)
-    save(cr)
+    Cairo.save(cr)
     move_to(cr, state.x * ppm + buf * ppm, state.y * ppm + buf * ppm)
     fov = model.sensor.fov
     radius = model.sensor.cutoff
@@ -114,7 +114,7 @@ function draw_arc(cr::CairoContext, radius, x, y, heading, fov, ppm, fade, cfade
     set_line_width(cr, 5.0)
     arc(cr, xc, yc, radius, angle1, angle2)
     fill(cr)
-    stroke(cr)
+    Cairo.stroke(cr)
 
     # draw helping lines
     set_line_width(cr, 6.0)
@@ -132,7 +132,7 @@ function draw_arc(cr::CairoContext, radius, x, y, heading, fov, ppm, fade, cfade
     set_source_rgba(cr, (cfade), (1 - cfade) * 0.5, (1 - cfade) * 1.1, fade / 5)
     fill_preserve(cr)
 
-    stroke(cr)
+    Cairo.stroke(cr)
 end
 
 
@@ -150,7 +150,7 @@ function draw_scene(rconf::RenderConf, model, paths, cutoff, dirpath)
     buf = rconf.buf
     draw_grid(model.grid, cr, 5, ppm, buf)
 
-    save(cr)
+    Cairo.save(cr)
     select_font_face(
         cr,
         "Latin Modern Math",
@@ -200,7 +200,7 @@ function draw_scene(rconf::RenderConf, model, paths, cutoff, dirpath)
                     state.state.x * ppm + buf * ppm,
                     state.state.y * ppm + buf * ppm,
                 )
-                stroke(cr)
+                Cairo.stroke(cr)
             end
         end
     end

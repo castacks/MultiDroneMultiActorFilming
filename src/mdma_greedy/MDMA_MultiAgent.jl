@@ -158,7 +158,6 @@ function compute_prior_coverage(
     # loop over targets and append to covered states
     # set coverage value for each target for now just 1 or 0
     target_traj = configs.target_trajectories
-    num_targets = length(target_traj[1, :])
 
     # Mapping of which targets are covered through history
     # 2D array of tuples of targets and values where each row is a timestep
@@ -172,7 +171,6 @@ function compute_prior_coverage(
         for time = 1:configs.horizon
             robot_state = current_robot_trajectory[time]
             for (target_idx, target) in enumerate(target_traj[time, :])
-                #TODO Loop over faces
                 if detectTarget(robot_state.state, target, configs.sensor)
                     for (f_idx, face) in enumerate(target.faces)
                         previous_coverage = coverage_data[time, target_idx, f_idx]
