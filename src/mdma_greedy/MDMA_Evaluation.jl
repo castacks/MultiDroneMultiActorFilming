@@ -29,6 +29,9 @@ function evaluate_solution(
         exit()
     end
 
+    const side_area = 1.01 # m^2
+    const top_area = 0.811 # m^2
+
     df = DataFrame(t = 1:horizon)
     for planner in planner_types
         cameras = readdir("$(blender_path)/$(planner)", join = true)
@@ -40,11 +43,39 @@ function evaluate_solution(
                 push!(images_at_t, image_paths[t])
             end
 
+            # Value for this timestep in the plot
             val_now = 0.0
             for img_path in images_at_t
+                # For every image
+                unique_colors = Dict()
                 img = load(img_path)
-                f_img = float.(Gray.(img))
-                val_now += sum(map(x -> x.val, f_img))
+
+                # Collect the unique colors in the image
+                # Due to antialiasing, filter out unique pixels
+                # that do not show up more than 20 times
+                for pixel in img
+                    mag = red(pixel) + green(pixel) + blue(pixel)
+                    # Skip very dark pixels
+                    if mag < 0.05
+                        continue
+                    end
+                    if !haskey(unique_colors, pixel)
+                        push!(unique_colors, pixel => 1)
+                    else
+                        unique_colors[pixel] += 1
+                    end
+                end
+                # Filter out non-significant pixels
+                unique_colors = filter(p -> last(p) > 20, unique_colors)
+
+                for (pixel, count) in unique_colors
+                    # We are looking at a top face if the red channel is > 0.5
+                    # In that case use the known face area for the top face
+                    # else use the face area for the side
+                    ppa = red(pixel) > 0.5 ? top_area * sqrt(count / top_area) : side_area * sqrt(count / side_area)
+                    
+                    val_now += ppa
+                end
             end
             push!(evals, val_now)
         end
