@@ -14,3 +14,16 @@ blender/template.blend1
 blender/template.blend1
 *.blend1
 *.blend1
+experiments/four_split/blender_output
+experiments/split_and_join/assignment/renders
+experiments/split_and_join/blender_output
+experiments/split_and_join/formation/renders
+experiments/split_and_join/greedy/renders
+experiments/spreadout_group/assignment/renders
+experiments/spreadout_group/blender_output
+experiments/spreadout_group/formation/renders
+experiments/spreadout_group/greedy/renders
+experiments/track_runners/assignment/renders
+experiments/track_runners/blender_output
+experiments/track_runners/formation/renders
+experiments/track_runners/greedy/renders
