@@ -53,7 +53,10 @@ def main():
                 angle_z = heading_angles[h] - PI/2.
                 camera.location.x = x
                 camera.location.y = y
+                camera.location.z = 5.0
                 camera.rotation_euler.z = angle_z
+                camera.rotation_euler.x = PI/2. - 0.3490655
+                camera.rotation_euler.y = 0.0
                 camera.keyframe_insert(data_path="location", frame=t)
                 camera.keyframe_insert(data_path="rotation_euler", frame=t)
 
