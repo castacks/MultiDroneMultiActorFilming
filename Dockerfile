@@ -24,6 +24,7 @@ RUN tar zxvf julia-1.8.2-linux-x86_64.tar.gz
 ENV PATH="$PATH:/julia-1.8.2/bin"
 ENV JULIA_LOAD_PATH="/airlab:/airlab/src/mdma_greedy:/env:$JULIA_LOAD_PATH"
 ENV JULIA_NUM_THREADS=12
+ENV DISPLAY=$DISPLAY
 
 RUN apt-get -y install blender
 

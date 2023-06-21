@@ -11,6 +11,9 @@ sudo docker run \
        --volume $PWD/../blender:/airlab/blender \
        --volume $PWD/../examples:/airlab/examples \
        --volume $PWD/../SubmodularMaximization.jl:/airlab/SubmodularMaximization.jl \
+       --env DISPLAY=$DISPLAY \
+       --volume /tmp/.X11-unix:/tmp/.X11-unix \
+       --volume $HOME/.Xauthority:$HOME/.Xauthority \
        -it \
        -p 8888:8888 \
        airlab \

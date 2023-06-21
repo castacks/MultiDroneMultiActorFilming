@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-./build
+# ./build
 
 sudo docker run \
        --volume $PWD/../src:/airlab/src \
@@ -12,6 +12,9 @@ sudo docker run \
        --volume $PWD/../experiments:/airlab/experiments \
        --volume $PWD/../examples:/airlab/examples \
        --volume $PWD/../SubmodularMaximization.jl:/airlab/SubmodularMaximization.jl \
+       --env DISPLAY=$DISPLAY \
+       --volume /tmp/.X11-unix:/tmp/.X11-unix \
+       --volume $HOME/.Xauthority:$HOME/.Xauthority \
        -it \
        airlab \
        /bin/bash

@@ -7,11 +7,3 @@ cd $(dirname "$0")
 sudo docker build .. --no-cache -t airlab 
 yes | sudo docker image prune || true
 
-docker_run () {
-    sudo docker run \
-           --volume $PWD/../src:/airlab/src\
-           --volume $PWD/../examples:/airlab/examples \
-           --volume $PWD/../SubmodularMaximization.jl:/airlab/ \
-           airlab \
-           "$@"
-}
