@@ -8,7 +8,8 @@ using DataFrames
 using CSV
 using Plots
 
-export AssignmentPlanner, GreedyPlanner, FormationPlanner, run_experiment
+export AssignmentPlanner, GreedyPlanner, FormationPlanner, run_all_experiments, ExperimentsConfig
+export blender_render_all_experiments, evaluate_all_experiments
 
 struct GreedyPlanner end
 struct FormationPlanner end
@@ -149,7 +150,7 @@ function run_all_experiments(config::ExperimentsConfig)
         planners = [FormationPlanner(), GreedyPlanner(), AssignmentPlanner()]
         # Generate experiment data
         println("Building Experiment Data")
-        data_cmd = `blender $(path)/$(experiment).blend --background --python $(config.path_to_experiments)/export_experiment_data.py`
+        data_cmd = `blender --background $(path)/$(experiment).blend  --python $(config.path_to_experiments)/export_experiment_data.py`
         run(data_cmd)
 
         # Run the experiment
@@ -164,9 +165,29 @@ function run_all_experiments(config::ExperimentsConfig)
 
         # Render Images
         println("Blender Rendering for $(experiment)")
-        render_cmd = `blender $(path)/$(experiment).blend --background --python $(config.path_to_experiments)/animate_cameras.py`
+        render_cmd = `blender --background $(path)/$(experiment).blend --python $(config.path_to_experiments)/animate_cameras.py`
         run(render_cmd)
         println("Render Finish for $(experiment)")
+
+        # Evaluate Experiments
+        evaluate_all_experiments(config)
+        println("Experiment $(experiment) complete!")
+    end
+end
+
+function blender_render_all_experiments(config::ExperimentsConfig)
+    Threads.@threads for experiment in config.experiments
+        path = "$(config.path_to_experiments)/$(experiment)"
+        println("Blender Rendering for $(experiment)")
+        render_cmd = `blender --background $(path)/$(experiment).blend  --python $(config.path_to_experiments)/animate_cameras.py`
+        run(render_cmd)
+        println("Render Finish for $(experiment)")
+    end
+end
+function evaluate_all_experiments(config::ExperimentsConfig)
+    # mtime is what we will store
+    for experiment in config.experiments
+        path = "$(config.path_to_experiments)/$(experiment)"
 
         # Evaluate Experiments
         println("Evaluating PPA for $(experiment)")
@@ -177,13 +198,11 @@ function run_all_experiments(config::ExperimentsConfig)
         println("Evaluating Image for $(experiment)")
         df_image = evaluate_solution(experiment, config.path_to_experiments, ImageEvaluation())
         CSV.write("$(path)/image_evaluation.csv", df_image)
-        save_plot(df_ppa, path, "Image", experiment)
+        save_plot(df_image, path, "Image", experiment)
 
         println("Experiment $(experiment) complete!")
     end
 end
-
-
 function save_plot(df::DataFrame, path::String, eval_kind::String, experiment_name::String)
     planners = ["formation","greedy","assignment"]
     pl = plot()
