@@ -64,8 +64,21 @@ def main():
         for camera_name in camera_names:
             render_path = f'{planner_path}/{camera_name}/'
             os.makedirs(render_path, exist_ok=True)
-            bpy.context.scene.camera = bpy.data.objects[camera_name]
-            bpy.context.scene.render.filepath = render_path
+            scene = bpy.context.scene
+            scene.camera = bpy.data.objects[camera_name]
+
+            # Set render settings directly
+            scene.render.filepath = render_path
+            scene.render.use_compositing = False
+            scene.render.resolution_x = 3840
+            scene.render.resolution_y = 2160
+            scene.render.resolution_percentage = 5
+            scene.render.image_settings.file_format = 'PNG'
+            scene.render.image_settings.color_depth = '16'
+            scene.render.image_settings.compression = 0
+            scene.render.filter_size = 0.0
+            scene.eevee.taa_render_samples = 1
+
             bpy.ops.render.render(animation=True)
         
 if __name__ == "__main__":
