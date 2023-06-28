@@ -3,19 +3,26 @@ import json
 import sys
 import os
 
+
 def main():
     PI = 3.14159
 
-    planner_kinds = ['greedy', 'formation', 'assignment']
+    planner_kinds = [
+        "greedy",
+        "assignment",
+        "formation",
+        "myopic",
+        "multiple_rounds_greedy",
+    ]
 
-    # Get correct location    
+    # Get correct location
     fname = bpy.path.basename(bpy.context.blend_data.filepath)
     path = bpy.data.filepath[: -len(fname)]
     os.chdir(path)
 
-    # Animate and render for each planner    
+    # Animate and render for each planner
     for planner in planner_kinds:
-        planner_path = f'blender_output/{planner}'
+        planner_path = f"blender_output/{planner}"
         os.makedirs(planner_path, exist_ok=True)
 
         solution_dict = {}
@@ -50,19 +57,19 @@ def main():
                 x = solution_dict["elements"][idx][1][t]["state"]["x"]
                 y = solution_dict["elements"][idx][1][t]["state"]["y"]
                 h = solution_dict["elements"][idx][1][t]["state"]["heading"]
-                angle_z = heading_angles[h] - PI/2.
+                angle_z = heading_angles[h] - PI / 2.0
                 camera.location.x = x
                 camera.location.y = y
                 camera.location.z = 5.0
                 camera.rotation_euler.z = angle_z
-                camera.rotation_euler.x = PI/2. - 0.3490655
+                camera.rotation_euler.x = PI / 2.0 - 0.3490655
                 camera.rotation_euler.y = 0.0
                 camera.keyframe_insert(data_path="location", frame=t)
                 camera.keyframe_insert(data_path="rotation_euler", frame=t)
 
         # Render out each camera
         for camera_name in camera_names:
-            render_path = f'{planner_path}/{camera_name}/'
+            render_path = f"{planner_path}/{camera_name}/"
             os.makedirs(render_path, exist_ok=True)
             scene = bpy.context.scene
             scene.camera = bpy.data.objects[camera_name]
@@ -73,13 +80,14 @@ def main():
             scene.render.resolution_x = 3840
             scene.render.resolution_y = 2160
             scene.render.resolution_percentage = 5
-            scene.render.image_settings.file_format = 'PNG'
-            scene.render.image_settings.color_depth = '16'
+            scene.render.image_settings.file_format = "PNG"
+            scene.render.image_settings.color_depth = "16"
             scene.render.image_settings.compression = 0
             scene.render.filter_size = 0.0
             scene.eevee.taa_render_samples = 1
 
             bpy.ops.render.render(animation=True)
-        
+
+
 if __name__ == "__main__":
     main()

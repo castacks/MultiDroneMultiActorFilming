@@ -23,7 +23,6 @@ function evaluate_solution(
 
     horizon = multi_configs.horizon
 
-    planner_types = ["greedy", "assignment", "formation"]
     if length(readdir(blender_path)) != 3
         println("Error, no planner directories")
         exit()
@@ -101,7 +100,6 @@ function evaluate_solution(
     # Make dataframe    
     df = DataFrame(t = 1:horizon)
 
-    planner_types = ["greedy", "assignment", "formation"]
     for planner in planner_types
         solution = load_solution("$(root_path)/$(planner)/solution.json")
 
