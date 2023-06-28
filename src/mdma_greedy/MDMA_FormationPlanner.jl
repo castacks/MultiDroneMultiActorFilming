@@ -1,7 +1,7 @@
 struct FormationPlannerConfigs
     radius::AbstractFloat
     point_nearest::Bool
-    initial_states::Vector{MDPState}
+    initial_angle::AbstractFloat
     grid::MDMA_Grid
     sensor::Camera
     target_trajectories::Array{Target,2}
@@ -11,13 +11,13 @@ end
 
 function formation_from_multi(
     radius::AbstractFloat,
-    initial_states::Vector{MDPState},
+    initial_angle::AbstractFloat,
     mconfig::MultiDroneMultiActorConfigs,
 )::FormationPlannerConfigs
     return FormationPlannerConfigs(
         radius,
         true,
-        initial_states,
+        initial_angle,
         mconfig.grid,
         mconfig.sensor,
         mconfig.target_trajectories,
@@ -94,8 +94,8 @@ function place_uavs(
     targets = config.target_trajectories[time, :]
     radius = compute_formation_radius(centroid, time, config)
     for _ = 1:config.num_robots
-        x = radius * cos(theta) + centroid[1]
-        y = radius * sin(theta) + centroid[2]
+        x = radius * cos(theta + config.initial_angle) + centroid[1]
+        y = radius * sin(theta + config.initial_angle) + centroid[2]
         u_state = UAVState(x, y, Symbol(:E))
         state = MDPState(u_state, time, config.horizon, nothing)
         push!(output_states, align_nearest(state, targets))
