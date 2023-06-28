@@ -29,8 +29,8 @@ function evaluate_solution(
         exit()
     end
 
-    const side_area = 1.01 # m^2
-    const top_area = 0.811 # m^2
+    side_area = 1.01 # m^2
+    top_area = 0.811 # m^2
 
     df = DataFrame(t = 1:horizon)
     for planner in planner_types
@@ -54,9 +54,9 @@ function evaluate_solution(
                 # Due to antialiasing, filter out unique pixels
                 # that do not show up more than 20 times
                 for pixel in img
-                    mag = red(pixel) + green(pixel) + blue(pixel)
-                    # Skip very dark pixels
-                    if mag < 0.05
+                    mag = (red(pixel) + green(pixel) + blue(pixel))/3.
+                    # Skip very dark or bright pixels
+                    if (red(pixel) ==  blue(pixel) == green(pixel))
                         continue
                     end
                     if !haskey(unique_colors, pixel)
@@ -65,8 +65,6 @@ function evaluate_solution(
                         unique_colors[pixel] += 1
                     end
                 end
-                # Filter out non-significant pixels
-                unique_colors = filter(p -> last(p) > 20, unique_colors)
 
                 for (pixel, count) in unique_colors
                     # We are looking at a top face if the red channel is > 0.5
