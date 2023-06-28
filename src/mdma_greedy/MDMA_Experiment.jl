@@ -9,7 +9,7 @@ using CSV
 using Plots
 
 export AssignmentPlanner, GreedyPlanner, FormationPlanner, MyopicPlanner, MultipleRoundsGreedyPlanner
-export run_all_experiments, ExperimentsConfig, planner_types
+export run_all_experiments, ExperimentsConfig
 export blender_render_all_experiments, evaluate_all_experiments
 
 struct GreedyPlanner end
@@ -18,7 +18,8 @@ struct AssignmentPlanner end
 struct MyopicPlanner end
 struct MultipleRoundsGreedyPlanner end
 
-planner_types = ["greedy", "assignment", "formation", "myopic", "multiple_rounds_greedy"]
+# planner_types = ["greedy", "assignment", "formation", "myopic", "multiple_rounds_greedy"]
+planner_types = ["myopic", "multipleroundsgreedy"]
 
 function run_experiment(
     experiment_name::String,
@@ -280,12 +281,12 @@ function evaluate_all_experiments(config::ExperimentsConfig)
 
         # Evaluate Experiments
         println("Evaluating PPA for $(experiment)")
-        df_ppa = evaluate_solution(experiment, config.path_to_experiments, PPAEvaluation())
+        df_ppa = evaluate_solution(experiment, planner_types, config.path_to_experiments, PPAEvaluation())
         CSV.write("$(path)/ppa_evaluation.csv", df_ppa)
         save_plot(df_ppa, path, "PPA", experiment)
 
         println("Evaluating Image for $(experiment)")
-        df_image = evaluate_solution(experiment, config.path_to_experiments, ImageEvaluation())
+        df_image = evaluate_solution(experiment, planner_types, config.path_to_experiments, ImageEvaluation())
         CSV.write("$(path)/image_evaluation.csv", df_image)
         save_plot(df_image, path, "Image", experiment)
 
@@ -293,9 +294,8 @@ function evaluate_all_experiments(config::ExperimentsConfig)
     end
 end
 function save_plot(df::DataFrame, path::String, eval_kind::String, experiment_name::String)
-    planners = ["formation","greedy","assignment"]
     pl = plot()
-    for planner in planners
+    for planner in planner_types
         plot!(pl, df[!, :t], df[!, Symbol(planner)], label=planner)
     end
     xlabel!(pl,"TimeStep")

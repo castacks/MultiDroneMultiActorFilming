@@ -11,6 +11,7 @@ struct PPAEvaluation end
 
 function evaluate_solution(
     experiment_name::String,
+    planner_types::[String],
     path_to_experiments::String,
     _::ImageEvaluation,
 )::DataFrame
@@ -84,6 +85,7 @@ end
 
 function evaluate_solution(
     experiment_name::String,
+    planner_types::[String],
     path_to_experiments::String,
     _::PPAEvaluation,
 )::DataFrame
