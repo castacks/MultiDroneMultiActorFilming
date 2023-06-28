@@ -4,6 +4,6 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-sudo docker build .. --no-cache -t airlab 
+sudo docker build .. -t airlab 
 yes | sudo docker image prune || true
 

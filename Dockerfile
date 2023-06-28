@@ -26,9 +26,20 @@ ENV JULIA_LOAD_PATH="/airlab:/airlab/src/mdma_greedy:/env:$JULIA_LOAD_PATH"
 ENV JULIA_NUM_THREADS=12
 ENV DISPLAY=$DISPLAY
 
-RUN apt-get -y install blender
 
 COPY juliapackages /env
 WORKDIR /env
 RUN julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate();'
+
+COPY blender /airlab/blender
+WORKDIR /airlab/blender
+RUN wget https://mirror.clarkson.edu/blender/release/Blender3.5/blender-3.5.1-linux-x64.tar.xz
+RUN tar xvf /airlab/blender/blender-3.5.1-linux-x64.tar.xz
+
+RUN apt-get -y install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev libxrender-dev libsm-dev
+RUN apt-get -y install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
+
+ENV PATH="$PATH:/airlab/blender/blender-3.5.1-linux-x64"
+
+
 WORKDIR /airlab
