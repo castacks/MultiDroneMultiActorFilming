@@ -141,7 +141,7 @@ mutable struct Target
 end
 
 function Target(x::Number, y::Number, h::Number, id::Number)
-    Target(Float64(x), Float64(y), h, 1.0, UInt32(7), UInt32(id))
+    Target(Float64(x), Float64(y), h, 0.968/2.0, UInt32(7), UInt32(id))
 end
 
 function multiply_face_weights(t::Target, weight::Number)::Target
