@@ -45,7 +45,7 @@ export Agent, generate_agents,
   independent
 
 # Solvers
-export solve_optimal, solve_worst, solve_myopic, solve_random, solve_sequential
+export solve_optimal, solve_worst, solve_myopic, solve_random, solve_sequential, solve_sequential_multiround
 
 # Max now uses isless to exclude types that do not have a total order. We would
 # like to have something like this defined for solutions but probably should not

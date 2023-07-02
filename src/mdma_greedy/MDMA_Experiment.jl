@@ -18,8 +18,11 @@ struct AssignmentPlanner end
 struct MyopicPlanner end
 struct MultipleRoundsGreedyPlanner end
 
-# planner_types = ["greedy", "assignment", "formation", "myopic", "multiple_rounds_greedy"]
-planner_types = ["myopic", "multipleroundsgreedy"]
+
+# planners = [FormationPlanner(), GreedyPlanner(), AssignmentPlanner(),MyopicPlanner(), MultipleRoundsGreedyPlanner()]
+planners = [MultipleRoundsGreedyPlanner()]
+planner_type_to_string = x -> lowercase(chop(string(x), head=5, tail=9))
+planner_types = map(planner_type_to_string, planners)
 
 function run_experiment(
     experiment_name::String,
@@ -52,13 +55,14 @@ function run_experiment(
 
     # Solving output
     println("Solving Solution for $(experiment_name) using MultipleRoundsGreedyPlanner")
-    solution = solve_sequential_multiround(multi_problem, multi_configs.num_robots)
+    println("Num Robots", multi_configs.num_robots)
+    solution =  solve_sequential_multiround(multi_problem, multi_configs.num_robots)
 
     # Save the solution
     MDMA.save_solution(
         experiment_name,
         path_to_experiments,
-        "multiple_rounds_greedy",
+        "multipleroundsgreedy",
         solution,
         multi_configs,
     )
@@ -237,7 +241,6 @@ function run_all_experiments(config::ExperimentsConfig)
     # mtime is what we will store
     Threads.@threads for experiment in config.experiments
         path = "$(config.path_to_experiments)/$(experiment)"
-        planners = [FormationPlanner(), GreedyPlanner(), AssignmentPlanner()]
         # Generate experiment data
         println("Building Experiment Data")
         data_cmd = `blender --background $(path)/$(experiment).blend  --python $(config.path_to_experiments)/export_experiment_data.py`
@@ -279,6 +282,7 @@ function evaluate_all_experiments(config::ExperimentsConfig)
     for experiment in config.experiments
         path = "$(config.path_to_experiments)/$(experiment)"
 
+        println("Path $(path)")
         # Evaluate Experiments
         println("Evaluating PPA for $(experiment)")
         df_ppa = evaluate_solution(experiment, planner_types, config.path_to_experiments, PPAEvaluation())

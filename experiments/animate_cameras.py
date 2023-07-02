@@ -12,7 +12,7 @@ def main():
         "assignment",
         "formation",
         "myopic",
-        "multiple_rounds_greedy",
+        "multipleroundsgreedy",
     ]
 
     # Get correct location

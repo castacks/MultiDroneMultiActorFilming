@@ -11,7 +11,7 @@ struct PPAEvaluation end
 
 function evaluate_solution(
     experiment_name::String,
-    planner_types::[String],
+    planner_types::Vector{String},
     path_to_experiments::String,
     _::ImageEvaluation,
 )::DataFrame
@@ -23,11 +23,6 @@ function evaluate_solution(
         configs_from_file("$(root_path)/$(experiment_name)_data.json", experiment_name, 3.0)
 
     horizon = multi_configs.horizon
-
-    if length(readdir(blender_path)) != 3
-        println("Error, no planner directories")
-        exit()
-    end
 
     side_area = 1.01 # m^2
     top_area = 0.811 # m^2
@@ -45,7 +40,8 @@ function evaluate_solution(
 
             # Value for this timestep in the plot
             val_now = 0.0
-            for img_path in images_at_t
+            seen_faces = Dict()
+            for (i,img_path) in enumerate(images_at_t)
                 # For every image
                 unique_colors = Dict()
                 img = load(img_path)
@@ -59,6 +55,13 @@ function evaluate_solution(
                     if (red(pixel) ==  blue(pixel) == green(pixel))
                         continue
                     end
+
+                    if !haskey(seen_faces, pixel)
+                        push!(seen_faces, pixel => 1)
+                    else
+                        seen_faces[pixel] += 1
+                    end
+                    
                     if !haskey(unique_colors, pixel)
                         push!(unique_colors, pixel => 1)
                     else
@@ -70,9 +73,15 @@ function evaluate_solution(
                     # We are looking at a top face if the red channel is > 0.5
                     # In that case use the known face area for the top face
                     # else use the face area for the side
-                    ppa = red(pixel) > 0.5 ? top_area * sqrt(count / top_area) : side_area * sqrt(count / side_area)
+                    previous_count = i == 0 ? 0 : seen_faces[pixel]
+
+                    ppa = x -> red(pixel) > 0.5 ? top_area * sqrt(x / top_area) : side_area * sqrt(x / side_area)
+
+                    ppa_old = ppa(previous_count)
+                    ppa_current = ppa(count)
+
                     
-                    val_now += ppa
+                    val_now += sqrt(ppa_current) + sqrt(ppa_old)
                 end
             end
             push!(evals, val_now)
@@ -85,7 +94,7 @@ end
 
 function evaluate_solution(
     experiment_name::String,
-    planner_types::[String],
+    planner_types::Vector{String},
     path_to_experiments::String,
     _::PPAEvaluation,
 )::DataFrame
