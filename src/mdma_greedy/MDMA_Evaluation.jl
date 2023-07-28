@@ -117,7 +117,7 @@ function evaluate_solution(
         solution = load_solution("$(root_path)/$(planner)/solution.json")
 
         # Get evaluation for all
-        ppa_values = []
+        view_quality_values = []
 
         # Might need to change the evaluation method.
         # First robot coverage array is zero
@@ -126,7 +126,7 @@ function evaluate_solution(
         # In aggregate
         coverage_data = generate_empty_coverage_data(multi_configs)
         for t = 1:horizon
-            ppa_now = 0.0
+            view_quality_at_time = 0.0
             states = []
 
             # Would be nice to do this in a neater way
@@ -136,9 +136,9 @@ function evaluate_solution(
             end
 
             targets = target_trajectories[t, :]
-            for state in states
-                for (target_id, target) in enumerate(targets)
-                    for (f_id, face) in enumerate(target.faces)
+            for (target_id, target) in enumerate(targets)
+                for (f_id, face) in enumerate(target.faces)
+                    for state in states
                         distance = (
                             face.pos[1] - state.state.x,
                             face.pos[2] - state.state.y,
@@ -147,22 +147,24 @@ function evaluate_solution(
                         theta = dirAngle(state.state.heading)
                         look_direction = (cos(theta), sin(theta), 0.0)
                         # Set previous_coverage to zero
-                        prior_pixel_density = coverage_data[t, target_id, f_id]
-                        current_pixel_density = compute_coverage_value(
+                        camera_pixel_density = compute_camera_coverage(
                             face,
                             look_direction,
-                            distance,
-                            prior_pixel_density,
+                            distance
                         )
-                        coverage_data[t, target_id, f_id] = current_pixel_density
-                        ppa_now += current_pixel_density - prior_pixel_density
+                        coverage_data[t, target_id, f_id] += camera_pixel_density
                     end
+                    # Accumulate reward for the face after we finish
+                    view_quality =
+                        face_view_quality(face,
+                                          coverage_data[t, target_id, f_id])
+                    view_quality_at_time += view_quality
                 end
             end
-            push!(ppa_values, ppa_now)
+            push!(view_quality_values, view_quality_at_time)
         end
 
-        df[!, planner] = ppa_values
+        df[!, planner] = view_quality_values
     end
     return df
 end
