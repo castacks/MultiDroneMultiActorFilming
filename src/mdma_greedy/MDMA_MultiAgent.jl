@@ -118,6 +118,17 @@ function compute_camera_coverage(
         isvisible(distance, face_normal) / norm(distance)^4
 end
 
+# Computes total view quality on a face after accumulating views from robots
+#
+# Basically:
+# * Input is total pixel density on the face, weighted by view quality
+#   (the extra dot product)
+# * Output is square root of that value, weighted by the size of the face, and
+#   how much we care about the face/target (face weight)
+function face_view_quality(face::Face, coverage_value)
+    face.weight * face.size * sqrt(coverage_value)
+end
+
 function empty(p::MultiRobotTargetCoverageProblem)
     Vector{MDPState}(undef, 0)
 end
