@@ -18,22 +18,26 @@ struct AssignmentPlanner end
 struct MyopicPlanner end
 struct MultipleRoundsGreedyPlanner end
 
-
-# planners = [FormationPlanner(), GreedyPlanner(), AssignmentPlanner(),MyopicPlanner(), MultipleRoundsGreedyPlanner()]
-planners = [MultipleRoundsGreedyPlanner()]
+## Ensure that planners start in the same state for each experiment
+planners = [FormationPlanner(), GreedyPlanner(), AssignmentPlanner(),MyopicPlanner(), MultipleRoundsGreedyPlanner()]
+# planners = [MyopicPlanner()]
+#planners = [MultipleRoundsGreedyPlanner()]
 planner_type_to_string = x -> lowercase(chop(string(x), head=5, tail=9))
 planner_types = map(planner_type_to_string, planners)
 
-function run_experiment(
+# maps experiment names to starting states
+starting_states = Dict()
+
+function init_discrete_problem(
     experiment_name::String,
     path_to_experiments::String,
-    _::MultipleRoundsGreedyPlanner,
 )
+
     # Set model parameters
-    focal_length = [20.0, 20.0]#mm
-    resolution = [3840.0, 2160.0]
-    lens_dim = [35.00, 24.00] #mm
-    pitch = -0.3490655 # if you change this also change animate_cameras.py
+    # focal_length = [20.0, 20.0]#mm
+    # resolution = [3840.0, 2160.0]
+    # lens_dim = [35.00, 24.00] #mm
+    # pitch = -0.3490655 # if you change this also change animate_cameras.py
     cutoff = 100.0
     # sensor = MDMA.PinholeCameraModel(focal_length, resolution, lens_dim, 0.0, pitch, cutoff)
     sensor = MDMA.ViewConeSensor(pi / 2, cutoff)
@@ -44,19 +48,32 @@ function run_experiment(
         experiment_name,
         move_dist,
     )
-
     multi_configs.sensor = sensor
-    # model = MDMA.SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, target_trajectories, move_dist);
-    robot_states = map(
-        x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid),
-        1:multi_configs.num_robots,
-    )
-    multi_problem = MDMA.MultiRobotTargetCoverageProblem(robot_states, multi_configs)
 
+    if !haskey(starting_states, experiment_name)
+        push!(starting_states, experiment_name => map(
+            x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid),
+            1:multi_configs.num_robots,
+        ))
+    end
+
+    robot_states = starting_states[experiment_name]
+
+    multi_problem = MDMA.MultiRobotTargetCoverageProblem(robot_states, multi_configs)
+    multi_problem
+
+end
+
+function run_experiment(
+    experiment_name::String,
+    path_to_experiments::String,
+    _::MultipleRoundsGreedyPlanner,
+)
+    problem = init_discrete_problem(experiment_name, path_to_experiments)
     # Solving output
     println("Solving Solution for $(experiment_name) using MultipleRoundsGreedyPlanner")
-    println("Num Robots", multi_configs.num_robots)
-    solution =  solve_sequential_multiround(multi_problem, multi_configs.num_robots)
+    println("Num Robots", problem.configs.num_robots)
+    solution =  solve_sequential_multiround(problem, problem.configs.num_robots)
 
     # Save the solution
     MDMA.save_solution(
@@ -64,7 +81,7 @@ function run_experiment(
         path_to_experiments,
         "multipleroundsgreedy",
         solution,
-        multi_configs,
+        problem.configs,
     )
 end
 
@@ -73,33 +90,11 @@ function run_experiment(
     path_to_experiments::String,
     _::MyopicPlanner,
 )
-    # Set model parameters
-    focal_length = [20.0, 20.0]#mm
-    resolution = [3840.0, 2160.0]
-    lens_dim = [35.00, 24.00] #mm
-    pitch = -0.3490655 # if you change this also change animate_cameras.py
-    cutoff = 100.0
-    # sensor = MDMA.PinholeCameraModel(focal_length, resolution, lens_dim, 0.0, pitch, cutoff)
-    sensor = MDMA.ViewConeSensor(pi / 2, cutoff)
-    move_dist = 3
 
-    multi_configs = configs_from_file(
-        "$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json",
-        experiment_name,
-        move_dist,
-    )
-
-    multi_configs.sensor = sensor
-    # model = MDMA.SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, target_trajectories, move_dist);
-    robot_states = map(
-        x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid),
-        1:multi_configs.num_robots,
-    )
-    multi_problem = MDMA.MultiRobotTargetCoverageProblem(robot_states, multi_configs)
-
+    problem = init_discrete_problem(experiment_name, path_to_experiments)
     # Solving output
     println("Solving Solution for $(experiment_name) using MyopicPlanner")
-    solution = solve_myopic(multi_problem)
+    solution = solve_myopic(problem)
 
     # Save the solution
     MDMA.save_solution(
@@ -107,7 +102,7 @@ function run_experiment(
         path_to_experiments,
         "myopic",
         solution,
-        multi_configs,
+        problem.configs,
     )
 end
 
@@ -116,33 +111,10 @@ function run_experiment(
     path_to_experiments::String,
     _::GreedyPlanner,
 )
-    # Set model parameters
-    focal_length = [20.0, 20.0]#mm
-    resolution = [3840.0, 2160.0]
-    lens_dim = [35.00, 24.00] #mm
-    pitch = -0.3490655 # if you change this also change animate_cameras.py
-    cutoff = 100.0
-    # sensor = MDMA.PinholeCameraModel(focal_length, resolution, lens_dim, 0.0, pitch, cutoff)
-    sensor = MDMA.ViewConeSensor(pi / 2, cutoff)
-    move_dist = 3
-
-    multi_configs = configs_from_file(
-        "$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json",
-        experiment_name,
-        move_dist,
-    )
-
-    multi_configs.sensor = sensor
-    # model = MDMA.SingleRobotMultiTargetViewCoverageProblem(grid, sensor, horizon, target_trajectories, move_dist);
-    robot_states = map(
-        x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid),
-        1:multi_configs.num_robots,
-    )
-    multi_problem = MDMA.MultiRobotTargetCoverageProblem(robot_states, multi_configs)
-
+    problem = init_discrete_problem(experiment_name, path_to_experiments)
     # Solving output
     println("Solving Solution for $(experiment_name) using GreedyPlanner")
-    solution = solve_sequential(multi_problem)
+    solution = solve_sequential(problem)
 
     # Save the solution
     MDMA.save_solution(
@@ -150,7 +122,7 @@ function run_experiment(
         path_to_experiments,
         "greedy",
         solution,
-        multi_configs,
+        problem.configs,
     )
 end
 
@@ -159,26 +131,11 @@ function run_experiment(
     path_to_experiments::String,
     _::AssignmentPlanner,
 )
-    cutoff = 100.0
-    sensor = MDMA.ViewConeSensor(pi / 2, cutoff)
-    move_dist = 3
-
-    multi_configs = configs_from_file(
-        "$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json",
-        experiment_name,
-        move_dist,
-    )
-    multi_configs.sensor = sensor
-    robot_states = map(
-        x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid),
-        1:multi_configs.num_robots,
-    )
-
-    multi_problem = MDMA.MultiRobotTargetAssignmentProblem(robot_states, multi_configs)
-
+    
+    problem = init_discrete_problem(experiment_name, path_to_experiments)
     # Solving output
     println("Solving Solution for $(experiment_name) using AssignmentPlanner")
-    solution = solve_sequential(multi_problem)
+    solution = solve_sequential(problem)
 
     # Save the solution
     MDMA.save_solution(
@@ -186,7 +143,7 @@ function run_experiment(
         path_to_experiments,
         "assignment",
         solution,
-        multi_configs,
+        problem.configs,
     )
 end
 
@@ -200,7 +157,7 @@ function run_experiment(
     # Just using the exiting function configs_from_file
     # To extract some information we need
     move_dist = 3
-    multi_configs = configs_from_file(
+    configs = configs_from_file(
         "$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json",
         experiment_name,
         move_dist,
@@ -209,7 +166,7 @@ function run_experiment(
     # Initial States    
     # TODO: Random phase angle
     # Instead of starting states
-    formation_configs = formation_from_multi(15.0, randn(), multi_configs)
+    formation_configs = formation_from_multi(15.0, randn(), configs)
 
     println("Solving Solution for $(experiment_name) using FormationPlanner")
     solution = solve_formation(formation_configs)
@@ -218,7 +175,7 @@ function run_experiment(
         path_to_experiments,
         "formation",
         solution,
-        multi_configs,
+        configs,
     )
 end
 

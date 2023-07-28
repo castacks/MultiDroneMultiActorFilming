@@ -37,18 +37,17 @@ function evaluate_solution(
                 image_paths = readdir(camera, join = true)
                 push!(images_at_t, image_paths[t])
             end
-
+            println(images_at_t)
             # Value for this timestep in the plot
             val_now = 0.0
-            seen_faces = Dict()
+            # Contains pixels -> num 
+            accumulated_pixels = Dict()
             for (i,img_path) in enumerate(images_at_t)
                 # For every image
-                unique_colors = Dict()
+                unique_colors_now = Dict()
                 img = load(img_path)
 
                 # Collect the unique colors in the image
-                # Due to antialiasing, filter out unique pixels
-                # that do not show up more than 20 times
                 for pixel in img
                     mag = (red(pixel) + green(pixel) + blue(pixel))/3.
                     # Skip very dark or bright pixels
@@ -56,32 +55,33 @@ function evaluate_solution(
                         continue
                     end
 
-                    if !haskey(seen_faces, pixel)
-                        push!(seen_faces, pixel => 1)
+                    if !haskey(accumulated_pixels, pixel)
+                        push!(accumulated_pixels, pixel => 1)
                     else
-                        seen_faces[pixel] += 1
+                        accumulated_pixels[pixel] += 1
                     end
                     
-                    if !haskey(unique_colors, pixel)
-                        push!(unique_colors, pixel => 1)
+                    if !haskey(unique_colors_now, pixel)
+                        push!(unique_colors_now, pixel => 1)
                     else
-                        unique_colors[pixel] += 1
+                        unique_colors_now[pixel] += 1
                     end
                 end
 
-                for (pixel, count) in unique_colors
+                # Compute PPA for this timestep based on face pixel counts
+                for (pixel, count) in unique_colors_now
                     # We are looking at a top face if the red channel is > 0.5
                     # In that case use the known face area for the top face
                     # else use the face area for the side
-                    previous_count = i == 0 ? 0 : seen_faces[pixel]
+                    # previous_count = i == 1 ? 0 : seen_faces[pixel]
+                    previous_count = accumulated_pixels[pixel]
 
                     ppa = x -> red(pixel) > 0.5 ? top_area * sqrt(x / top_area) : side_area * sqrt(x / side_area)
 
                     ppa_old = ppa(previous_count)
-                    ppa_current = ppa(count)
-
+                    ppa_current = ppa(count) + ppa_old
                     
-                    val_now += sqrt(ppa_current) + sqrt(ppa_old)
+                    val_now += ppa_current - ppa_old
                 end
             end
             push!(evals, val_now)
@@ -153,7 +153,7 @@ function evaluate_solution(
                             prior_pixel_density,
                         )
                         coverage_data[t, target_id, f_id] = current_pixel_density
-                        ppa_now += sqrt(current_pixel_density) - sqrt(prior_pixel_density)
+                        ppa_now += current_pixel_density - prior_pixel_density
                     end
                 end
             end

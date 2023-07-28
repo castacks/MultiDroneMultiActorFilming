@@ -105,7 +105,7 @@ function compute_coverage_value(
 )::Float64
     # update
 
-    alpha = 10#f.size#1??
+    alpha = 1
     face_normal = face.normal
 
     # get pixel density
