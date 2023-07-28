@@ -9,6 +9,28 @@ export evaluate_solution, PPAEvaluation, ImageEvaluation
 struct ImageEvaluation end
 struct PPAEvaluation end
 
+# Computes view quality for images as surface integral of square root pixel
+# density with unweighted faces
+#
+# sum over faces of
+#   face_area * sqrt(pixels / face_area)
+function cumulative_view_quality(count_by_color)
+    reward = 0
+
+    # Compute PPA for this timestep based on face pixel counts
+    for (pixel, count) in counts_by_color
+        # We are looking at a top face if the red channel is > 0.5
+        # In that case use the known face area for the top face
+        # else use the face area for the side
+        # previous_count = i == 1 ? 0 : seen_faces[pixel]
+        view_quality = x -> red(pixel) > 0.5 ? top_area * sqrt(x / top_area) : side_area * sqrt(x / side_area)
+
+        # Could add a multiplicative factor on count to handle resolution (micah)
+        reward += view_quality(count)
+    end
+    return reward
+end
+
 function evaluate_solution(
     experiment_name::String,
     planner_types::Vector{String},
@@ -40,11 +62,10 @@ function evaluate_solution(
             println(images_at_t)
             # Value for this timestep in the plot
             val_now = 0.0
-            # Contains pixels -> num 
+            # Contains pixels -> num
             accumulated_pixels = Dict()
             for (i,img_path) in enumerate(images_at_t)
                 # For every image
-                unique_colors_now = Dict()
                 img = load(img_path)
 
                 # Collect the unique colors in the image
@@ -60,32 +81,13 @@ function evaluate_solution(
                     else
                         accumulated_pixels[pixel] += 1
                     end
-                    
-                    if !haskey(unique_colors_now, pixel)
-                        push!(unique_colors_now, pixel => 1)
-                    else
-                        unique_colors_now[pixel] += 1
-                    end
-                end
-
-                # Compute PPA for this timestep based on face pixel counts
-                for (pixel, count) in unique_colors_now
-                    # We are looking at a top face if the red channel is > 0.5
-                    # In that case use the known face area for the top face
-                    # else use the face area for the side
-                    # previous_count = i == 1 ? 0 : seen_faces[pixel]
-                    previous_count = accumulated_pixels[pixel]
-
-                    ppa = x -> red(pixel) > 0.5 ? top_area * sqrt(x / top_area) : side_area * sqrt(x / side_area)
-
-                    ppa_old = ppa(previous_count)
-                    ppa_current = ppa(count) + ppa_old
-                    
-                    val_now += ppa_current - ppa_old
                 end
             end
-            push!(evals, val_now)
+
+            reward = cumulative_view_quality(accumulated_pixels)
+            push!(evals, reward)
         end
+
         df[!, planner] = evals
     end
 
@@ -108,7 +110,7 @@ function evaluate_solution(
     target_trajectories = multi_configs.target_trajectories
     horizon = multi_configs.horizon
 
-    # Make dataframe    
+    # Make dataframe
     df = DataFrame(t = 1:horizon)
 
     for planner in planner_types
@@ -121,7 +123,7 @@ function evaluate_solution(
         # First robot coverage array is zero
         # We have its trajectory so we can compute coverage data for the second robot
         # Lets compute the coverage on a per timestep basis if possible
-        # In aggregate 
+        # In aggregate
         coverage_data = generate_empty_coverage_data(multi_configs)
         for t = 1:horizon
             ppa_now = 0.0
