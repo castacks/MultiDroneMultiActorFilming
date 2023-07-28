@@ -13,7 +13,8 @@ import SubmodularMaximization.objective
 
 export MultiDroneMultiActorConfigs, MultiRobotTargetCoverageProblem
 export generate_empty_coverage_data,
-    compute_prior_coverage, solve_block, empty, objective, compute_coverage_value
+    compute_prior_coverage, solve_block, empty, objective,
+    compute_camera_coverage, face_view_quality
 
 
 # Stores configuration variables for multi-robot target tracking
