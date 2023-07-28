@@ -97,29 +97,25 @@ function MultiRobotTargetCoverageProblem(robot_states::Vector{MDPState}, kwargs.
 end
 
 # This should later be replaced with PPA
-function compute_coverage_value(
+# This computes the summands of gamma_f (i.e. the per robot camera view quality)
+#
+# Note from micah: I removed the previous coverage so that the sum will be
+# outside
+function compute_camera_coverage(
     face::Face,
     heading::Tuple{Float64,Float64,Float64},
-    distance::Tuple{Float64,Float64,Float64},
-    previous_coverage::Float64,
+    distance::Tuple{Float64,Float64,Float64}
 )::Float64
     # update
 
     alpha = 1
     face_normal = face.normal
 
-    # get pixel density
-    prior_pixel_density = previous_coverage
-
     current_pixel_density =
         alpha *
-        face.weight *
         abs(dot(distance, heading)) *
         -dot(distance, face_normal) *
-        isvisible(distance, face_normal) / norm(distance)^3
-
-    # Sum pixel density
-    current_pixel_density + prior_pixel_density
+        isvisible(distance, face_normal) / norm(distance)^4
 end
 
 function empty(p::MultiRobotTargetCoverageProblem)
