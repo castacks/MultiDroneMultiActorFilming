@@ -213,7 +213,7 @@ function POMDPs.reward(
                 face_normal = face.normal
 
                 # get pixel density
-                prior_pixel_density = target_coverage[f_id]
+                prior_face_coverage = target_coverage[f_id]
 
                 # distance = (face.pos[1]; face.pos[2]; target_height / 2) - (action.state.x; action.state.y; drone_height)
 
@@ -226,12 +226,13 @@ function POMDPs.reward(
                 heading = (cos(theta), sin(theta), 0.0)
 
                 # Includes the sum
-                current_pixel_density =
-                    compute_coverage_value(face, heading, distance, prior_pixel_density)
+                cumulative_face_coverage = prior_face_coverage +
+                    compute_camera_coverage(face, heading, distance)
 
 
-                # Sum marginal reward
-                reward += sqrt(current_pixel_density) - sqrt(prior_pixel_density)
+                # Compute marginal view reward for this face
+                reward += face_view_quality(face, cumulative_pixel_coverage) -
+                            face_view_quality(face, prior_face_coverage)
             end
 
         end
