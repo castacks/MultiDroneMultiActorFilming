@@ -35,7 +35,7 @@ function get_states(width::Int64, height::Int64, horizon::Int64)
         c = i[2] # column
         d = i[3] # direction
         t = i[4] # time
-        states[i] = MDPState(UAVState(c, r, cardinaldir[d]), t, horizon, nothing)
+        states[i] = MDPState(UAVState(c, r, cardinaldir[d]), t, horizon)
     end
     states
 end
