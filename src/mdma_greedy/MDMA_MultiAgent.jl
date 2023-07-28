@@ -181,7 +181,6 @@ function compute_prior_coverage(
             for (target_idx, target) in enumerate(target_traj[time, :])
                 if detectTarget(robot_state.state, target, configs.sensor)
                     for (f_idx, face) in enumerate(target.faces)
-                        previous_coverage = coverage_data[time, target_idx, f_idx]
                         distance = (
                             face.pos[1] - robot_state.state.x,
                             face.pos[2] - robot_state.state.y,
@@ -189,13 +188,12 @@ function compute_prior_coverage(
                         )
                         theta = dirAngle(robot_state.state.heading)
                         heading = (cos(theta), sin(theta), 0.0)
-                        num_pixels = compute_coverage_value(
+                        num_pixels = compute_camera_coverage(
                             face,
                             heading,
-                            distance,
-                            previous_coverage,
+                            distance
                         )
-                        coverage_data[time, target_idx, f_idx] = num_pixels
+                        coverage_data[time, target_idx, f_idx] += num_pixels
                     end
                 end
                 # Update coverage based on previous coverage values Need to
