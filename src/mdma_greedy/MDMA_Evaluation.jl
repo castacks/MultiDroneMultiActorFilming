@@ -3,6 +3,7 @@ using MDMA
 using DataFrames
 using Images
 using FileIO
+using Debugger
 
 export evaluate_solution, PPAEvaluation, ImageEvaluation
 
@@ -14,9 +15,11 @@ struct PPAEvaluation end
 #
 # sum over faces of
 #   face_area * sqrt(pixels / face_area)
-function cumulative_view_quality(count_by_color)
+function cumulative_view_quality(counts_by_color)
     reward = 0
 
+    side_area = 1.01 # m^2
+    top_area = 0.811 # m^2
     # Compute PPA for this timestep based on face pixel counts
     for (pixel, count) in counts_by_color
         # We are looking at a top face if the red channel is > 0.5
@@ -46,8 +49,6 @@ function evaluate_solution(
 
     horizon = multi_configs.horizon
 
-    side_area = 1.01 # m^2
-    top_area = 0.811 # m^2
 
     df = DataFrame(t = 1:horizon)
     for planner in planner_types
@@ -60,11 +61,11 @@ function evaluate_solution(
                 push!(images_at_t, image_paths[t])
             end
             println(images_at_t)
-            # Value for this timestep in the plot
-            val_now = 0.0
+            # # Value for this timestep in the plot
+            # val_now = 0.0
             # Contains pixels -> num
             accumulated_pixels = Dict()
-            for (i,img_path) in enumerate(images_at_t)
+            for (_,img_path) in enumerate(images_at_t)
                 # For every image
                 img = load(img_path)
 
@@ -112,7 +113,6 @@ function evaluate_solution(
 
     # Make dataframe
     df = DataFrame(t = 1:horizon)
-
     for planner in planner_types
         solution = load_solution("$(root_path)/$(planner)/solution.json")
 
