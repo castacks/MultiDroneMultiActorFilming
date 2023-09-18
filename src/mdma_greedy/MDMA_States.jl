@@ -67,7 +67,7 @@ end
 Camera = Union{ViewConeSensor,PinholeCameraModel}
 
 const drone_height::Float64 = 5.0 # meters
-const target_height::Float64 = 0 # meters
+const target_height::Float64 = 0 # meter
 const cardinaldir = Vector([:E, :NE, :N, :NW, :W, :SW, :S, :SE])
 
 function dir_to_index(d::Symbol)
@@ -110,6 +110,7 @@ mutable struct Target
         # n represents the number of total faces
         faces = Vector{Face}(undef, n)
 
+        target_vertical_size = 1.8
         # Change in angle
         dphi = (2 * pi) / (n - 1)
         side_length = 2 * a * tan(dphi / 2)
@@ -120,7 +121,7 @@ mutable struct Target
             norm = [cos(theta); sin(theta); 0.0]
             pos = a * norm
             # Make sure faces are relative to Target position
-            f = Face(x + pos[1], y + pos[2], side_length * target_height, 1.0, norm) # Possible weight 0.5*cos(theta+pi)+0.5
+            f = Face(x + pos[1], y + pos[2], side_length * target_vertical_size, 1.0, norm) # Possible weight 0.5*cos(theta+pi)+0.5
             # Set front faces to twice the weight
             # if i in 1:2 || i == n-1
             #     f.weight = 4.0
@@ -131,8 +132,7 @@ mutable struct Target
         # Adding top face
         norm = [0.0; 0.0; 1.0]
         # Top face should be in center of target
-        # NOTE: Setting weight to zero as a test!
-        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 0.0, norm)
+        f = Face(x, y, 3 * sqrt(3) * side_length^2 / 2, 1.0, norm)
         faces[n] = f
 
 

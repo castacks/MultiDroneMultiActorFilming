@@ -30,7 +30,8 @@ def main():
         "priority_speaker",
         "split_and_join",
         "spreadout_group",
-        "track_runners"
+        "track_runners",
+        "heavy_mixing"
     ]
 
     planners = [

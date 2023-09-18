@@ -185,7 +185,7 @@ struct ExperimentsConfig
 end
 
 
-ExperimentsConfig(path_to_experiments::String) = ExperimentsConfig(path_to_experiments, ["cluster", "cross_mix", "four_split", "split_and_join", "spreadout_group", "track_runners", "priority_runners", "priority_speaker"])
+ExperimentsConfig(path_to_experiments::String) = ExperimentsConfig(path_to_experiments, ["cluster", "cross_mix", "four_split","heavy_mixing","split_and_join", "spreadout_group", "track_runners", "priority_runners", "priority_speaker"])
 
 # Experiment Steps
 #  - Generate $(experiment_name)_data.json using a blender call

@@ -231,7 +231,7 @@ function POMDPs.reward(
 
 
                 # Compute marginal view reward for this face
-                reward += face_view_quality(face, cumulative_pixel_coverage) -
+                reward += face_view_quality(face, cumulative_face_coverage) -
                             face_view_quality(face, prior_face_coverage)
             end
 
