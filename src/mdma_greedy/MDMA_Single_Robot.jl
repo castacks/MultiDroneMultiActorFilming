@@ -57,7 +57,8 @@ mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotP
     move_dist::Int64
     coverage_data::CoverageData
     initial_state::MDPState
-    view_reward_cache::Vector{Float64}
+    # view_reward_cache::Vector{Float64}
+    view_reward_cache::Array{Float64,4}
     # Add default height of 7 meters
 
     function SingleRobotMultiTargetViewCoverageProblem(
@@ -78,7 +79,7 @@ mutable struct SingleRobotMultiTargetViewCoverageProblem <: AbstractSingleRobotP
             move_dist,
             coverage_data,
             initial_state,
-            []
+            zeros(Float64, 0, 0, 0, 0)
         )
 
         this.view_reward_cache = initialize_reward_cache(this)
@@ -89,22 +90,23 @@ get_states(model::SingleRobotMultiTargetViewCoverageProblem) = get_states(model.
 horizon(x::AbstractSingleRobotProblem) = x.horizon
 
 # Cache view rewards for each state
-function initialize_reward_cache(this)
+function initialize_reward_cache(this)::Array{Float64, 4}
     states = get_states(this)
 
-    map(states) do state
-        compute_single_agent_view_reward(this, state)
-    end
+    map(x -> compute_single_agent_view_reward(this, x), states)
+    # map(x -> compute_single_agent_view_reward(this, x), states)
 end
 
 function load_cached_reward(
         model::SingleRobotMultiTargetViewCoverageProblem,
         state::MDPState)
-    model.view_reward_cache[state.state.y,
-                            state.state.x,
+
+    model.view_reward_cache[trunc(Int, state.state.y),
+                            trunc(Int, state.state.x),
                             dir_to_index(state.state.heading),
                             state.depth
                            ]
+    # model.view_reward_cache[stateindex(state)]
 end
 
 function compute_single_agent_view_reward(
@@ -145,7 +147,7 @@ function compute_single_agent_view_reward(
 
 
                 # Compute marginal view reward for this face
-                reward += face_view_quality(face, cumulative_pixel_coverage) -
+                reward += face_view_quality(face, cumulative_face_coverage) -
                             face_view_quality(face, prior_face_coverage)
             end
 
@@ -236,7 +238,7 @@ end
 
 in_bounds(grid::MDMA_Grid, x::Integer, y::Integer) = in_bounds(grid, UAVState(x, y, :N))
 in_bounds(grid::MDMA_Grid, x::AbstractFloat, y::AbstractFloat) =
-    in_bounds(grid, UAVState(x, y, :N))
+in_bounds(grid, UAVState(x, y, :N))
 in_bounds(grid::MDMA_Grid, state::MDPState) = in_bounds(grid, state.state)
 function in_bounds(grid::MDMA_Grid, state::State)
     if state.x > 0 && state.x <= grid.width

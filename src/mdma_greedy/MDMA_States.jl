@@ -120,7 +120,7 @@ mutable struct Target
             norm = [cos(theta); sin(theta); 0.0]
             pos = a * norm
             # Make sure faces are relative to Target position
-            f = Face(x + pos[1], y + pos[2], side_length * target_height, 1.0, norm) # Possible weight 0.5*cos(theta+pi)+0.5
+            f = Face(x + pos[1], y + pos[2], side_length * 3.5, 1.0, norm) # Possible weight 0.5*cos(theta+pi)+0.5
             # Set front faces to twice the weight
             # if i in 1:2 || i == n-1
             #     f.weight = 4.0

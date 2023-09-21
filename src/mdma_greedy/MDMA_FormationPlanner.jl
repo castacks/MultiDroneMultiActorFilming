@@ -97,7 +97,7 @@ function place_uavs(
         x = radius * cos(theta + config.initial_angle) + centroid[1]
         y = radius * sin(theta + config.initial_angle) + centroid[2]
         u_state = UAVState(x, y, Symbol(:E))
-        state = MDPState(u_state, time, config.horizon, nothing)
+        state = MDPState(u_state, time, config.horizon)
         push!(output_states, align_nearest(state, targets))
         theta += dtheta
     end
@@ -117,7 +117,7 @@ function align_nearest(state::MDPState, targets::Vector{Target})::MDPState
         end
     end
     u_state = UAVState(state.state.x, state.state.y, heading_from_angle(angle))
-    MDPState(u_state, state.depth, state.horizon, nothing)
+    MDPState(u_state, state.depth, state.horizon)
 end
 
 function solve_formation(config::FormationPlannerConfigs)::Solution
