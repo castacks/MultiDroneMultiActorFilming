@@ -123,10 +123,9 @@ function load_solution(filename)
             state_dict = states["state"]
             depth = states["depth"]
             horizon = states["horizon"]
-            prev = nothing
             state =
                 UAVState(state_dict["x"], state_dict["y"], Symbol(state_dict["heading"]))
-            push!(robot_states, MDPState(state, depth, horizon, prev))
+            push!(robot_states, MDPState(state, depth, horizon))
         end
         push!(elements, (robot_id, robot_states))
     end

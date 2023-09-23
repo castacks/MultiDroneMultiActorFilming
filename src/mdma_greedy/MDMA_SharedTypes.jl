@@ -23,13 +23,12 @@ struct MDPState
     state::State
     depth::Int64
     horizon::Int64
-    prev::Union{MDPState,Nothing}
 end
 
-MDPState(state, horizon) = MDPState(state, 1, horizon, nothing)
-MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, m.horizon, nothing)
-MDPState(m::MDPState) = MDPState(m.state, m.depth + 1, m.horizon, nothing)
-MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth + 1, m.horizon, nothing)
+MDPState(state, horizon) = MDPState(state, 1, horizon)
+MDPState(m::MDPState, s::State) = MDPState(s, m.depth + 1, m.horizon)
+MDPState(m::MDPState) = MDPState(m.state, m.depth + 1, m.horizon)
+MDPState(m::MDPState, a::MDPState) = MDPState(a.state, m.depth + 1, m.horizon)
 
 const Trajectory = Vector{MDPState}
 
