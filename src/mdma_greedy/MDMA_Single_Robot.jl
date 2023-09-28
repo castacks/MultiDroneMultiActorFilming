@@ -150,7 +150,6 @@ function compute_single_agent_view_reward(
                 reward += face_view_quality(face, cumulative_face_coverage) -
                             face_view_quality(face, prior_face_coverage)
             end
-
         end
     end
 

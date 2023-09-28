@@ -134,7 +134,7 @@ mutable struct SingleRobotTargetAssignmentProblem <: AbstractSingleRobotProblem
     move_dist::Int64
     assignments::Vector{Bool}
     initial_state::MDPState
-
+    view_reward_cache::Array{Float64,4}
     function SingleRobotTargetAssignmentProblem(
         grid::MDMA_Grid,
         sensor::Camera,
@@ -145,7 +145,7 @@ mutable struct SingleRobotTargetAssignmentProblem <: AbstractSingleRobotProblem
         initial_state::MDPState,
     )
 
-        new(
+        this = new(
             grid,
             sensor,
             horizon,
@@ -153,58 +153,92 @@ mutable struct SingleRobotTargetAssignmentProblem <: AbstractSingleRobotProblem
             move_dist,
             assignments,
             initial_state,
+            zeros(Float64, 0, 0, 0, 0)
         )
+        this.view_reward_cache = initialize_reward_cache_assignment(this)
+        this
     end
 end
 
 
+get_states(model::SingleRobotTargetAssignmentProblem) = get_states(model.grid)
 # This should depend on the prior observations as well as other plans from robots
 function POMDPs.reward(
     model::SingleRobotTargetAssignmentProblem,
     state::MDPState,
     action::MDPState,
 )
-    # Want to just give a reward value if you detect an object
-    reward = 0
-    time = action.depth
-    targets = model.target_trajectories[time, :]
-    for (target_id, t) in enumerate(targets)
-        # Pixel density by face should be stored
-        if (model.assignments[target_id])
-            if detectTarget(action.state, t, model.sensor)
-                for (f_id, face) in enumerate(t.faces)
-                    face_normal = face.normal
-
-                    distance = (
-                        face.pos[1] - action.state.x,
-                        face.pos[2] - action.state.y,
-                        target_height / 2 - drone_height,
-                    )
-                    theta = dirAngle(action.state.heading)
-                    heading = (cos(theta), sin(theta), 0.0)
-
-                    alpha = 10
-                    face_normal = face.normal
-
-                    current_pixel_density =
-                        alpha *
-                        face.weight *
-                        abs(dot(distance, heading)) *
-                        -dot(distance, face_normal) *
-                        isvisible(distance, face_normal) / norm(distance)^3
-
-                    reward += current_pixel_density
-                end
-            end
-        end
-    end
-
+    reward = load_cached_reward_assignment(model, action)
     if (action.state.heading == state.state.heading)
         reward += 0.02
     end
 
     if (action.state.x == state.state.x) && (action.state.y == state.state.y)
         reward += 0.01
+    end
+
+    reward
+end
+
+function initialize_reward_cache_assignment(this)::Array{Float64, 4}
+    states = get_states(this)
+
+    map(x -> compute_single_agent_view_reward_assignment(this, x), states)
+    # map(x -> compute_single_agent_view_reward(this, x), states)
+end
+
+function load_cached_reward_assignment(
+        model::SingleRobotTargetAssignmentProblem,
+        state::MDPState)
+
+    model.view_reward_cache[trunc(Int, state.state.y),
+                            trunc(Int, state.state.x),
+                            dir_to_index(state.state.heading),
+                            state.depth
+                           ]
+    # model.view_reward_cache[stateindex(state)]
+end
+
+function compute_single_agent_view_reward_assignment(
+        model::SingleRobotTargetAssignmentProblem,
+        mdp_state::MDPState)
+
+    # Want to just give a reward value if you detect an object
+    reward = 0.0
+    time = mdp_state.depth
+    targets = model.target_trajectories[time, :]
+    assignments = model.assignments
+    for (target_id, t) in enumerate(targets)
+        # Pixel density by face should be stored
+        if (assignments[target_id])
+            if detectTarget(mdp_state.state, t, model.sensor)
+                # print("\Target detected ", t.x, " ", t.y, " ", mdp_state.state.x, " ", mdp_state.state.y)
+                # println()
+                # println("Robot Heading $(mdp_state.state.heading)")
+                for (f_id, face) in enumerate(t.faces)
+                    face_normal = face.normal
+
+                    # get pixel density
+
+                    # distance = (face.pos[1]; face.pos[2]; target_height / 2) - (mdp_state.state.x; mdp_state.state.y; drone_height)
+
+                    distance = (
+                        face.pos[1] - mdp_state.state.x,
+                        face.pos[2] - mdp_state.state.y,
+                        target_height / 2 - drone_height,
+                    )
+                    theta = dirAngle(mdp_state.state.heading)
+                    heading = (cos(theta), sin(theta), 0.0)
+
+                    # Includes the sum
+                    cumulative_face_coverage = compute_camera_coverage(face, heading, distance)
+
+
+                    # Compute marginal view reward for this face
+                    reward += face_view_quality(face, cumulative_face_coverage)
+                end
+            end
+        end
     end
 
     reward

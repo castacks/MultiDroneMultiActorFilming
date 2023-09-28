@@ -20,6 +20,7 @@ struct MultipleRoundsGreedyPlanner end
 
 ## Ensure that planners start in the same state for each experiment
 planners = [FormationPlanner(), GreedyPlanner(), AssignmentPlanner(),MyopicPlanner(), MultipleRoundsGreedyPlanner()]
+# planners = [AssignmentPlanner()]
 # planners = [MyopicPlanner()]
 #planners = [MultipleRoundsGreedyPlanner()]
 planner_type_to_string = x -> lowercase(chop(string(x), head=5, tail=9))
@@ -132,7 +133,29 @@ function run_experiment(
     _::AssignmentPlanner,
 )
     
-    problem = init_discrete_problem(experiment_name, path_to_experiments)
+    cutoff = 100.0
+    # sensor = MDMA.PinholeCameraModel(focal_length, resolution, lens_dim, 0.0, pitch, cutoff)
+    sensor = MDMA.ViewConeSensor(pi / 2, cutoff)
+    move_dist = 3
+
+    multi_configs = configs_from_file(
+        "$(path_to_experiments)/$(experiment_name)/$(experiment_name)_data.json",
+        experiment_name,
+        move_dist,
+    )
+    multi_configs.sensor = sensor
+
+    if !haskey(starting_states, experiment_name)
+        push!(starting_states, experiment_name => map(
+            x -> MDMA.random_state(multi_configs.horizon, multi_configs.grid),
+            1:multi_configs.num_robots,
+        ))
+    end
+
+    robot_states = starting_states[experiment_name]
+
+    problem = MDMA.MultiRobotTargetAssignmentProblem(robot_states, multi_configs)
+    
     # Solving output
     println("Solving Solution for $(experiment_name) using AssignmentPlanner")
     solution = solve_sequential(problem)
