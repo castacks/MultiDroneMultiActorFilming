@@ -17,7 +17,8 @@ def summarize_experiment(df_root, expr_name: str):
         # df_root["Median PPA"][expr_name] = median_ppa
         # df_root["Total Image"][expr_name] = sum_image
         # df_root["Total PPA"][expr_name] = sum_ppa
-        df_root[col_name][expr_name] = median_ppa
+        df_root[col_name + "_" + "SRPPA"][expr_name] = median_ppa
+        df_root[col_name + "_" + "Image"][expr_name] = median_image
 
 
 def main():
@@ -42,11 +43,23 @@ def main():
         "multipleroundsgreedy",
     ]
 
-    row_data = [0 for _ in planners]
-    df_root = pd.DataFrame(data=[row_data for _ in experiments], columns=planners, index=experiments)
+    views = [
+        "SRPPA",
+        "Image",
+    ]
+
+    cols = []
+    for pl in planners:
+        for v in views:
+            cols.append(pl + "_" + v)
+
+
+    row_data = [0 for _ in cols]
+    df_root = pd.DataFrame(data=[row_data for _ in experiments], columns=cols, index=experiments)
     for expr_name in experiments:
         summarize_experiment(df_root, expr_name)
 
+    df_root.to_csv("total_summary.csv")
     print(df_root)
 
 if __name__ == "__main__":

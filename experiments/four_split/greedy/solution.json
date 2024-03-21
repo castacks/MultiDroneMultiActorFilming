@@ -5,1003 +5,903 @@
             [
                 {
                     "state": {
-                        "x": 25,
+                        "x": 4,
+                        "y": 27,
+                        "heading": "E"
+                    },
+                    "depth": 1,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 25,
+                        "heading": "SE"
+                    },
+                    "depth": 2,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 23,
+                        "heading": "S"
+                    },
+                    "depth": 3,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 21,
+                        "heading": "S"
+                    },
+                    "depth": 4,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 19,
+                        "heading": "S"
+                    },
+                    "depth": 5,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 6,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 15,
+                        "heading": "SE"
+                    },
+                    "depth": 7,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 14,
+                        "heading": "SE"
+                    },
+                    "depth": 8,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 9,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 10,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 11,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 12,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 13,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 14,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 15,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 16,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 10,
+                        "heading": "NE"
+                    },
+                    "depth": 17,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
                         "y": 9,
                         "heading": "NE"
                     },
-                    "depth": 1,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 7,
-                        "heading": "N"
-                    },
-                    "depth": 2,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 3,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 9,
-                        "heading": "W"
-                    },
-                    "depth": 4,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 10,
-                        "heading": "W"
-                    },
-                    "depth": 5,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 10,
-                        "heading": "W"
-                    },
-                    "depth": 6,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 10,
-                        "heading": "W"
-                    },
-                    "depth": 7,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 10,
-                        "heading": "W"
-                    },
-                    "depth": 8,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 10,
-                        "heading": "W"
-                    },
-                    "depth": 9,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 10,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 11,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 12,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 13,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 14,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 15,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 11,
-                        "heading": "W"
-                    },
-                    "depth": 16,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 12,
-                        "heading": "W"
-                    },
-                    "depth": 17,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 12,
-                        "heading": "W"
-                    },
                     "depth": 18,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 20,
-                        "y": 12,
-                        "heading": "W"
+                        "x": 8,
+                        "y": 9,
+                        "heading": "NE"
                     },
                     "depth": 19,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 20,
-                        "y": 12,
-                        "heading": "W"
+                        "x": 8,
+                        "y": 9,
+                        "heading": "NE"
                     },
                     "depth": 20,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 20,
-                        "y": 12,
-                        "heading": "W"
+                        "x": 8,
+                        "y": 9,
+                        "heading": "NE"
                     },
                     "depth": 21,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 18,
-                        "y": 10,
-                        "heading": "NW"
+                        "x": 8,
+                        "y": 9,
+                        "heading": "NE"
                     },
                     "depth": 22,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 8,
-                        "heading": "NW"
+                        "x": 9,
+                        "y": 10,
+                        "heading": "NE"
                     },
                     "depth": 23,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 6,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 10,
+                        "heading": "NE"
                     },
                     "depth": 24,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 6,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 10,
+                        "heading": "NE"
                     },
                     "depth": 25,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 6,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 10,
+                        "heading": "NE"
                     },
                     "depth": 26,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 6,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 10,
+                        "heading": "NE"
                     },
                     "depth": 27,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 11,
+                        "heading": "NE"
                     },
                     "depth": 28,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 11,
+                        "heading": "NE"
                     },
                     "depth": 29,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 11,
+                        "heading": "NE"
                     },
                     "depth": 30,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 11,
+                        "heading": "NE"
                     },
                     "depth": 31,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 9,
+                        "y": 11,
+                        "heading": "NE"
                     },
                     "depth": 32,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 12,
+                        "heading": "NE"
                     },
                     "depth": 33,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 12,
+                        "heading": "NE"
                     },
                     "depth": 34,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 12,
+                        "heading": "NE"
                     },
                     "depth": 35,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 8,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 12,
+                        "heading": "NE"
                     },
                     "depth": 36,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 8,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 13,
+                        "heading": "NE"
                     },
                     "depth": 37,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 8,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 13,
+                        "heading": "NE"
                     },
                     "depth": 38,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 13,
-                        "y": 9,
-                        "heading": "N"
+                        "x": 10,
+                        "y": 13,
+                        "heading": "NE"
                     },
                     "depth": 39,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 11,
-                        "y": 11,
+                        "x": 10,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 40,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 9,
-                        "y": 11,
+                        "x": 11,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 41,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 9,
-                        "y": 11,
+                        "x": 11,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 42,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 9,
-                        "y": 12,
+                        "x": 11,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 43,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 10,
+                        "x": 11,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 44,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 10,
+                        "x": 11,
+                        "y": 14,
                         "heading": "NE"
                     },
                     "depth": 45,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 11,
+                        "y": 14,
                         "heading": "NE"
                     },
                     "depth": 46,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 47,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 48,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 49,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 50,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 51,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 52,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
-                        "y": 11,
+                        "x": 12,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 53,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 10,
-                        "y": 11,
-                        "heading": "NE"
-                    },
-                    "depth": 54,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 12,
-                        "heading": "NE"
-                    },
-                    "depth": 55,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 12,
-                        "heading": "NE"
-                    },
-                    "depth": 56,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 12,
-                        "heading": "NE"
-                    },
-                    "depth": 57,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 12,
-                        "heading": "NE"
-                    },
-                    "depth": 58,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 12,
-                        "heading": "NE"
-                    },
-                    "depth": 59,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 12,
-                        "heading": "NE"
-                    },
-                    "depth": 60,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 13,
-                        "y": 11,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 54,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 55,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 56,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 57,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 58,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 59,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
+                    },
+                    "depth": 60,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 13,
                         "heading": "NE"
                     },
                     "depth": 61,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 15,
-                        "y": 9,
-                        "heading": "N"
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
                     },
                     "depth": 62,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 7,
-                        "heading": "N"
+                        "x": 13,
+                        "y": 13,
+                        "heading": "NE"
                     },
                     "depth": 63,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 14,
+                        "y": 12,
+                        "heading": "NE"
+                    },
+                    "depth": 64,
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 16,
-                        "y": 7,
-                        "heading": "N"
-                    },
-                    "depth": 64,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 7,
+                        "y": 10,
                         "heading": "N"
                     },
                     "depth": 65,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 17,
-                        "y": 7,
+                        "x": 18,
+                        "y": 9,
                         "heading": "N"
                     },
                     "depth": 66,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 17,
-                        "y": 7,
+                        "x": 18,
+                        "y": 9,
                         "heading": "N"
                     },
                     "depth": 67,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 17,
-                        "y": 7,
+                        "x": 18,
+                        "y": 9,
                         "heading": "N"
                     },
                     "depth": 68,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 19,
-                        "y": 6,
+                        "x": 18,
+                        "y": 9,
                         "heading": "N"
                     },
                     "depth": 69,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 21,
-                        "y": 7,
+                        "x": 20,
+                        "y": 9,
                         "heading": "N"
                     },
                     "depth": 70,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 71,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 24,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 72,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 24,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 73,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 24,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 74,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 25,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 75,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 9,
-                        "heading": "NW"
-                    },
-                    "depth": 76,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 77,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 78,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 28,
-                        "y": 9,
-                        "heading": "NW"
-                    },
-                    "depth": 79,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 28,
-                        "y": 9,
-                        "heading": "NW"
-                    },
-                    "depth": 80,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 28,
-                        "y": 9,
-                        "heading": "NW"
-                    },
-                    "depth": 81,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 26,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 82,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 24,
-                        "y": 5,
-                        "heading": "NW"
-                    },
-                    "depth": 83,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 22,
-                        "y": 3,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 71,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 22,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 72,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 22,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 73,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 8,
+                        "heading": "NW"
+                    },
+                    "depth": 74,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 8,
+                        "heading": "NW"
+                    },
+                    "depth": 75,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 8,
+                        "heading": "NW"
+                    },
+                    "depth": 76,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 8,
+                        "heading": "NW"
+                    },
+                    "depth": 77,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 8,
+                        "heading": "NW"
+                    },
+                    "depth": 78,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 8,
+                        "heading": "NW"
+                    },
+                    "depth": 79,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 80,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 81,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 82,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 83,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 6,
                         "heading": "N"
                     },
                     "depth": 84,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 3,
+                        "y": 6,
                         "heading": "N"
                     },
                     "depth": 85,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 3,
+                        "y": 5,
                         "heading": "N"
                     },
                     "depth": 86,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 3,
+                        "y": 5,
                         "heading": "N"
                     },
                     "depth": 87,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 2,
+                        "y": 5,
                         "heading": "N"
                     },
                     "depth": 88,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 2,
+                        "y": 5,
                         "heading": "N"
                     },
                     "depth": 89,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 2,
+                        "y": 5,
                         "heading": "N"
                     },
                     "depth": 90,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 2,
+                        "y": 4,
                         "heading": "N"
                     },
                     "depth": 91,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 2,
+                        "y": 4,
                         "heading": "N"
                     },
                     "depth": 92,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 1,
+                        "y": 4,
                         "heading": "N"
                     },
                     "depth": 93,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 1,
+                        "y": 4,
                         "heading": "N"
                     },
                     "depth": 94,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 21,
-                        "y": 1,
+                        "y": 4,
                         "heading": "N"
                     },
                     "depth": 95,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 20,
-                        "y": 1,
+                        "x": 21,
+                        "y": 4,
                         "heading": "N"
                     },
                     "depth": 96,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 20,
-                        "y": 1,
+                        "y": 3,
                         "heading": "N"
                     },
                     "depth": 97,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 20,
-                        "y": 1,
+                        "y": 3,
                         "heading": "N"
                     },
                     "depth": 98,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 20,
-                        "y": 1,
+                        "y": 3,
                         "heading": "N"
                     },
                     "depth": 99,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 19,
-                        "y": 1,
+                        "x": 20,
+                        "y": 3,
                         "heading": "N"
                     },
                     "depth": 100,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 }
             ]
         ],
@@ -1010,683 +910,705 @@
             [
                 {
                     "state": {
-                        "x": 15,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 1,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 13,
-                        "y": 14,
+                        "x": 16,
+                        "y": 29,
                         "heading": "SE"
                     },
-                    "depth": 2,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 1,
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 11,
-                        "y": 16,
+                        "x": 15,
+                        "y": 27,
+                        "heading": "S"
+                    },
+                    "depth": 2,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 25,
                         "heading": "S"
                     },
                     "depth": 3,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 9,
-                        "y": 16,
-                        "heading": "S"
+                        "x": 17,
+                        "y": 23,
+                        "heading": "SW"
                     },
                     "depth": 4,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 7,
-                        "y": 14,
-                        "heading": "SE"
-                    },
-                    "depth": 5,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 5,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 6,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 11,
-                        "heading": "E"
-                    },
-                    "depth": 7,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 11,
-                        "heading": "E"
-                    },
-                    "depth": 8,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 9,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 10,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 11,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 12,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 12,
-                        "heading": "E"
-                    },
-                    "depth": 13,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 13,
-                        "heading": "E"
-                    },
-                    "depth": 14,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 13,
-                        "heading": "E"
-                    },
-                    "depth": 15,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 13,
-                        "heading": "E"
-                    },
-                    "depth": 16,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 13,
-                        "heading": "E"
-                    },
-                    "depth": 17,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 13,
-                        "heading": "E"
-                    },
-                    "depth": 18,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 4,
-                        "y": 14,
-                        "heading": "E"
-                    },
-                    "depth": 19,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 4,
-                        "y": 14,
-                        "heading": "E"
-                    },
-                    "depth": 20,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 4,
-                        "y": 15,
-                        "heading": "E"
-                    },
-                    "depth": 21,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 5,
-                        "y": 17,
-                        "heading": "SE"
-                    },
-                    "depth": 22,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 7,
-                        "y": 19,
-                        "heading": "SE"
-                    },
-                    "depth": 23,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 8,
-                        "y": 21,
-                        "heading": "SE"
-                    },
-                    "depth": 24,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 10,
-                        "y": 22,
-                        "heading": "S"
-                    },
-                    "depth": 25,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 10,
-                        "y": 22,
-                        "heading": "S"
-                    },
-                    "depth": 26,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 22,
-                        "heading": "S"
-                    },
-                    "depth": 27,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 22,
-                        "heading": "S"
-                    },
-                    "depth": 28,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 22,
-                        "heading": "S"
-                    },
-                    "depth": 29,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 23,
-                        "heading": "S"
-                    },
-                    "depth": 30,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 23,
-                        "heading": "S"
-                    },
-                    "depth": 31,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 12,
-                        "y": 23,
-                        "heading": "S"
-                    },
-                    "depth": 32,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 12,
-                        "y": 23,
-                        "heading": "S"
-                    },
-                    "depth": 33,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 12,
-                        "y": 23,
-                        "heading": "S"
-                    },
-                    "depth": 34,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 13,
-                        "y": 24,
-                        "heading": "S"
-                    },
-                    "depth": 35,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 13,
-                        "y": 24,
-                        "heading": "S"
-                    },
-                    "depth": 36,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 13,
-                        "y": 24,
-                        "heading": "S"
-                    },
-                    "depth": 37,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 13,
-                        "y": 24,
-                        "heading": "S"
-                    },
-                    "depth": 38,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 15,
-                        "y": 24,
-                        "heading": "S"
-                    },
-                    "depth": 39,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 22,
-                        "heading": "SW"
-                    },
-                    "depth": 40,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 41,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 42,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 43,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 44,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 45,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 46,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 23,
-                        "heading": "SW"
-                    },
-                    "depth": 47,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 24,
-                        "heading": "SW"
-                    },
-                    "depth": 48,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 25,
-                        "heading": "S"
-                    },
-                    "depth": 49,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 25,
-                        "heading": "S"
-                    },
-                    "depth": 50,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 25,
-                        "heading": "S"
-                    },
-                    "depth": 51,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 26,
-                        "heading": "S"
-                    },
-                    "depth": 52,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 26,
-                        "heading": "S"
-                    },
-                    "depth": 53,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 26,
-                        "heading": "S"
-                    },
-                    "depth": 54,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 27,
-                        "heading": "S"
-                    },
-                    "depth": 55,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 27,
-                        "heading": "S"
-                    },
-                    "depth": 56,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 27,
-                        "heading": "S"
-                    },
-                    "depth": 57,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 28,
-                        "heading": "S"
-                    },
-                    "depth": 58,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 28,
-                        "heading": "S"
-                    },
-                    "depth": 59,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 28,
-                        "heading": "S"
-                    },
-                    "depth": 60,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 29,
-                        "heading": "S"
-                    },
-                    "depth": 61,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 29,
-                        "heading": "S"
-                    },
-                    "depth": 62,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 29,
-                        "heading": "S"
-                    },
-                    "depth": 63,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 16,
-                        "y": 29,
+                        "y": 21,
+                        "heading": "SW"
+                    },
+                    "depth": 5,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 6,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 7,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 14,
+                        "y": 15,
+                        "heading": "SW"
+                    },
+                    "depth": 8,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 13,
+                        "heading": "SW"
+                    },
+                    "depth": 9,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 11,
+                        "heading": "W"
+                    },
+                    "depth": 10,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 11,
+                        "heading": "W"
+                    },
+                    "depth": 11,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 11,
+                        "heading": "W"
+                    },
+                    "depth": 12,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 11,
+                        "heading": "W"
+                    },
+                    "depth": 13,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 11,
+                        "heading": "W"
+                    },
+                    "depth": 14,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 11,
+                        "heading": "W"
+                    },
+                    "depth": 15,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 13,
+                        "heading": "W"
+                    },
+                    "depth": 16,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 15,
+                        "heading": "SW"
+                    },
+                    "depth": 17,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 18,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 19,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 20,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 21,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 22,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 17,
+                        "heading": "SW"
+                    },
+                    "depth": 23,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 18,
+                        "heading": "SW"
+                    },
+                    "depth": 24,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 18,
+                        "heading": "SW"
+                    },
+                    "depth": 25,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 18,
+                        "heading": "SW"
+                    },
+                    "depth": 26,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 18,
+                        "heading": "SW"
+                    },
+                    "depth": 27,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 18,
+                        "heading": "SW"
+                    },
+                    "depth": 28,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 18,
+                        "heading": "SW"
+                    },
+                    "depth": 29,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 30,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 31,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 32,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 33,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 34,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 35,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 36,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 19,
+                        "heading": "SW"
+                    },
+                    "depth": 37,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 38,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 39,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 40,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 41,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 21,
+                        "heading": "SW"
+                    },
+                    "depth": 42,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 21,
+                        "heading": "SW"
+                    },
+                    "depth": 43,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 21,
+                        "heading": "SW"
+                    },
+                    "depth": 44,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 21,
+                        "heading": "SW"
+                    },
+                    "depth": 45,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 21,
+                        "heading": "SW"
+                    },
+                    "depth": 46,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 20,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 47,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 20,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 48,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 18,
+                        "y": 22,
+                        "heading": "SW"
+                    },
+                    "depth": 49,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 23,
+                        "heading": "S"
+                    },
+                    "depth": 50,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 23,
+                        "heading": "S"
+                    },
+                    "depth": 51,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 23,
+                        "heading": "S"
+                    },
+                    "depth": 52,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 24,
+                        "heading": "S"
+                    },
+                    "depth": 53,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 24,
+                        "heading": "S"
+                    },
+                    "depth": 54,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 24,
+                        "heading": "S"
+                    },
+                    "depth": 55,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 24,
+                        "heading": "S"
+                    },
+                    "depth": 56,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 25,
+                        "heading": "S"
+                    },
+                    "depth": 57,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 25,
+                        "heading": "S"
+                    },
+                    "depth": 58,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 25,
+                        "heading": "S"
+                    },
+                    "depth": 59,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 26,
+                        "heading": "S"
+                    },
+                    "depth": 60,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 17,
+                        "y": 26,
+                        "heading": "S"
+                    },
+                    "depth": 61,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 26,
+                        "heading": "S"
+                    },
+                    "depth": 62,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 26,
+                        "heading": "S"
+                    },
+                    "depth": 63,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 26,
                         "heading": "S"
                     },
                     "depth": 64,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 15,
-                        "y": 29,
+                        "y": 27,
                         "heading": "S"
                     },
                     "depth": 65,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 15,
-                        "y": 29,
+                        "y": 27,
                         "heading": "S"
                     },
                     "depth": 66,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 14,
-                        "y": 29,
+                        "x": 15,
+                        "y": 27,
                         "heading": "S"
                     },
                     "depth": 67,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 14,
-                        "y": 29,
+                        "y": 27,
                         "heading": "S"
                     },
                     "depth": 68,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 14,
+                        "y": 27,
+                        "heading": "S"
+                    },
+                    "depth": 69,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 70,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 71,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 72,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 73,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 74,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 75,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 76,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 77,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 27,
+                        "heading": "SE"
+                    },
+                    "depth": 78,
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1694,149 +1616,44 @@
                         "y": 29,
                         "heading": "S"
                     },
-                    "depth": 69,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 70,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 71,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 10,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 72,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 10,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 73,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 10,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 74,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 9,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 75,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 9,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 76,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 8,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 77,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 8,
-                        "y": 29,
-                        "heading": "SE"
-                    },
-                    "depth": 78,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 8,
-                        "y": 29,
-                        "heading": "SE"
-                    },
                     "depth": 79,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 7,
+                        "x": 13,
                         "y": 29,
-                        "heading": "SE"
+                        "heading": "S"
                     },
                     "depth": 80,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 7,
+                        "x": 13,
                         "y": 29,
-                        "heading": "SE"
+                        "heading": "S"
                     },
                     "depth": 81,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 8,
-                        "y": 28,
-                        "heading": "SE"
+                        "x": 13,
+                        "y": 29,
+                        "heading": "S"
                     },
                     "depth": 82,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 10,
+                        "x": 13,
                         "y": 29,
-                        "heading": "SE"
+                        "heading": "S"
                     },
                     "depth": 83,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1845,8 +1662,7 @@
                         "heading": "S"
                     },
                     "depth": 84,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1855,8 +1671,7 @@
                         "heading": "S"
                     },
                     "depth": 85,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1865,8 +1680,7 @@
                         "heading": "S"
                     },
                     "depth": 86,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1875,8 +1689,7 @@
                         "heading": "S"
                     },
                     "depth": 87,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1885,8 +1698,7 @@
                         "heading": "S"
                     },
                     "depth": 88,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1895,8 +1707,7 @@
                         "heading": "S"
                     },
                     "depth": 89,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1905,48 +1716,43 @@
                         "heading": "S"
                     },
                     "depth": 90,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 9,
+                        "x": 10,
                         "y": 29,
-                        "heading": "SE"
+                        "heading": "S"
                     },
                     "depth": 91,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 7,
+                        "x": 10,
                         "y": 29,
-                        "heading": "SE"
+                        "heading": "S"
                     },
                     "depth": 92,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 6,
+                        "x": 10,
                         "y": 29,
-                        "heading": "SE"
+                        "heading": "S"
                     },
                     "depth": 93,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 6,
+                        "x": 8,
                         "y": 29,
                         "heading": "SE"
                     },
                     "depth": 94,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1955,8 +1761,7 @@
                         "heading": "SE"
                     },
                     "depth": 95,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1965,18 +1770,16 @@
                         "heading": "SE"
                     },
                     "depth": 96,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 7,
+                        "x": 8,
                         "y": 29,
                         "heading": "SE"
                     },
                     "depth": 97,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1985,8 +1788,7 @@
                         "heading": "SE"
                     },
                     "depth": 98,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
@@ -1995,18 +1797,16 @@
                         "heading": "SE"
                     },
                     "depth": 99,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 6,
+                        "x": 7,
                         "y": 29,
                         "heading": "SE"
                     },
                     "depth": 100,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 }
             ]
         ],
@@ -2015,1006 +1815,1811 @@
             [
                 {
                     "state": {
-                        "x": 4,
-                        "y": 18,
-                        "heading": "W"
+                        "x": 22,
+                        "y": 21,
+                        "heading": "SW"
                     },
                     "depth": 1,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 4,
-                        "y": 16,
+                        "x": 20,
+                        "y": 19,
                         "heading": "SW"
                     },
                     "depth": 2,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 6,
-                        "y": 15,
-                        "heading": "S"
+                        "x": 18,
+                        "y": 17,
+                        "heading": "SW"
                     },
                     "depth": 3,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 4,
-                        "y": 13,
-                        "heading": "SE"
+                        "x": 16,
+                        "y": 15,
+                        "heading": "SW"
                     },
                     "depth": 4,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 2,
-                        "y": 11,
-                        "heading": "E"
+                        "x": 14,
+                        "y": 13,
+                        "heading": "SW"
                     },
                     "depth": 5,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 2,
+                        "x": 16,
                         "y": 11,
-                        "heading": "E"
+                        "heading": "W"
                     },
                     "depth": 6,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 3,
-                        "y": 13,
-                        "heading": "E"
-                    },
-                    "depth": 7,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 5,
-                        "y": 15,
-                        "heading": "SE"
-                    },
-                    "depth": 8,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 7,
-                        "y": 17,
-                        "heading": "SE"
-                    },
-                    "depth": 9,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 9,
-                        "y": 19,
-                        "heading": "S"
-                    },
-                    "depth": 10,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 9,
-                        "y": 19,
-                        "heading": "S"
-                    },
-                    "depth": 11,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 11,
-                        "y": 19,
-                        "heading": "S"
-                    },
-                    "depth": 12,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 13,
-                        "y": 19,
-                        "heading": "S"
-                    },
-                    "depth": 13,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 15,
-                        "y": 18,
-                        "heading": "SW"
+                        "y": 9,
+                        "heading": "W"
+                    },
+                    "depth": 7,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 13,
+                        "y": 7,
+                        "heading": "NW"
+                    },
+                    "depth": 8,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 9,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 10,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 11,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 6,
+                        "heading": "N"
+                    },
+                    "depth": 12,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 7,
+                        "heading": "N"
+                    },
+                    "depth": 13,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 12,
+                        "y": 7,
+                        "heading": "N"
                     },
                     "depth": 14,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 12,
+                        "y": 7,
+                        "heading": "N"
                     },
                     "depth": 15,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 12,
+                        "y": 7,
+                        "heading": "N"
                     },
                     "depth": 16,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 14,
+                        "y": 8,
+                        "heading": "NW"
                     },
                     "depth": 17,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 14,
+                        "y": 8,
+                        "heading": "NW"
                     },
                     "depth": 18,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 16,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
                     },
                     "depth": 19,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 20,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 21,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 22,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 23,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 24,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 15,
+                        "y": 9,
+                        "heading": "NW"
+                    },
+                    "depth": 25,
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 16,
-                        "y": 19,
-                        "heading": "SW"
+                        "y": 10,
+                        "heading": "NW"
                     },
-                    "depth": 20,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 26,
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 17,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 16,
+                        "y": 10,
+                        "heading": "NW"
                     },
-                    "depth": 21,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 27,
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 17,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 16,
+                        "y": 10,
+                        "heading": "NW"
                     },
-                    "depth": 22,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 28,
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 17,
-                        "y": 19,
-                        "heading": "SW"
+                        "x": 16,
+                        "y": 10,
+                        "heading": "NW"
                     },
-                    "depth": 23,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 29,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 10,
+                        "heading": "NW"
+                    },
+                    "depth": 30,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 10,
+                        "heading": "NW"
+                    },
+                    "depth": 31,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 16,
+                        "y": 10,
+                        "heading": "NW"
+                    },
+                    "depth": 32,
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 18,
-                        "y": 18,
-                        "heading": "SW"
-                    },
-                    "depth": 24,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 16,
-                        "heading": "W"
-                    },
-                    "depth": 25,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 26,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 27,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 20,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 28,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 29,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 30,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 31,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 32,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 33,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 34,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 35,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 21,
-                        "y": 14,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 36,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 16,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 37,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 16,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 38,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 16,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 39,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 16,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 40,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 15,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 41,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 15,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 42,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 23,
-                        "y": 15,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 43,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 23,
-                        "y": 15,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 44,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 23,
-                        "y": 14,
-                        "heading": "W"
+                        "x": 18,
+                        "y": 12,
+                        "heading": "NW"
                     },
                     "depth": 45,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 21,
+                        "x": 18,
                         "y": 12,
                         "heading": "NW"
                     },
                     "depth": 46,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 47,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 48,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 49,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 50,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 51,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 52,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 53,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 22,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 54,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 55,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 56,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 57,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 58,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 59,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 10,
-                        "heading": "NW"
-                    },
-                    "depth": 60,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 24,
-                        "y": 12,
-                        "heading": "NW"
-                    },
-                    "depth": 61,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 26,
-                        "y": 14,
-                        "heading": "W"
-                    },
-                    "depth": 62,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 26,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 63,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 26,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 64,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 65,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 66,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 67,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 28,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 68,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 28,
-                        "y": 15,
-                        "heading": "W"
-                    },
-                    "depth": 69,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 27,
-                        "y": 13,
-                        "heading": "W"
-                    },
-                    "depth": 70,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 26,
-                        "y": 11,
-                        "heading": "NW"
-                    },
-                    "depth": 71,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 24,
-                        "y": 9,
-                        "heading": "NW"
-                    },
-                    "depth": 72,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 23,
-                        "y": 7,
-                        "heading": "NW"
-                    },
-                    "depth": 73,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 21,
-                        "y": 6,
-                        "heading": "N"
-                    },
-                    "depth": 74,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 19,
-                        "y": 6,
-                        "heading": "N"
-                    },
-                    "depth": 75,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 5,
-                        "heading": "N"
-                    },
-                    "depth": 76,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 5,
-                        "heading": "N"
-                    },
-                    "depth": 77,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 5,
-                        "heading": "N"
-                    },
-                    "depth": 78,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 5,
-                        "heading": "N"
-                    },
-                    "depth": 79,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 17,
-                        "y": 5,
-                        "heading": "N"
-                    },
-                    "depth": 80,
-                    "horizon": 100,
-                    "prev": null
-                },
-                {
-                    "state": {
-                        "x": 18,
-                        "y": 5,
-                        "heading": "N"
-                    },
-                    "depth": 81,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 20,
-                        "y": 3,
-                        "heading": "N"
+                        "y": 13,
+                        "heading": "NW"
                     },
-                    "depth": 82,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 47,
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 22,
-                        "y": 4,
-                        "heading": "N"
+                        "x": 20,
+                        "y": 13,
+                        "heading": "NW"
                     },
-                    "depth": 83,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 48,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 20,
+                        "y": 13,
+                        "heading": "NW"
+                    },
+                    "depth": 49,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 20,
+                        "y": 13,
+                        "heading": "NW"
+                    },
+                    "depth": 50,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 20,
+                        "y": 13,
+                        "heading": "NW"
+                    },
+                    "depth": 51,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 20,
+                        "y": 13,
+                        "heading": "NW"
+                    },
+                    "depth": 52,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 12,
+                        "heading": "NW"
+                    },
+                    "depth": 53,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 12,
+                        "heading": "NW"
+                    },
+                    "depth": 54,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 12,
+                        "heading": "NW"
+                    },
+                    "depth": 55,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 12,
+                        "heading": "NW"
+                    },
+                    "depth": 56,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 12,
+                        "heading": "NW"
+                    },
+                    "depth": 57,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 21,
+                        "y": 12,
+                        "heading": "NW"
+                    },
+                    "depth": 58,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 59,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 60,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 61,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 23,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 62,
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 24,
-                        "y": 6,
-                        "heading": "NW"
+                        "y": 15,
+                        "heading": "W"
                     },
-                    "depth": 84,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 63,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 24,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 64,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 24,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 65,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 24,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 66,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 24,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 67,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 68,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 69,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 70,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 71,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 72,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 73,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 74,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 75,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 76,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 77,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 78,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 15,
+                        "heading": "W"
+                    },
+                    "depth": 79,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 80,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 81,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 25,
+                        "y": 14,
+                        "heading": "W"
+                    },
+                    "depth": 82,
+                    "horizon": 100
                 },
                 {
                     "state": {
                         "x": 26,
-                        "y": 8,
-                        "heading": "NW"
+                        "y": 13,
+                        "heading": "W"
                     },
-                    "depth": 85,
-                    "horizon": 100,
-                    "prev": null
+                    "depth": 83,
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 28,
-                        "y": 10,
+                        "x": 26,
+                        "y": 13,
+                        "heading": "W"
+                    },
+                    "depth": 84,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 26,
+                        "y": 13,
+                        "heading": "W"
+                    },
+                    "depth": 85,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 26,
+                        "y": 13,
                         "heading": "W"
                     },
                     "depth": 86,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 28,
+                        "x": 26,
                         "y": 12,
                         "heading": "W"
                     },
                     "depth": 87,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 14,
+                        "x": 26,
+                        "y": 12,
                         "heading": "W"
                     },
                     "depth": 88,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 13,
+                        "x": 26,
+                        "y": 12,
                         "heading": "W"
                     },
                     "depth": 89,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 13,
+                        "x": 26,
+                        "y": 12,
                         "heading": "W"
                     },
                     "depth": 90,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 13,
+                        "x": 26,
+                        "y": 11,
                         "heading": "W"
                     },
                     "depth": 91,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 13,
+                        "x": 26,
+                        "y": 11,
                         "heading": "W"
                     },
                     "depth": 92,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 13,
+                        "x": 26,
+                        "y": 11,
                         "heading": "W"
                     },
                     "depth": 93,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 13,
+                        "x": 26,
+                        "y": 11,
                         "heading": "W"
                     },
                     "depth": 94,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
+                        "x": 26,
                         "y": 11,
                         "heading": "W"
                     },
                     "depth": 95,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 11,
+                        "x": 26,
+                        "y": 10,
                         "heading": "W"
                     },
                     "depth": 96,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 11,
+                        "x": 26,
+                        "y": 10,
                         "heading": "W"
                     },
                     "depth": 97,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 10,
+                        "x": 27,
+                        "y": 9,
                         "heading": "W"
                     },
                     "depth": 98,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
-                        "y": 10,
+                        "x": 27,
+                        "y": 9,
                         "heading": "W"
                     },
                     "depth": 99,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
                 },
                 {
                     "state": {
-                        "x": 29,
+                        "x": 27,
                         "y": 9,
                         "heading": "W"
                     },
                     "depth": 100,
-                    "horizon": 100,
-                    "prev": null
+                    "horizon": 100
+                }
+            ]
+        ],
+        [
+            4,
+            [
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 22,
+                        "heading": "W"
+                    },
+                    "depth": 1,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "SW"
+                    },
+                    "depth": 2,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 18,
+                        "heading": "S"
+                    },
+                    "depth": 3,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 16,
+                        "heading": "SE"
+                    },
+                    "depth": 4,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 14,
+                        "heading": "SE"
+                    },
+                    "depth": 5,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 12,
+                        "heading": "E"
+                    },
+                    "depth": 6,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 10,
+                        "heading": "E"
+                    },
+                    "depth": 7,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 11,
+                        "heading": "E"
+                    },
+                    "depth": 8,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 13,
+                        "heading": "SE"
+                    },
+                    "depth": 9,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 15,
+                        "heading": "SE"
+                    },
+                    "depth": 10,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 11,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 12,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 13,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 14,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 15,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 17,
+                        "heading": "S"
+                    },
+                    "depth": 16,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 17,
+                        "heading": "SE"
+                    },
+                    "depth": 17,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 17,
+                        "heading": "SE"
+                    },
+                    "depth": 18,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 17,
+                        "heading": "SE"
+                    },
+                    "depth": 19,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 17,
+                        "heading": "SE"
+                    },
+                    "depth": 20,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 21,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 22,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 23,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 24,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 25,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 26,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 27,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 28,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 29,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 30,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 31,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 32,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 33,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 18,
+                        "heading": "SE"
+                    },
+                    "depth": 34,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 19,
+                        "heading": "SE"
+                    },
+                    "depth": 35,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 19,
+                        "heading": "SE"
+                    },
+                    "depth": 36,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 19,
+                        "heading": "SE"
+                    },
+                    "depth": 37,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 19,
+                        "heading": "SE"
+                    },
+                    "depth": 38,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 19,
+                        "heading": "SE"
+                    },
+                    "depth": 39,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 40,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 41,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 42,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 43,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 44,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 45,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 46,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 47,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 11,
+                        "y": 21,
+                        "heading": "SE"
+                    },
+                    "depth": 48,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 49,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 50,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 51,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 52,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 53,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 54,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 55,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 56,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 19,
+                        "heading": "E"
+                    },
+                    "depth": 57,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 58,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 59,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 60,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 61,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 62,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 63,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 64,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 65,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 66,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 67,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 68,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 69,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 10,
+                        "y": 20,
+                        "heading": "E"
+                    },
+                    "depth": 70,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 71,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 72,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 73,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 74,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 75,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 76,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 77,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 78,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 9,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 79,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 80,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 81,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 82,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 83,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 8,
+                        "y": 22,
+                        "heading": "E"
+                    },
+                    "depth": 84,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 85,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 86,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 87,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 88,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 7,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 89,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 90,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 91,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 6,
+                        "y": 23,
+                        "heading": "E"
+                    },
+                    "depth": 92,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 93,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 94,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 5,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 95,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 4,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 96,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 4,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 97,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 4,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 98,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 4,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 99,
+                    "horizon": 100
+                },
+                {
+                    "state": {
+                        "x": 4,
+                        "y": 24,
+                        "heading": "E"
+                    },
+                    "depth": 100,
+                    "horizon": 100
                 }
             ]
         ]
     ],
-    "value": 2189.9391058673446
+    "value": 415.14008169058354
 }

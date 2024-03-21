@@ -209,6 +209,7 @@ end
 
 
 ExperimentsConfig(path_to_experiments::String) = ExperimentsConfig(path_to_experiments, ["cluster", "cross_mix", "four_split","heavy_mixing","split_and_join", "spreadout_group", "track_runners", "priority_runners", "priority_speaker"])
+# ExperimentsConfig(path_to_experiments::String) = ExperimentsConfig(path_to_experiments, ["split_and_join"])
 
 # Experiment Steps
 #  - Generate $(experiment_name)_data.json using a blender call
@@ -251,6 +252,8 @@ end
 function blender_render_all_experiments(config::ExperimentsConfig)
     Threads.@threads for experiment in config.experiments
         path = "$(config.path_to_experiments)/$(experiment)"
+        data_cmd = `blender --background $(path)/$(experiment).blend  --python $(config.path_to_experiments)/export_experiment_data.py`
+        run(data_cmd)
         println("Blender Rendering for $(experiment)")
         render_cmd = `blender --background $(path)/$(experiment).blend  --python $(config.path_to_experiments)/animate_cameras.py`
         run(render_cmd)
@@ -285,5 +288,6 @@ function save_plot(df::DataFrame, path::String, eval_kind::String, experiment_na
     xlabel!(pl,"TimeStep")
     ylabel!(pl, "Evaluation ($(eval_kind))")
     title!(pl, "$(eval_kind) Evaluation for $(experiment_name)")
+    # savefig(pl, "$(path)/$(lowercase(eval_kind))_evaluation.tikz")
     savefig(pl, "$(path)/$(lowercase(eval_kind))_evaluation.png")
 end
