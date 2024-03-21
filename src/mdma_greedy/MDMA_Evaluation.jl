@@ -139,20 +139,22 @@ function evaluate_solution(
             for (target_id, target) in enumerate(targets)
                 for (f_id, face) in enumerate(target.faces)
                     for state in states
-                        distance = (
-                            face.pos[1] - state.state.x,
-                            face.pos[2] - state.state.y,
-                            target_height / 2 - drone_height,
-                        )
-                        theta = dirAngle(state.state.heading)
-                        look_direction = (cos(theta), sin(theta), 0.0)
-                        # Set previous_coverage to zero
-                        camera_pixel_density = compute_camera_coverage(
-                            face,
-                            look_direction,
-                            distance
-                        )
-                        coverage_data[t, target_id, f_id] += camera_pixel_density
+                        if detectTarget(state, target, model.sensor)
+                            distance = (
+                                face.pos[1] - state.state.x,
+                                face.pos[2] - state.state.y,
+                                target_height / 2 - drone_height,
+                            )
+                            theta = dirAngle(state.state.heading)
+                            look_direction = (cos(theta), sin(theta), 0.0)
+                            # Set previous_coverage to zero
+                            camera_pixel_density = compute_camera_coverage(
+                                face,
+                                look_direction,
+                                distance
+                            )
+                            coverage_data[t, target_id, f_id] += camera_pixel_density
+                        end
                     end
                     # Accumulate reward for the face after we finish
                     view_quality =
