@@ -139,7 +139,7 @@ function evaluate_solution(
             for (target_id, target) in enumerate(targets)
                 for (f_id, face) in enumerate(target.faces)
                     for state in states
-                        if detectTarget(state, target, model.sensor)
+                        if detectTarget(state.state, target, multi_configs.sensor)
                             distance = (
                                 face.pos[1] - state.state.x,
                                 face.pos[2] - state.state.y,
