@@ -17,8 +17,8 @@ def summarize_experiment(df_root, expr_name: str):
         # df_root["Median PPA"][expr_name] = median_ppa
         # df_root["Total Image"][expr_name] = sum_image
         # df_root["Total PPA"][expr_name] = sum_ppa
-        df_root[col_name + "_" + "SRPPA"][expr_name] = median_ppa
-        df_root[col_name + "_" + "Image"][expr_name] = median_image
+        df_root[col_name + "_" + "SRPPA"][expr_name] = sum_ppa / 100.
+        df_root[col_name + "_" + "Image"][expr_name] = sum_image / 1000.
 
 
 def main():
@@ -37,9 +37,9 @@ def main():
 
     planners = [
         "formation",
-        "greedy",
         "assignment",
         "myopic",
+        "greedy",
         "multipleroundsgreedy",
     ]
 
@@ -59,8 +59,13 @@ def main():
     for expr_name in experiments:
         summarize_experiment(df_root, expr_name)
 
-    df_root.to_csv("total_summary.csv")
+    df_root.to_csv("data_summary.csv")
+
+    # for row in df_root.iterrows():
+    #     print(row[0], np.max(np.array(row[1].to_list())))
+      
     print(df_root)
+    print("Wrote data_summary.csv")
 
 if __name__ == "__main__":
     main()
