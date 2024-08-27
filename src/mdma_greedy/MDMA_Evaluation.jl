@@ -110,6 +110,7 @@ function evaluate_solution(
 
     target_trajectories = multi_configs.target_trajectories
     horizon = multi_configs.horizon
+    sensor = MDMA.ViewConeSensor(pi / 2, 1000.)
 
     # Make dataframe
     df = DataFrame(t = 1:horizon)
@@ -139,7 +140,7 @@ function evaluate_solution(
             for (target_id, target) in enumerate(targets)
                 for (f_id, face) in enumerate(target.faces)
                     for state in states
-                        if detectTarget(state.state, target, multi_configs.sensor)
+                        if detectTarget(state.state, target, sensor)
                             distance = (
                                 face.pos[1] - state.state.x,
                                 face.pos[2] - state.state.y,

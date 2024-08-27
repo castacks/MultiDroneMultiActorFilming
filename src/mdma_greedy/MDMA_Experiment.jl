@@ -288,6 +288,6 @@ function save_plot(df::DataFrame, path::String, eval_kind::String, experiment_na
     xlabel!(pl,"TimeStep")
     ylabel!(pl, "Evaluation ($(eval_kind))")
     title!(pl, "$(eval_kind) Evaluation for $(experiment_name)")
-    # savefig(pl, "$(path)/$(lowercase(eval_kind))_evaluation.tikz")
+    savefig(pl, "$(path)/$(lowercase(eval_kind))_evaluation.tex")
     savefig(pl, "$(path)/$(lowercase(eval_kind))_evaluation.png")
 end
