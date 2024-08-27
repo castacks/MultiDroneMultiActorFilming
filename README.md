@@ -22,6 +22,16 @@ To build
 To get a shell
 * `sudo ./start`
 
+Once in a shell, one can run/interact with the multi-agent model MDMA in the Julia interpreter.
+
+For example:
+* `julia`
+* `julia> using MDMA`
+
+To run all the experiments and generate all outputs
+* `julia> conf = ExperimentsConfig("./experiments")`
+* `julia> run_all_experiments(conf)`
+
 To get a jupyter notebook
 * `sudo ./run_jupyter`
 
