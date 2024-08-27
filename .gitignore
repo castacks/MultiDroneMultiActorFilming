@@ -102,3 +102,6 @@ experiments/spreadout_group/myopic
 experiments/total_summary.csv
 experiments/track_runners/multipleroundsgreedy
 experiments/track_runners/myopic
+experiments/split_and_join/image_evaluation.tikz
+experiments/split_and_join/ppa_evaluation.tikz
+experiments/spreadout_group/ppa_evaluation.tikz
