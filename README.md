@@ -1,5 +1,8 @@
 # Multi-Agent Sensing
 
+This package provides the implementations used for multi-robot planning for
+filming groups of moving actors (see references). 
+
 This package provides centralized implementations of Randomized Sequential
 Partitions (RSP) (see references) that are suitable for numerical simulations as
 well as a number of other algorithms for multi-agent planning via submodular
@@ -13,7 +16,8 @@ Additionally, we implemented two application scenarios
 
 ## Installation
 
-The easiest way would be to use the provided Dockerfile and scripts.
+The easiest way would be to use the provided Dockerfile and scripts, to do this
+one must first install [docker](https://www.docker.com/)
 
 To build
 * `cd docker-scripts`
@@ -31,6 +35,8 @@ For example:
 To run all the experiments and generate all outputs
 * `julia> conf = ExperimentsConfig("./experiments")`
 * `julia> run_all_experiments(conf)`
+
+Running the experiments 
 
 To get a jupyter notebook
 * `sudo ./run_jupyter`

@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:jammy
 
 # COPY src /airlab/src
 # COPY example /airlab/example
@@ -14,7 +14,8 @@ RUN apt-get -y install wget
 RUN apt-get -y install python3-pip
 
 RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir matplotlib
+RUN pip install --no-cache-dir "numpy<2.0"
+RUN pip install --no-cache-dir "matplotlib==3.5.2"
 RUN pip install --no-cache-dir tikzplotlib
 RUN pip install --no-cache-dir notebook
 
@@ -33,13 +34,13 @@ RUN julia -e 'using Pkg; Pkg.activate("."); Pkg.instantiate();'
 
 COPY blender /airlab/blender
 WORKDIR /airlab/blender
-RUN wget https://mirror.clarkson.edu/blender/release/Blender3.5/blender-3.5.1-linux-x64.tar.xz
-RUN tar xvf /airlab/blender/blender-3.5.1-linux-x64.tar.xz
+RUN wget https://mirror.clarkson.edu/blender/release/Blender4.2/blender-4.2.1-linux-x64.tar.xz
+RUN tar xvf /airlab/blender/blender-4.2.1-linux-x64.tar.xz
 
 RUN apt-get -y install build-essential git subversion cmake libx11-dev libxxf86vm-dev libxcursor-dev libxi-dev libxrandr-dev libxinerama-dev libegl-dev libxrender-dev libsm-dev
 RUN apt-get -y install libwayland-dev wayland-protocols libxkbcommon-dev libdbus-1-dev linux-libc-dev
 
-ENV PATH="$PATH:/airlab/blender/blender-3.5.1-linux-x64"
+ENV PATH="$PATH:/airlab/blender/blender-4.2.1-linux-x64"
 
 
 WORKDIR /airlab

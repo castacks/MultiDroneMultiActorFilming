@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 
-# ./build
+xhost +local:
 
 sudo docker run \
        --volume $PWD/../src:/airlab/src \
