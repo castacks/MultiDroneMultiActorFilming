@@ -38,6 +38,16 @@ To run all the experiments and generate all outputs
 * `julia> conf = ExperimentsConfig("./experiments")`
 * `julia> run_all_experiments(conf)`
 
+ExperimentsConfig can also be provided a list of experiments to run (in the case you do not want to run everything).
+For example, to run only the `cluster` experiment you can do
+* `julia> conf = ExperimentsConfig("./experiments", ["cluster"])`
+
+The repo comes with a set of solutions already in the correct locations. You can also try
+to render all the image outputs, and compute solution evaluations without recomputing solutions.
+* `julia> blender_render_all_experiments(conf)`
+* `julia> evaluate_all_experiments(conf)`
+
+
 TODO: Explain how to navigate the experiment output.
 
 ## Example code
