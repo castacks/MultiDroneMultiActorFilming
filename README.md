@@ -38,15 +38,11 @@ To run all the experiments and generate all outputs
 * `julia> conf = ExperimentsConfig("./experiments")`
 * `julia> run_all_experiments(conf)`
 
-Running the experiments
-
-To get a jupyter notebook
-* `sudo ./run_jupyter`
-
+TODO: Explain how to navigate the experiment output.
 
 ## Example code
 
-**Does anything currently belong under examples?**
+TODO: Add a smaller example
 
 ## References
 
